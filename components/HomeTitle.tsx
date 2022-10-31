@@ -21,7 +21,7 @@ export default function HomeTitle() {
           <p
             onClick={() => setSelectIndex(0)}
             className="font-bold transition-all"
-            style={{ lineHeight: '180px', WebkitTextStroke: 'calc(0.005em + 1px) #000', color: 'transparent', fontSize: `${hoverIndex === 0 ? '13.8vw' : '15.2vw'}` }}>
+            style={{ lineHeight: '13.8vw', WebkitTextStroke: 'calc(0.005em + 1px) #000', color: 'transparent', fontSize: `${hoverIndex === 0 ? '13.8vw' : '15.2vw'}` }}>
             Post
           </p>
         }
@@ -40,7 +40,7 @@ export default function HomeTitle() {
           <p
             onClick={() => setSelectIndex(1)}
             className="font-bold transition-all"
-            style={{ lineHeight: '180px', WebkitTextStroke: 'calc(0.005em + 1px) #000', color: 'transparent', fontSize: `${hoverIndex === 1 ? '13.8vw' : '15.2vw'}` }}>
+            style={{ lineHeight: '13.8vw', WebkitTextStroke: 'calc(0.005em + 1px) #000', color: 'transparent', fontSize: `${hoverIndex === 1 ? '13.8vw' : '15.2vw'}` }}>
             Work
           </p>
         }

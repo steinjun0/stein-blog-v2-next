@@ -65,8 +65,8 @@ export default function Home() {
           <div className='flex-col w-1/2'>
             <HomeTitle />
           </div>
-          <div className='flex-col justify-center ml-auto w-1/2 h-full'>
-            <div className='relative' style={{ width: '30vw', height: '30vw', left: 'calc(50% - 15vw)' }}>
+          <div className='flex-col justify-end ml-auto w-1/2 h-full'>
+            <div className='relative right-0' style={{ width: '30vw', height: '30vw', left: 'calc(100% - 30vw)' }}>
               <Image
                 src={'/images/profile.png'}
                 alt='profile'
@@ -81,11 +81,11 @@ export default function Home() {
             <PostComponent key={i} categories={['cat1', 'cat2']} title={e.title} subtitle={e.subtitle} />
           )}
         </section> */}
-        <section className="flex justify-between px-8 mt-16 items-center w-100 h-52 border-slate-0 border-0">
-          {posts!.slice(0, getMaxPostCount(getBreakPoint(size.width))).map((e, i) =>
-            <div className='w-64 h-36 relative' style={{ overflow: 'hidden' }}>
+        <section className="flex justify-between mt-8 items-center w-100 h-52 border-slate-0 border-0">
+          {['/images/dapadaStock.png', '/images/dapadaEdu.png', '/images/careerDive.png'].slice(0, getMaxPostCount(getBreakPoint(size.width))).map((e, i) =>
+            <div className='w-64 h-36 relative border-slate-200 border' style={{ overflow: 'hidden' }}>
               <Image
-                src={'/images/profile.png'}
+                src={e}
                 alt='profile'
                 width={256}
                 height={144}
