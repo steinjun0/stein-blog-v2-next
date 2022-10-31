@@ -38,7 +38,7 @@ function getMaxPostCount(breakPoint: string): number {
     '2xl': 4,
     'xl': 4,
     'lg': 3,
-    'md': 2,
+    'md': 3,
     'sm': 2,
     'None': 1
   }
@@ -47,6 +47,8 @@ function getMaxPostCount(breakPoint: string): number {
 
 export default function Home() {
   const [posts, setPosts] = useState<IPostComponent[]>([])
+  const [selectIndex, setSelectIndex] = useState<number>(0)
+
   const size = useWindowSize();
   useEffect(() => {
     const dummyPosts = [
@@ -59,11 +61,11 @@ export default function Home() {
   }, [])
 
   return (
-    <div className='container flex flex-col justify-center' style={{ height: 'calc(100vh - 68px)' }}>
+    <div className='container max-w-screen-lg flex flex-col justify-center' style={{ height: 'calc(100vh - 68px)' }}>
       <div className='flex-col'>
         <div className='flex justify-center items-center w-full'>
           <div className='flex-col w-1/2'>
-            <HomeTitle />
+            <HomeTitle selectIndex={selectIndex} setSelectIndex={setSelectIndex} />
           </div>
           <div className='flex-col justify-end ml-auto w-1/2 h-full'>
             <div className='relative right-0' style={{ width: '30vw', height: '30vw', left: 'calc(100% - 30vw)' }}>
@@ -76,23 +78,25 @@ export default function Home() {
             </div>
           </div>
         </div>
-        {/* <section className="flex justify-between px-8 mt-16 items-center w-100 h-52 border-slate-0 border-0">
-          {posts!.slice(0, getMaxPostCount(getBreakPoint(size.width))).map((e, i) =>
-            <PostComponent key={i} categories={['cat1', 'cat2']} title={e.title} subtitle={e.subtitle} />
-          )}
-        </section> */}
-        <section className="flex justify-between mt-8 items-center w-100 h-52 border-slate-0 border-0">
-          {['/images/dapadaStock.png', '/images/dapadaEdu.png', '/images/careerDive.png'].slice(0, getMaxPostCount(getBreakPoint(size.width))).map((e, i) =>
-            <div className='w-64 h-36 relative border-slate-200 border' style={{ overflow: 'hidden' }}>
-              <Image
-                src={e}
-                alt='profile'
-                width={256}
-                height={144}
-              />
-            </div>
-          )}
-        </section>
+        {selectIndex ?
+          <section className="flex justify-around mt-16 items-center w-100 h-52 border-slate-0 border-0">
+            {['/images/dapadaStock.png', '/images/dapadaEdu.png', '/images/careerDive.png'].slice(0, getMaxPostCount(getBreakPoint(size.width))).map((e, i) =>
+              <div className='w-64 h-36 relative border-slate-200 border' style={{ overflow: 'hidden' }}>
+                <Image
+                  src={e}
+                  alt='profile'
+                  width={256}
+                  height={144}
+                />
+              </div>
+            )}
+          </section>
+          :
+          <section className="flex justify-around mt-16 items-center w-100 h-52 border-slate-0 border-0">
+            {posts!.slice(0, getMaxPostCount(getBreakPoint(size.width))).map((e, i) =>
+              <PostComponent key={i} categories={['cat1', 'cat2']} title={e.title} subtitle={e.subtitle} />
+            )}
+          </section>}
       </div>
 
     </div>

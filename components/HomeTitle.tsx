@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
-export default function HomeTitle() {
+export default function HomeTitle({ selectIndex, setSelectIndex }: { selectIndex: number, setSelectIndex: Dispatch<SetStateAction<number>> }) {
 
-  const [selectIndex, setSelectIndex] = useState<number>(0)
   const [hoverIndex, setHoverIndex] = useState<number>(-1)
 
   return (
