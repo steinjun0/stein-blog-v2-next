@@ -79,7 +79,7 @@ export default function Home() {
           </div>
         </div>
         {selectIndex ?
-          <section className="flex justify-around mt-16 items-center w-100 h-52 border-slate-0 border-0">
+          <section className="flex justify-between mt-16 items-center w-100 h-52 border-slate-0 border-0">
             {['/images/dapadaStock.png', '/images/dapadaEdu.png', '/images/careerDive.png'].slice(0, getMaxPostCount(getBreakPoint(size.width))).map((e, i) =>
               <div className='w-64 h-36 relative border-slate-200 border' style={{ overflow: 'hidden' }}>
                 <Image
@@ -92,7 +92,7 @@ export default function Home() {
             )}
           </section>
           :
-          <section className="flex justify-around mt-16 items-center w-100 h-52 border-slate-0 border-0">
+          <section className="flex justify-between mt-16 items-center w-100 h-52 border-slate-0 border-0">
             {posts!.slice(0, getMaxPostCount(getBreakPoint(size.width))).map((e, i) =>
               <PostComponent key={i} categories={['cat1', 'cat2']} title={e.title} subtitle={e.subtitle} />
             )}
