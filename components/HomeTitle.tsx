@@ -1,15 +1,17 @@
 import { Icon, iconClasses, Slide } from "@mui/material";
 import { Dispatch, SetStateAction, useState } from "react";
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { useRouter } from "next/router";
 
 export default function HomeTitle({ selectIndex, setSelectIndex }: { selectIndex: number, setSelectIndex: Dispatch<SetStateAction<number>> }) {
 
   const [hoverIndex, setHoverIndex] = useState<number>(-1)
+  const router = useRouter();
 
   return (
     <div className='flex-col overflow-y-clip' >
       <div
-        onClick={() => setSelectIndex(0)}
+        onClick={() => selectIndex == 0 ? router.push('post') : setSelectIndex(0)}
         onMouseEnter={() => setHoverIndex(0)}
         onMouseLeave={() => setHoverIndex(-1)}
         className="flex justify-start items-end"
@@ -34,7 +36,7 @@ export default function HomeTitle({ selectIndex, setSelectIndex }: { selectIndex
       </div>
 
       <div
-        onClick={() => setSelectIndex(1)}
+        onClick={() => selectIndex == 1 ? router.push('work') : setSelectIndex(1)}
         onMouseEnter={() => setHoverIndex(1)}
         onMouseLeave={() => setHoverIndex(-1)}
         className="flex justify-start items-end"
