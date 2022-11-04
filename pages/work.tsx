@@ -1,4 +1,5 @@
 import { Divider } from "@mui/material";
+import Image from "next/image";
 import { useState } from "react";
 
 export default function Work() {
@@ -18,6 +19,21 @@ export default function Work() {
                         <span className={category === e ? 'underline decoration-solid' : 'text-gray-300'}
                             onClick={() => setCategory(e)}>{e}</span>)}
             </div>
+
+            <div className="grid grid-cols-2 gap-0">
+                {['/images/DapadaSquare.png', '/images/CareerDiveSquare.png', '/images/DapadaEduSquare.png', '/images/DaconSquare.png'].map(
+                    (e) => <div className="relative w-full h-0 cursor-pointer"
+                        style={{ paddingBottom: '100%' }}>
+                        <Image
+                            src={e}
+                            alt='work'
+                            fill
+                        />
+                    </div>
+                )}
+
+            </div>
+
         </div >
     );
 }
