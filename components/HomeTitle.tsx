@@ -29,7 +29,7 @@ export default function HomeTitle({ selectIndex, setSelectIndex }: { selectIndex
             </p>
           }
           <div style={{ overflow: 'hidden' }}>
-            <Slide direction="right" in={selectIndex === 0}>
+            <Slide direction="right" in={selectIndex === 0 && hoverIndex == 0}>
               <ChevronRightIcon style={{ fontSize: '11.5vw' }} />
             </Slide>
           </div>
@@ -37,7 +37,7 @@ export default function HomeTitle({ selectIndex, setSelectIndex }: { selectIndex
 
         <div style={{ position: 'relative', overflow: 'hidden', width: '100%' }} >
           <Slide direction="right" in={selectIndex === 0 && hoverIndex == 0} >
-            <hr className="bg-black h-1" style={{ width: '39vw' }} />
+            <hr className="border-black" style={{ width: '39vw', borderWidth: '1px' }} />
           </Slide>
         </div>
       </div>
@@ -61,7 +61,7 @@ export default function HomeTitle({ selectIndex, setSelectIndex }: { selectIndex
             </p>
           }
           <div style={{ overflow: 'hidden' }}>
-            <Slide direction="right" in={selectIndex === 1}>
+            <Slide direction="right" in={selectIndex === 1 && hoverIndex == 1}>
               <ChevronRightIcon style={{ fontSize: '11.5vw' }} />
             </Slide>
           </div>
@@ -70,7 +70,7 @@ export default function HomeTitle({ selectIndex, setSelectIndex }: { selectIndex
 
         <div style={{ position: 'relative', overflow: 'hidden', width: '100%' }} >
           <Slide direction="right" in={selectIndex === 1 && hoverIndex == 1} >
-            <hr className="bg-black h-1" style={{ width: '45vw' }} />
+            <hr className="border-black" style={{ width: '45vw', borderWidth: '1px' }} />
           </Slide>
         </div>
 
