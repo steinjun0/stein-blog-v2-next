@@ -1,5 +1,6 @@
 import { Divider } from "@mui/material";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 
 export default function Work() {
@@ -20,16 +21,19 @@ export default function Work() {
                             onClick={() => setCategory(e)}>{e}</span>)}
             </div>
 
-            <div className="grid grid-cols-2 gap-0">
+            <div className="grid grid-cols-2 gap-0 mt-4">
                 {['/images/DapadaSquare.png', '/images/CareerDiveSquare.png', '/images/DapadaEduSquare.png', '/images/DaconSquare.png'].map(
-                    (e) => <div className="relative w-full h-0 cursor-pointer"
-                        style={{ paddingBottom: '100%' }}>
-                        <Image
-                            src={e}
-                            alt='work'
-                            fill
-                        />
-                    </div>
+                    (e) => <Link href={'/work/1'}>
+                        <div className="relative w-full h-0 cursor-pointer"
+                            style={{ paddingBottom: '100%' }}>
+                            <Image
+                                src={e}
+                                alt='work'
+                                fill
+                            />
+                        </div>
+                    </Link>
+
                 )}
 
             </div>
