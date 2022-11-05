@@ -12,7 +12,7 @@ function PostComponent({ categories, title, subtitle }: IPostComponent) {
     <div className="w-60 h-36 flex-col justify-center border-b-slate-400 border-b">
       <span className='text-xs'>[{categories.toString().replaceAll(',', ', ')}]</span>
       <h1 className='text-xl font-medium h-16 mt-1 whitespace-pre-wrap'>{title}</h1>
-      <p className='text-sm mt-1 whitespace-pre-wrap'>{subtitle}</p>
+      <p className='text-sm overflow-hidden whitespace-nowrap text-ellipsis mt-1'>{subtitle}</p>
     </div>
   );
 }
@@ -53,8 +53,8 @@ export default function Home() {
   useEffect(() => {
     const dummyPosts = [
       { categories: ['cat1', 'cat2'], title: '이 글의 제목은 \n"무엇이 제목인가"', subtitle: '제목과 부제목에 대한 간단한 고찰' },
-      { categories: ['cat1', 'cat2'], title: '여러가지 상황\n미필적 고의도 범죄다', subtitle: '부제목의 길고 긴 길이.\n그것은 두줄이 되기에 충분했다' },
-      { categories: ['cat1', 'cat2'], title: '이 글의 제목은 \n"무엇이 제목인가"', subtitle: '제목과 부제목에 대한 간단한 고찰\n2줄로 나눠봤습니다' },
+      { categories: ['cat1', 'cat2'], title: '여러가지 상황\n미필적 고의도 범죄다', subtitle: '부제목은 무조건 1줄이내. 최대 27자' },
+      { categories: ['cat1', 'cat2'], title: '이 글의 제목은 \n"무엇이 제목인가"', subtitle: '일이삼사오육칠팔구십일이삼사오육칠' },
       { categories: ['cat1', 'cat2'], title: '여러가지 상황', subtitle: '부제목의 길고 긴 길이.\n그것은 두줄이 되기에 충분했다' },
     ]
     setPosts(dummyPosts)
