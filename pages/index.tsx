@@ -9,10 +9,10 @@ interface IPostComponent { categories: string[], title: string, subtitle: string
 
 function PostComponent({ categories, title, subtitle }: IPostComponent) {
   return (
-    <div className="w-64 h-44 flex-col justify-center border-b-slate-400 border-b">
-      <span className='text-sm'>[{categories.toString().replaceAll(',', ', ')}]</span>
-      <h1 className='text-2xl font-medium h-16 mt-1 whitespace-pre-wrap'>{title}</h1>
-      <p className='mt-3 whitespace-pre-wrap'>{subtitle}</p>
+    <div className="w-60 h-36 flex-col justify-center border-b-slate-400 border-b">
+      <span className='text-xs'>[{categories.toString().replaceAll(',', ', ')}]</span>
+      <h1 className='text-xl font-medium h-16 mt-1 whitespace-pre-wrap'>{title}</h1>
+      <p className='text-sm mt-1 whitespace-pre-wrap'>{subtitle}</p>
     </div>
   );
 }
@@ -80,12 +80,13 @@ export default function Home() {
         {selectIndex ?
           <section className="flex justify-between mt-16 items-center w-100 h-52 border-slate-0 border-0">
             {['/images/dapadaStock.png', '/images/dapadaEdu.png', '/images/careerDive.png'].slice(0, getMaxPostCount(getBreakPoint(size.width))).map((e, i) =>
-              <div className='w-64 h-36 relative border-slate-200 border' style={{ overflow: 'hidden' }}>
+              <div className='relative border-slate-200 border' style={{ overflow: 'hidden' }}>
                 <Image
                   src={e}
                   alt='profile'
-                  width={256}
-                  height={144}
+                  width={240}
+                  height={240 * 9 / 16}
+
                 />
               </div>
             )}
