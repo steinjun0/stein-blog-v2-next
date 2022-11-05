@@ -9,8 +9,8 @@ export default function Work() {
     return (
         <div className="flex-col  w-full mt-10 justify-start">
             <div className="flex items-end">
-                <h1 className="text-7xl mr-3">Work</h1>
-                <span >as an engineer.</span>
+                <h1 className="text-7xl mr-3 font-medium">Work</h1>
+                <span >as an Engineer.</span>
             </div>
             <Divider style={{ marginLeft: '186px' }} color={'black'} />
 
