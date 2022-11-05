@@ -61,19 +61,18 @@ export default function Home() {
   }, [])
 
   return (
-    <div className='container max-w-screen-lg flex flex-col justify-center' style={{ height: 'calc(100vh - 68px)' }}>
+    <div className='container flex flex-col justify-center' style={{ height: 'calc(100vh - 68px)' }}>
       <div className='flex-col'>
-        <div className='flex justify-center items-center w-full'>
-          <div className='flex-col w-1/2'>
+        <div className='flex justify-between items-center w-full'>
+          <div className='flex-col'>
             <HomeTitle selectIndex={selectIndex} setSelectIndex={setSelectIndex} />
           </div>
-          <div className='flex-col justify-end ml-auto w-1/2 h-full'>
-            <div className='relative right-0' style={{ width: '30vw', height: '30vw', left: 'calc(100% - 30vw)' }}>
+          <div className='flex w-1/3'>
+            <div className='relative w-full h-0' style={{ paddingBottom: '100%' }}>
               <Image
                 src={'/images/profile.png'}
                 alt='profile'
                 fill
-                sizes='100vw'
               />
             </div>
           </div>

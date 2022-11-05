@@ -14,23 +14,30 @@ export default function HomeTitle({ selectIndex, setSelectIndex }: { selectIndex
         onClick={() => selectIndex == 0 ? router.push('post') : setSelectIndex(0)}
         onMouseEnter={() => setHoverIndex(0)}
         onMouseLeave={() => setHoverIndex(-1)}
-        className="flex justify-start items-end"
+        className="flex-col justify-start items-end"
         style={{ cursor: 'pointer', overflowY: 'clip' }}
       >
+        <div className="flex items-end">
+          {selectIndex === 0 ?
+            <p className="font-bold transition-all" style={{ fontSize: '13.5vw', lineHeight: '100%' }}>Post</p>
+            :
+            <p
+              onClick={() => setSelectIndex(0)}
+              className="font-bold transition-all"
+              style={{ lineHeight: '100%', WebkitTextStroke: 'calc(0.005em + 1px) #000', color: 'transparent', fontSize: '15.5vw' }}>
+              Post
+            </p>
+          }
+          <div style={{ overflow: 'hidden' }}>
+            <Slide direction="right" in={selectIndex === 0}>
+              <ChevronRightIcon style={{ fontSize: '11.5vw' }} />
+            </Slide>
+          </div>
+        </div>
 
-        {selectIndex === 0 ?
-          <p className="font-bold transition-all" style={{ fontSize: '13.8vw', lineHeight: '13.8vw' }}>Post</p>
-          :
-          <p
-            onClick={() => setSelectIndex(0)}
-            className="font-bold transition-all"
-            style={{ lineHeight: '13.8vw', WebkitTextStroke: 'calc(0.005em + 1px) #000', color: 'transparent', fontSize: '15.2vw' }}>
-            Post
-          </p>
-        }
-        <div style={{ overflow: 'hidden' }}>
-          <Slide direction="right" in={selectIndex === 0}>
-            <ChevronRightIcon style={{ fontSize: '15.2vw', height: '10.2vw' }} />
+        <div style={{ position: 'relative', overflow: 'hidden', width: '100%' }} >
+          <Slide direction="right" in={selectIndex === 0 && hoverIndex == 0} >
+            <hr className="bg-black h-1" style={{ width: '39vw' }} />
           </Slide>
         </div>
       </div>
@@ -39,25 +46,34 @@ export default function HomeTitle({ selectIndex, setSelectIndex }: { selectIndex
         onClick={() => selectIndex == 1 ? router.push('work') : setSelectIndex(1)}
         onMouseEnter={() => setHoverIndex(1)}
         onMouseLeave={() => setHoverIndex(-1)}
-        className="flex justify-start items-end"
+        className="flex-col justify-start items-end"
         style={{ cursor: 'pointer', overflowY: 'clip' }}
       >
-        {selectIndex === 1 ?
-          <p className="font-bold transition-all" style={{ fontSize: `${selectIndex === 1 ? '13.8vw' : '15.2vw'}`, lineHeight: '13.8vw' }}>Work</p>
+        <div className="flex items-end">
+          {selectIndex === 1 ?
+            <p className="font-bold transition-all " style={{ fontSize: '13.5vw', lineHeight: '100%' }}>Work</p>
+            :
+            <p
+              onClick={() => setSelectIndex(1)}
+              className="font-bold transition-all"
+              style={{ lineHeight: '100%', WebkitTextStroke: 'calc(0.005em + 1px) #000', color: 'transparent', fontSize: '15.5vw' }}>
+              Work
+            </p>
+          }
+          <div style={{ overflow: 'hidden' }}>
+            <Slide direction="right" in={selectIndex === 1}>
+              <ChevronRightIcon style={{ fontSize: '11.5vw' }} />
+            </Slide>
+          </div>
+        </div>
 
-          :
-          <p
-            onClick={() => setSelectIndex(1)}
-            className="font-bold transition-all"
-            style={{ lineHeight: '13.8vw', WebkitTextStroke: 'calc(0.005em + 1px) #000', color: 'transparent', fontSize: `${hoverIndex === 1 ? '13.8vw' : '15.2vw'}` }}>
-            Work
-          </p>
-        }
-        <div style={{ overflow: 'hidden' }}>
-          <Slide direction="right" in={selectIndex === 1}>
-            <ChevronRightIcon style={{ fontSize: '15.2vw', height: '10.2vw' }} />
+
+        <div style={{ position: 'relative', overflow: 'hidden', width: '100%' }} >
+          <Slide direction="right" in={selectIndex === 1 && hoverIndex == 1} >
+            <hr className="bg-black h-1" style={{ width: '45vw' }} />
           </Slide>
         </div>
+
       </div>
 
     </div>
