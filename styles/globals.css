@@ -33,6 +33,10 @@ a {
 @tailwind components;
 @tailwind utilities;
 
+/* @import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities'; */
+
 @font-face {
   font-family: "NotoSansKR";
   font-weight: 100;

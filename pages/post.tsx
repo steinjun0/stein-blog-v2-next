@@ -1,4 +1,4 @@
-import { Divider } from "@mui/material";
+import { Divider, Slide } from "@mui/material";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -23,19 +23,22 @@ export default function Work() {
 				<h1 className="text-7xl mr-3 font-medium">Post</h1>
 				<span >Study · Engineering · Art · Life · etc.</span>
 			</div>
-			<Divider style={{ marginLeft: '158px' }} color={'black'} />
+			<Slide in={true} direction={'right'}>
+				<Divider style={{ marginLeft: '158px' }} color={'black'} />
+			</Slide>
+
 
 			<div className="flex w-52 mt-10 justify-between [&>span]:cursor-pointer">
 				{['All', 'Product', 'Project'].map(
-					(e) =>
-						<span className={category === e ? 'underline decoration-solid' : 'text-gray-300'}
+					(e, i) =>
+						<span key={i} className={category === e ? 'underline decoration-solid' : 'text-gray-300'}
 							onClick={() => setCategory(e)}>{e}</span>)}
 			</div>
 
 			<div>
 				{posts.map(
-					(post) => (
-						<div className="w-full mt-6 flex-col justify-center border-b-slate-400 border-b">
+					(post, i) => (
+						<div key={i} className="w-full mt-6 flex-col justify-center border-b-slate-400 border-b">
 							<span className='text-xs'>[{post.categories.toString().replaceAll(',', ', ')}]</span>
 							<Link href={'/post/1'}><h1 className='text-xl font-medium mt-1 whitespace-wrap [&:hover]:underline'>{post.title}</h1></Link>
 							<p className='text-sm overflow-hidden whitespace-wrap text-ellipsis mt-3 mb-6'

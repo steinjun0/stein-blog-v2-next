@@ -1,10 +1,8 @@
-import Head from 'next/head'
 import Image from 'next/image';
 import Link from 'next/link';
-import { Suspense, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import HomeTitle from '../components/HomeTitle';
 import useWindowSize from '../components/hooks/useWindowSize';
-import styles from '../styles/Home.module.css'
 
 function getBreakPoint(width: number): string {
   if (width > 1536) {
@@ -67,9 +65,9 @@ export default function Home() {
           </div>
         </div>
         {selectIndex ?
-          <section className="flex justify-between mt-16 items-center w-100 h-52 ">
+          <section className="flex justify-between mt-16 items-center w-full h-52 ">
             {['/images/dapadaStock.png', '/images/dapadaEdu.png', '/images/careerDive.png'].slice(0, getMaxPostCount(getBreakPoint(size.width))).map((e, i) =>
-              <div className='relative border-slate-200 border' style={{ overflow: 'hidden' }}>
+              <div key={i} className='relative border-slate-200 border' style={{ overflow: 'hidden' }}>
                 <Image
                   src={e}
                   alt='profile'
@@ -81,9 +79,9 @@ export default function Home() {
             )}
           </section>
           :
-          <section className="flex justify-between mt-16 items-center w-100 h-52 border-slate-0 border-0">
+          <section className="flex justify-between mt-16 items-center w-full h-52 border-slate-0 border-0">
             {posts!.slice(0, getMaxPostCount(getBreakPoint(size.width))).map((e, i) =>
-              <div className="w-60 h-36 flex-col justify-center border-b-slate-400 border-b">
+              <div key={i} className="w-60 h-36 flex-col justify-center border-b-slate-400 border-b">
                 <span className='text-xs'>[{e.categories.toString().replaceAll(',', ', ')}]</span>
                 <Link href={'/post/1'}><h1 className='text-xl font-medium h-16 mt-1 whitespace-pre-wrap [&:hover]:underline'>{e.title}</h1></Link>
                 <p className='text-sm overflow-hidden whitespace-nowrap text-ellipsis mt-1'>{e.subtitle}</p>

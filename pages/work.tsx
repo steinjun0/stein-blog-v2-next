@@ -16,14 +16,14 @@ export default function Work() {
 
             <div className="flex w-52 mt-10 justify-between [&>span]:cursor-pointer">
                 {['All', 'Product', 'Project'].map(
-                    (e) =>
-                        <span className={category === e ? 'underline decoration-solid' : 'text-gray-300'}
+                    (e, i) =>
+                        <span key={i} className={category === e ? 'underline decoration-solid' : 'text-gray-300'}
                             onClick={() => setCategory(e)}>{e}</span>)}
             </div>
 
             <div className="grid grid-cols-2 gap-0 mt-4">
                 {['/images/DapadaSquare.png', '/images/CareerDiveSquare.png', '/images/DapadaEduSquare.png', '/images/DaconSquare.png'].map(
-                    (e) => <Link href={'/work/1'}>
+                    (e, i) => <Link key={i} href={'/work/1'}>
                         <div className="relative w-full h-0 cursor-pointer"
                             style={{ paddingBottom: '100%' }}>
                             <Image
