@@ -8,7 +8,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <>
       <nav className='flex p-4'>
         <Link href={'/'}>
-          <p className='text-3xl font-bold'>Stein</p>
+          <p className='text-3xl' style={{ fontWeight: 700 }}>Stein</p>
         </Link>
       </nav>
       <div className='flex justify-center px-8'>

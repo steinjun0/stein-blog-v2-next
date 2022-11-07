@@ -19,12 +19,12 @@ export default function HomeTitle({ selectIndex, setSelectIndex }: { selectIndex
       >
         <div className="flex items-end">
           {selectIndex === 0 ?
-            <p className="font-bold transition-all" style={{ fontSize: '13.5vw', lineHeight: '100%' }}>Post</p>
+            <p className="transition-all" style={{ fontSize: '13.5vw', fontWeight: 700, lineHeight: '100%' }}>Post</p>
             :
             <p
               onClick={() => setSelectIndex(0)}
-              className="font-bold transition-all"
-              style={{ lineHeight: '100%', WebkitTextStroke: 'calc(0.005em + 1px) #000', color: 'transparent', fontSize: '15.5vw' }}>
+              className="transition-all"
+              style={{ lineHeight: '100%', fontWeight: 700, WebkitTextStroke: 'calc(0.005em + 1px) #000', color: 'transparent', fontSize: '15.5vw' }}>
               Post
             </p>
           }
@@ -51,12 +51,12 @@ export default function HomeTitle({ selectIndex, setSelectIndex }: { selectIndex
       >
         <div className="flex items-end">
           {selectIndex === 1 ?
-            <p className="font-bold transition-all " style={{ fontSize: '13.5vw', lineHeight: '100%' }}>Work</p>
+            <p className="transition-all " style={{ fontSize: '13.5vw', fontWeight: 700, lineHeight: '100%' }}>Work</p>
             :
             <p
               onClick={() => setSelectIndex(1)}
-              className="font-bold transition-all"
-              style={{ lineHeight: '100%', WebkitTextStroke: 'calc(0.005em + 1px) #000', color: 'transparent', fontSize: '15.5vw' }}>
+              className="transition-all"
+              style={{ fontWeight: 700, lineHeight: '100%', WebkitTextStroke: 'calc(0.005em + 1px) #000', color: 'transparent', fontSize: '15.5vw' }}>
               Work
             </p>
           }
