@@ -30,7 +30,7 @@ export default function HomeTitle({ selectIndex, setSelectIndex }: { selectIndex
           }
           <div style={{ overflow: 'hidden' }}>
             <Slide direction="right" in={selectIndex === 0 && hoverIndex == 0}>
-              <ChevronRightIcon style={{ fontSize: 'min(11.5vw, 170px)' }} />
+              <ChevronRightIcon style={{ fontSize: 'min(11.5vw, 160px)' }} />
             </Slide>
           </div>
         </div>
@@ -62,7 +62,7 @@ export default function HomeTitle({ selectIndex, setSelectIndex }: { selectIndex
           }
           <div style={{ overflow: 'hidden' }}>
             <Slide direction="right" in={selectIndex === 1 && hoverIndex == 1}>
-              <ChevronRightIcon style={{ fontSize: 'min(11.5vw, 170px)' }} />
+              <ChevronRightIcon style={{ fontSize: 'min(11.5vw, 160px)' }} />
             </Slide>
           </div>
         </div>
