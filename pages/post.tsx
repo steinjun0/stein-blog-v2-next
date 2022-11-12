@@ -49,17 +49,20 @@ export default function Work() {
 
 
 
-			<div className="flex flex-wrap gap-3">
+			<div className="flex flex-wrap xs:justify-center gap-3 xl:justify-between mt-4">
 				{posts.map(
 					(post, i) => (
-						<div key={i} className="w-80 mt-6 justify-center border-gray-200 border rounded-sm overflow-hidden">
+						<div key={i} className="w-96 mt-6 justify-center border-gray-200 border rounded-sm overflow-hidden">
 							{/* <span className='text-xs'>[{post.categories.toString().replaceAll(',', ', ')}]</span> */}
-							<Image
-								src={post.image}
-								alt='profile'
-								width={480}
-								height={480}
-							/>
+							<Link href={'/post/1'}>
+								<Image
+									src={post.image}
+									alt='profile'
+									width={600}
+									height={600}
+								/>
+							</Link>
+
 							<div className="flex-col p-4 pb-3 border-t border-gray-200">
 								<Link href={'/post/1'}><h1 className='text-2xl whitespace-pre-wrap [&:hover]:underline' style={{ fontWeight: '700' }}>{post.title}</h1></Link>
 								<p className='text-sm overflow-hidden whitespace-wrap text-ellipsis mt-3 mb-3 text-gray-500'
