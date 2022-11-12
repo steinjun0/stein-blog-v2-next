@@ -50,8 +50,8 @@ export default function Home() {
   return (
     <div className='container flex flex-col justify-center' style={{ height: 'calc(100vh - 68px)' }}>
       <div className='flex-col'>
-        <div className='flex justify-between items-center w-full'>
-          <div className='flex-col'>
+        <div className='flex justify-between items-center'>
+          <div className='flex-col w-2/3'>
             <HomeTitle selectIndex={selectIndex} setSelectIndex={setSelectIndex} />
           </div>
           <div className='flex w-1/3'>
@@ -66,7 +66,7 @@ export default function Home() {
         </div>
         {selectIndex ?
           <section className="flex justify-between mt-16 items-center w-full h-52 ">
-            {['/images/dapadaStock.png', '/images/dapadaEdu.png', '/images/careerDive.png'].slice(0, getMaxPostCount(getBreakPoint(size.width))).map((e, i) =>
+            {['/images/dapadaStock.png', '/images/dapadaEdu.png', '/images/careerDive.png', '/images/dapadaStock.png'].slice(0, getMaxPostCount(getBreakPoint(size.width))).map((e, i) =>
               <div key={i} className='relative border-slate-200 border' style={{ overflow: 'hidden' }}>
                 <Image
                   src={e}

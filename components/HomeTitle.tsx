@@ -19,25 +19,25 @@ export default function HomeTitle({ selectIndex, setSelectIndex }: { selectIndex
       >
         <div className="flex items-end">
           {selectIndex === 0 ?
-            <p className="transition-all" style={{ fontSize: '13.5vw', fontWeight: 700, lineHeight: '100%' }}>Post</p>
+            <p className="transition-all" style={{ fontSize: 'min(13.5vw, 190px)', fontWeight: 700, lineHeight: '100%' }}>Post</p>
             :
             <p
               onClick={() => setSelectIndex(0)}
               className="transition-all"
-              style={{ lineHeight: '100%', fontWeight: 700, WebkitTextStroke: 'calc(0.005em + 1px) #000', color: 'transparent', fontSize: '15.5vw' }}>
+              style={{ lineHeight: '100%', fontWeight: 700, WebkitTextStroke: 'calc(0.005em + 1px) #000', color: 'transparent', fontSize: 'min(15.5vw, 220px)' }}>
               Post
             </p>
           }
           <div style={{ overflow: 'hidden' }}>
             <Slide direction="right" in={selectIndex === 0 && hoverIndex == 0}>
-              <ChevronRightIcon style={{ fontSize: '11.5vw' }} />
+              <ChevronRightIcon style={{ fontSize: 'min(11.5vw, 170px)' }} />
             </Slide>
           </div>
         </div>
 
         <div style={{ position: 'relative', overflow: 'hidden', width: '100%' }} >
           <Slide direction="right" in={selectIndex === 0 && hoverIndex == 0} >
-            <hr className="border-black" style={{ width: '39vw', borderWidth: '1px' }} />
+            <hr className="border-black" style={{ width: '70%', borderWidth: '1px' }} />
           </Slide>
         </div>
       </div>
@@ -51,18 +51,18 @@ export default function HomeTitle({ selectIndex, setSelectIndex }: { selectIndex
       >
         <div className="flex items-end">
           {selectIndex === 1 ?
-            <p className="transition-all " style={{ fontSize: '13.5vw', fontWeight: 700, lineHeight: '100%' }}>Work</p>
+            <p className="transition-all " style={{ fontSize: 'min(13.5vw, 190px)', fontWeight: 700, lineHeight: '100%' }}>Work</p>
             :
             <p
               onClick={() => setSelectIndex(1)}
               className="transition-all"
-              style={{ fontWeight: 700, lineHeight: '100%', WebkitTextStroke: 'calc(0.005em + 1px) #000', color: 'transparent', fontSize: '15.5vw' }}>
+              style={{ fontWeight: 700, lineHeight: '100%', WebkitTextStroke: 'calc(0.005em + 1px) #000', color: 'transparent', fontSize: 'min(15.5vw, 220px)' }}>
               Work
             </p>
           }
           <div style={{ overflow: 'hidden' }}>
             <Slide direction="right" in={selectIndex === 1 && hoverIndex == 1}>
-              <ChevronRightIcon style={{ fontSize: '11.5vw' }} />
+              <ChevronRightIcon style={{ fontSize: 'min(11.5vw, 170px)' }} />
             </Slide>
           </div>
         </div>
@@ -70,7 +70,7 @@ export default function HomeTitle({ selectIndex, setSelectIndex }: { selectIndex
 
         <div style={{ position: 'relative', overflow: 'hidden', width: '100%' }} >
           <Slide direction="right" in={selectIndex === 1 && hoverIndex == 1} >
-            <hr className="border-black" style={{ width: '45vw', borderWidth: '1px' }} />
+            <hr className="border-black" style={{ width: '80%', borderWidth: '1px' }} />
           </Slide>
         </div>
 
