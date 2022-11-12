@@ -11,7 +11,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <p className='text-3xl' style={{ fontWeight: 700 }}>Stein</p>
         </Link>
       </nav>
-      <div className='flex justify-center px-8'>
+      <div className='flex justify-center px-4'>
         <Component {...pageProps} />
       </div>
     </>
