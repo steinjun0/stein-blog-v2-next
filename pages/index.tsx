@@ -66,7 +66,7 @@ export default function Home() {
         </div>
         {selectIndex ?
           <section className="flex justify-between mt-16 items-center w-full h-52 ">
-            {['/images/dapadaStock.png', '/images/dapadaEdu.png', '/images/careerDive.png', '/images/dapadaStock.png'].slice(0, getMaxPostCount(getBreakPoint(size.width))).map((e, i) =>
+            {['/images/Dapada.png', '/images/DapadaEdu.png', '/images/CareerDive.png', '/images/DapadaStock.png'].slice(0, getMaxPostCount(getBreakPoint(size.width))).map((e, i) =>
               <div key={i} className='relative border-slate-200 border' style={{ overflow: 'hidden' }}>
                 <Image
                   src={e}

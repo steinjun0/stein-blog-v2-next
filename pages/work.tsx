@@ -21,7 +21,7 @@ export default function Work() {
                             onClick={() => setCategory(e)}>{e}</span>)}
             </div>
 
-            <div className="grid grid-cols-2 gap-0 mt-4">
+            <div className="grid grid-cols-3 gap-0 mt-4">
                 {['/images/DapadaSquare.png', '/images/CareerDiveSquare.png', '/images/DapadaEduSquare.png', '/images/DaconSquare.png'].map(
                     (e, i) => <Link key={i} href={'/work/1'}>
                         <div className="relative w-full h-0 cursor-pointer"

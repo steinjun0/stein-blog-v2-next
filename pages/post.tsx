@@ -47,15 +47,14 @@ export default function Work() {
 			</Slide>
 
 
-			<div className="flex mt-10 justify-start [&>span]:cursor-pointer">
-				<span className={mainCategory === 'All' ? 'underline decoration-solid' : 'text-gray-300'}
+			<div className="flex mt-10 justify-start [&>span]:cursor-pointer border-b w-fit pr-2">
+				<span className={mainCategory === 'All' ? 'decoration-solid' : 'text-gray-300'}
 					onClick={() => setMainCategory('All')}>All</span>
 				<div className='ml-4'>
-					<span className={`${mainCategory !== 'All' ? 'underline decoration-solid' : 'text-gray-300'} cursor-pointer`} onClick={(e) => setMainCategory('SelectCategory')}>
+					<span className={`${mainCategory !== 'All' ? 'decoration-solid' : 'text-gray-300'} cursor-pointer`} onClick={(e) => { setMainCategory('SelectCategory'); setSubCategory('') }}>
 						{mainCategory === 'All' ? 'SelectCategory' : `${mainCategory} > ${subCategory}`}
 					</span>
-
-					<div className="p-4 bg-orange-300 relative flex" style={{}}>
+					<div className={"mt-2 p-4 bg-white border flex " + (subCategory === '' && mainCategory !== 'All' ? "absolute" : "hidden")} style={{}}>
 						<div className="pr-2 mr-2 flex-col" style={{ borderRight: '1px solid #000' }}>
 							{categories.mainCategories.map((e) => {
 								return <div className='cursor-pointer [&:hover]:underline' onClick={() => {
