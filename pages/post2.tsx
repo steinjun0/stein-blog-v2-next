@@ -56,16 +56,16 @@ export default function Work() {
 					</span>
 					<div className={"mt-2 p-4 bg-white border flex " + (subCategory === '' && mainCategory !== 'All' ? "absolute" : "hidden")} style={{}}>
 						<div className="pr-2 mr-2 flex-col" style={{ borderRight: '1px solid #000' }}>
-							{categories.mainCategories.map((e) => {
-								return <div className='cursor-pointer [&:hover]:underline' onClick={() => {
+							{categories.mainCategories.map((e, i) => {
+								return <div key={i} className='cursor-pointer [&:hover]:underline' onClick={() => {
 									setMainCategory(e)
 									setSubCategory('')
 								}}>{e}</div>
 							})}
 						</div>
 						<div className="flex-col">
-							{categories.subCategories[mainCategory] && categories.subCategories[mainCategory].map((e) => {
-								return <div className='cursor-pointer [&:hover]:underline' onClick={() => setSubCategory(e)}>{e}</div>
+							{categories.subCategories[mainCategory] && categories.subCategories[mainCategory].map((e, i) => {
+								return <div key={i} className='cursor-pointer [&:hover]:underline' onClick={() => setSubCategory(e)}>{e}</div>
 							})}
 						</div>
 					</div>
