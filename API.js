@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { AxiosError } from 'axios'
 
 const API_URL = process.env.NODE_ENV === 'production' ? 'https://api.blog.steinjun.net' : '//localhost:8888'
 
@@ -14,12 +15,7 @@ if (accessToken !== null) {
 }
 
 
-const getValidError = exception => {
-    if (exception.response !== undefined && exception.response.data !== undefined && exception.response.data.errors !== undefined) {
-        return exception.response.data.errors
-    }
-    return exception
-}
+
 export default {
     // api default
 
@@ -35,98 +31,58 @@ export default {
     },
     async getAxios(url) {
         this.refreshUserData()
-        try {
-            const res = tokenHeader ? await axios.get(url, tokenHeader) : await axios.get(url)
-            return res
-        } catch (e) {
-            return { error: getValidError(e) }
-        }
+        const res = tokenHeader ? await axios.get(url, tokenHeader) : await axios.get(url)
+        return res
     },
     async getAxiosBinary(url) {
         this.refreshUserData()
-        try {
-            const res = tokenHeader ? await axios.get(url, tokenHeader) : await axios.get(url)
-            return res
-        } catch (e) {
-            return { error: getValidError(e) }
-        }
+        const res = tokenHeader ? await axios.get(url, tokenHeader) : await axios.get(url)
+        return res
     },
     async getAxiosZip(url) {
         this.refreshUserData()
-        try {
-            const res = tokenHeader ? await axios.get(url, { headers: { Authorization: `${tokenHeader.headers.Authorization}`, accept: 'application/x-zip-compressed' } }) : await axios.get(url, { headers: { accept: 'application/x-zip-compressed' } })
-            return res
-        } catch (e) {
-            return { error: getValidError(e) }
-        }
+        const res = tokenHeader ? await axios.get(url, { headers: { Authorization: `${tokenHeader.headers.Authorization}`, accept: 'application/x-zip-compressed' } }) : await axios.get(url, { headers: { accept: 'application/x-zip-compressed' } })
+        return res
     },
     async getAxiosWithParams(url, param) {
         this.refreshUserData()
-        try {
-            const res = await axios.get(url, {
-                headers: { Authorization: `${tokenHeader.headers.Authorization}` },
-                params: param,
-            }, tokenHeader)
-            return res
-        } catch (e) {
-            return { error: getValidError(e) }
-        }
+        const res = await axios.get(url, {
+            headers: { Authorization: `${tokenHeader.headers.Authorization}` },
+            params: param,
+        }, tokenHeader)
+        return res
     },
     async postAxios(url, data) {
         this.refreshUserData()
-        try {
-            const res = tokenHeader ? await axios.post(url, data, tokenHeader) : await axios.post(url, data)
-            return res
-        } catch (e) {
-            return { error: getValidError(e) }
-        }
+        const res = tokenHeader ? await axios.post(url, data, tokenHeader) : await axios.post(url, data)
+        return res
     },
     async postAxiosFormData(url, data) {
         this.refreshUserData()
-        try {
-            const res = tokenHeader ? await axios.post(url, data, { headers: { Authorization: `${tokenHeader.headers.Authorization}`, 'Content-Type': 'multipart/form-data' } }) : await axios.post(url, data, { headers: { 'Content-Type': 'multipart/form-data' } })
-            return res
-        } catch (e) {
-            return { error: getValidError(e) }
-        }
+        const res = tokenHeader ? await axios.post(url, data, { headers: { Authorization: `${tokenHeader.headers.Authorization}`, 'Content-Type': 'multipart/form-data' } }) : await axios.post(url, data, { headers: { 'Content-Type': 'multipart/form-data' } })
+        return res
     },
     async patchAxios(url, data) {
         this.refreshUserData()
-        try {
-            const res = tokenHeader ? await axios.patch(url, data, tokenHeader) : await axios.patch(url, data)
-            return res
-        } catch (e) {
-            return { error: getValidError(e) }
-        }
+        const res = tokenHeader ? await axios.patch(url, data, tokenHeader) : await axios.patch(url, data)
+        return res
     },
     async patchAxiosFormData(url, data) {
         this.refreshUserData()
-        try {
-            const res = tokenHeader ? await axios.patch(url, data, { headers: { Authorization: `${tokenHeader.headers.Authorization}`, 'Content-Type': 'multipart/form-data' } }) : await axios.patch(url, data, { headers: { 'Content-Type': 'multipart/form-data' } })
-            return res
-        } catch (e) {
-            return { error: getValidError(e) }
-        }
+        const res = tokenHeader ? await axios.patch(url, data, { headers: { Authorization: `${tokenHeader.headers.Authorization}`, 'Content-Type': 'multipart/form-data' } }) : await axios.patch(url, data, { headers: { 'Content-Type': 'multipart/form-data' } })
+        return res
     },
 
     async putAxios(url) {
         this.refreshUserData()
-        try {
-            const res = tokenHeader ? await axios.put(url, tokenHeader) : await axios.put(url)
-            return res
-        } catch (e) {
-            return { error: getValidError(e) }
-        }
+        const res = tokenHeader ? await axios.put(url, tokenHeader) : await axios.put(url)
+        return res
     },
 
     async deleteAxios(url) {
         this.refreshUserData()
-        try {
-            const res = tokenHeader ? await axios.delete(url, tokenHeader) : await axios.delete(url)
-            return res
-        } catch (e) {
-            return { error: getValidError(e) }
-        }
+        const res = tokenHeader ? await axios.delete(url, tokenHeader) : await axios.delete(url)
+        return res
     },
 
     // api
@@ -134,6 +90,11 @@ export default {
     async getPostList() {
         const postListRes = await this.getAxios(`${API_URL}/post`)
         return postListRes
+    },
+
+    async getPost({ id }) {
+        const postRes = await this.getAxios(`${API_URL}/post/${id}`)
+        return postRes
     },
 
     async getConsultSchedule(year, month, mentorId) {
