@@ -2,6 +2,7 @@ import { Divider, Slide } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import API from "API"
 
 
 export default function Work() {
@@ -27,6 +28,10 @@ export default function Work() {
 	const [posts, setPosts] = useState<{ image: string, categories: string[], title: string, subtitle: string, body: string }[]>([])
 	const [isSlideStart, setIsSlideStart] = useState<boolean>(false)
 	useEffect(() => {
+		API.getPostList().then((res) => {
+			console.log('hi', res);
+		});
+
 		const dummyPosts = [
 			{ image: '/images/DapadaSquare.png', categories: ['cat1', 'cat2'], title: '이 글의 제목은 \n"무엇이 제목인가"', subtitle: '제목과 부제목에 대한 간단한 고찰', body: ' 저번 게시글에서 캐릭터의 움직임을 구현하고, 해당 캐릭터를 따라오는 AI를 구현했다. 이제 캐릭터에 교체 가능한 무기를 장착시키고, 무기의 자동 공격을 구현해보자. 계획 1. 게임에 등장할 모델들 구현, 디자인하기 ✅ 2. 캐릭터 움직임 구현하기 ✅ 3. 캐릭터를 해당 캐릭터를 따라오 장착시키고, 무기의 자동 공격을 구현해보자. 계획 1. 게임에 등장할 모델들 구현, 디자인하기 ✅ 2. 캐릭터 움직임 구현하기 ✅ 3. 캐릭터를 해당 캐릭터를 따라오' },
 			{ image: '/images/DapadaEduSquare.png', categories: ['cat1', 'cat2'], title: '여러가지 상황\n미필적 고의도 범죄다', subtitle: '부제목은 무조건 1줄이내. 최대 27자', body: ' 저번 게시글에서 캐릭터의 움직임을 구현하고, 해당 캐릭터를 따라오는 AI를 구현했다. 이제 캐릭터에 교체 가능한 무기를 장착시키고, 무기의 자동 공격을 구현해보자. 계획 1. 게임에 등장할 모델들 구현, 디자인하기 ✅ 2. 캐릭터 움직임 구현하기 ✅ 3. 캐릭터를 해당 캐릭터를 따라오 장착시키고, 무기의 자동 공격을 구현해보자. 계획 1. 게임에 등장할 모델들 구현, 디자인하기 ✅ 2. 캐릭터 움직임 구현하기 ✅ 3. 캐릭터를 해당 캐릭터를 따라오' },
