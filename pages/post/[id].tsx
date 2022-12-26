@@ -19,7 +19,7 @@ export default function WorkPage() {
         if (router.isReady) {
             (async () => {
                 try {
-                    const { data } = await API.getPost({ id: router.query.id });
+                    const { data } = await API.getPost({ id: Number(router.query.id) });
                     setPost(data)
                 } catch (error) {
                     if (isAxiosError(error)) {
@@ -39,24 +39,30 @@ export default function WorkPage() {
         }
     }, [post])
 
-    const koDtf = new Intl.DateTimeFormat("ko");
+    // const koDtf = new Intl.DateTimeFormat("ko", { dateStyle: "medium", timeStyle: 'short', hour12: false });
+    const koDtf = new Intl.DateTimeFormat("ko", { dateStyle: "medium" });
 
     return (
         <div className='flex flex-col w-full mt-10'>
 
             {!isLoading && <div className="flex-col">
-                <div className="flex mb-2">
+                <div className="flex mb-2 justify-between items-end">
                     <span className="text-3xl font-bold">
                         {post!.title}
                     </span>
+                    <span className="text-sm">category</span>
                 </div>
                 <div className="flex justify-between mb-3 items-end">
                     <div className="flex items-end">
                         <span className="mr-3">{post!.subtitle}</span>
-                        <span className="text-sm mr-2 text-gray-700 font-light">{post!.created_at.toString()}</span>
-                        <span className="text-sm text-gray-700 font-light">{post!.updated_at.toString()}</span>
+
                     </div>
-                    <span className="text-sm">category</span>
+                    <div>
+                        <span className="text-sm text-gray-700 font-light mr-2">{koDtf.format(post!.created_at)}</span>
+                        <span className="text-sm text-gray-700 font-light">{koDtf.format(post!.updated_at)}</span>
+
+                    </div>
+
                 </div>
             </div>}
             <hr className="mb-7" />
