@@ -1,12 +1,19 @@
 import API from "API";
 import { AxiosResponse, isAxiosError } from "axios";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+
+const MDEditor = dynamic(
+    () => import("@uiw/react-md-editor"),
+    { ssr: false }
+);
 
 export default function WorkPage() {
     const router = useRouter()
     const [post, setPost] = useState<{ title: string, subtitle: string, body: string, created_at: Date, updated_at: Date }>()
-
+    const [isLoading, setIsLoading] = useState<boolean>(true)
+    const [md, setMd] = useState<string>()
 
     useEffect(() => {
         if (router.isReady) {
@@ -22,54 +29,46 @@ export default function WorkPage() {
                     }
                 }
             })()
-
         }
     }, [router.isReady])
-    // useEffect(() => {
-    //     (async ()=>{
-    //         if (router.isReady) {
-    //             try {
 
-    //             const { data } = await API.getPost({ id: router.query.id });
-    //             user = data.userDetails;
-    //           } catch (error) {
-    //             if (axios.isAxiosError(error)) {
-    //               handleAxiosError(error);
-    //             } else {
-    //               handleUnexpectedError(error);
-    //             }
-    //           }        
-    //         }
-    //     })
+    useEffect(() => {
+        console.log('post12', post)
+        if (post !== undefined) {
+            setIsLoading(false)
+        }
+    }, [post])
 
-    //         API.getPost({ id: router.query.id }).then((res) => {
-    //             if (res.status === 200) {
-
-    //             }
-    //             console.log(res)
-    //         })
-    //     }
-    // }, [router.isReady])
+    const koDtf = new Intl.DateTimeFormat("ko");
 
     return (
         <div className='flex flex-col w-full mt-10'>
-            <div className="flex-col">
+
+            {!isLoading && <div className="flex-col">
                 <div className="flex mb-2">
-                    <span className="text-5xl">
-                        {post?.title}
+                    <span className="text-3xl font-bold">
+                        {post!.title}
                     </span>
                 </div>
-                <div className="flex justify-between mb-3">
+                <div className="flex justify-between mb-3 items-end">
                     <div className="flex items-end">
-                        <span className="text-lg mr-3">{post?.subtitle}</span>
-                        <span className="mr-2 text-gray-700">{post?.created_at.toString()}</span>
-                        <span className="text-gray-700">{post?.updated_at.toString()}</span>
+                        <span className="mr-3">{post!.subtitle}</span>
+                        <span className="text-sm mr-2 text-gray-700 font-light">{post!.created_at.toString()}</span>
+                        <span className="text-sm text-gray-700 font-light">{post!.updated_at.toString()}</span>
                     </div>
-                    <span>category</span>
+                    <span className="text-sm">category</span>
                 </div>
-            </div>
+            </div>}
             <hr className="mb-7" />
-            <div>{post?.body}</div>
+            <div className="container">
+                <MDEditor
+                    value={md}
+                    onChange={setMd}
+                />
+            </div>
+
+            {!isLoading && <div className="wmde-markdown wmde-markdown-color" dangerouslySetInnerHTML={{ __html: post!.body }}></div>}
+            {/* <MDEditor.Markdown source={md} style={{ whiteSpace: 'pre-wrap' }} /> */}
         </div>
     );
 }
