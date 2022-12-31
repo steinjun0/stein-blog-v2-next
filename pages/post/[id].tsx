@@ -15,6 +15,10 @@ export default function WorkPage() {
             (async () => {
                 try {
                     const { data } = await API.getPost({ id: Number(router.query.id) });
+                    // data.body 
+                    if (process.env.NODE_ENV === 'development') {
+                        data.body = data.body.replace('https://api.blog.steinjun.net', '//localhost:8888')
+                    }
                     setPost(data)
                 } catch (error) {
                     if (isAxiosError(error)) {
