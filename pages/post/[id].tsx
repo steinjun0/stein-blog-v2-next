@@ -1,19 +1,14 @@
 import API from "API";
-import { AxiosResponse, isAxiosError } from "axios";
-import dynamic from "next/dynamic";
+import { isAxiosError } from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
-const MDEditor = dynamic(
-    () => import("@uiw/react-md-editor"),
-    { ssr: false }
-);
 
 export default function WorkPage() {
     const router = useRouter()
     const [post, setPost] = useState<{ title: string, subtitle: string, body: string, created_at: Date, updated_at: Date }>()
     const [isLoading, setIsLoading] = useState<boolean>(true)
-    const [md, setMd] = useState<string>()
+
 
     useEffect(() => {
         if (router.isReady) {
@@ -33,18 +28,17 @@ export default function WorkPage() {
     }, [router.isReady])
 
     useEffect(() => {
-        console.log('post12', post)
         if (post !== undefined) {
             setIsLoading(false)
         }
     }, [post])
+
 
     // const koDtf = new Intl.DateTimeFormat("ko", { dateStyle: "medium", timeStyle: 'short', hour12: false });
     const koDtf = new Intl.DateTimeFormat("ko", { dateStyle: "medium" });
 
     return (
         <div className='flex flex-col w-full mt-10'>
-
             {!isLoading && <div className="flex-col">
                 <div className="flex mb-2 justify-between items-end">
                     <span className="text-3xl font-bold">
@@ -66,12 +60,6 @@ export default function WorkPage() {
                 </div>
             </div>}
             <hr className="mb-7" />
-            <div className="container">
-                <MDEditor
-                    value={md}
-                    onChange={setMd}
-                />
-            </div>
 
             {!isLoading && <div className="wmde-markdown wmde-markdown-color" dangerouslySetInnerHTML={{ __html: post!.body }}></div>}
             {/* <MDEditor.Markdown source={md} style={{ whiteSpace: 'pre-wrap' }} /> */}

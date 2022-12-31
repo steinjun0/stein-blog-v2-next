@@ -85,6 +85,7 @@ export default {
         return res
     },
     async postAxiosFormData(url: string, data: object) {
+        // You need to make data as a FormData
         this.refreshUserData()
         const res = tokenHeader ? await axios.post(url, data, { headers: { Authorization: tokenHeader.Authorization, 'Content-Type': 'multipart/form-data' }, transformResponse: handleDates })
             : await axios.post(url, data, { headers: { 'Content-Type': 'multipart/form-data' }, transformResponse: handleDates })
@@ -116,6 +117,17 @@ export default {
         return res
     },
 
+
+    // static link
+    getOrigin() {
+        return API_URL
+    },
+
+    getPostFileUrl({ postId, fileName }: { postId: number | 'temp', fileName: string }) {
+        return `${API_URL}/file/post/${postId}/${fileName}`
+    },
+
+
     // api
 
     async getPostList() {
@@ -128,15 +140,19 @@ export default {
         return postRes
     },
 
+
+
     // async getConsultSchedule(year, month, mentorId) {
     //     const scheduleRes = await this.getAxiosWithParams(`${API_URL}/consult/schedule`, { 'Year': year, 'Month': month, 'MentorID': +mentorId })
     //     return scheduleRes
     // },
 
-    // async postAccount(email, password, nickname) {
-    //     const res = await this.postAxios(`${API_URL}/account`, { email, password, nickname })
-    //     return res
-    // },
+    async postFile({ file, name }: { file: Blob, name?: string }) {
+        const data = new FormData();
+        data.append('file', file, name)
+        const res = await this.postAxiosFormData(`${API_URL}/file/post`, data)
+        return res
+    },
 
     // async postAccountMentorFile(id, file) {
     //     const scheduleRes = await this.postAxiosFormData(`${API_URL}/account/mentor/${id}/file`, file)
