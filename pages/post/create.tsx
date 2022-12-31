@@ -99,7 +99,7 @@ export default function WorkPage() {
                                 setFileNames(fileNames => [...fileNames, fileName])
                                 fileNamesRef.current = [...fileNamesRef.current, fileName]
 
-                                const newMd: string = mdRef.current + `<p align="center"><img src="${API.getPostFileUrl({ postId: 'temp', fileName: fileName })}" alt="${fileName}"/></p>`
+                                const newMd: string = mdRef.current + `<p align="center"><img src="${API.getPostFileUrl({ postId: 'temp', fileName: fileName })}" alt="${fileName}" style="max-height: 300px"/></p>`
                                 setMd(newMd)
                             } else {
                                 alert('이미지가 업로드 되지 못하였습니다!')
