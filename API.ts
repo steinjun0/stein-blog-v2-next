@@ -154,10 +154,10 @@ export default {
         return res
     },
 
-    // async postAccountMentorFile(id, file) {
-    //     const scheduleRes = await this.postAxiosFormData(`${API_URL}/account/mentor/${id}/file`, file)
-    //     return scheduleRes
-    // },
+    async postPost(data: { title: string, subtitle: string, body: string, categories?: Array<number>, files?: Array<string> }) {
+        const scheduleRes = await this.postAxios(`${API_URL}/post`, data)
+        return scheduleRes
+    },
 
     // async patchAccount(userData) {
     //     const userRes = await this.patchAxios(`${API_URL}/account/update`, userData)

@@ -1,6 +1,7 @@
-import { TextField } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import API from "API";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 
 
@@ -50,14 +51,32 @@ function getUnduplicatedName(originFileName: string, fileNames: Array<string>): 
 }
 
 export default function WorkPage() {
+    const router = useRouter()
+
     const [title, setTitle] = useState<string>('');
     const [subtitle, setSubtitle] = useState<string>('');
+    const [categories, setCategories] = useState<Array<number>>([]);
     const [fileNames, setFileNames] = useState<Array<string>>([]);
     const [md, setMd] = useState<string>('') // for save
     const mdRef = useRef<string>('') // for read
     const fileNamesRef = useRef<Array<string>>([])
 
     let isSetListener = false
+
+    function onClickSave() {
+        type postPostDto = { title: string, subtitle: string, body: string, categories?: Array<number>, files?: Array<string> }
+        const data: postPostDto = {
+            title, subtitle, categories, body: md, files: fileNames
+        }
+        API.postPost(data).then((res) => {
+            if (res.status === 201) {
+                alert('업로드에 성공했습니다')
+                router.push(`/post/${res.data.postRes.id}`)
+            } else {
+                alert('업로드에 실패했습니다')
+            }
+        })
+    }
 
 
     useEffect(() => {
@@ -114,8 +133,10 @@ export default function WorkPage() {
 
             <div className="flex-col">
                 <div className="flex mb-2 justify-between items-end">
-                    <span className="text-3xl font-bold">
+                    <span className="w-2/3">
                         <TextField variant="standard"
+                            fullWidth
+                            InputProps={{ style: { fontWeight: 700, fontSize: '30px' } }}
                             value={title}
                             onChange={(e) => { setTitle(e.target.value) }}
                         />
@@ -123,8 +144,10 @@ export default function WorkPage() {
                     <span className="text-sm">category</span>
                 </div>
                 <div className="flex justify-between mb-3 items-end">
-                    <div className="flex items-end">
-                        <TextField variant="standard"
+                    <div className="items-end w-72">
+                        <TextField
+                            fullWidth
+                            variant="standard"
                             value={subtitle}
                             onChange={(e) => { setSubtitle(e.target.value) }}
                         />
@@ -147,7 +170,11 @@ export default function WorkPage() {
             <div id='md-preview' style={{ padding: '50px 0', maxHeight: '400px', overflow: 'scroll' }}>
                 <Markdown source={md} />
             </div>
-
+            <Button
+                variant="outlined"
+                style={{ cursor: 'pointer' }}
+                onClick={() => { onClickSave() }}
+            >저장</Button>
         </div>
     );
 }
