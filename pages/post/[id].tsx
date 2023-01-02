@@ -12,7 +12,7 @@ const Markdown = dynamic(
 
 export default function WorkPage() {
     const router = useRouter()
-    const [post, setPost] = useState<{ title: string, subtitle: string, body: string, created_at: Date, updated_at: Date }>()
+    const [post, setPost] = useState<{ title: string, subtitle: string, body: string, created_at: Date, updated_at: Date, categories?: { id: number, name: string }[] }>()
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
 
@@ -54,7 +54,13 @@ export default function WorkPage() {
                     <span className="text-3xl font-bold">
                         {post!.title}
                     </span>
-                    <span className="text-sm">category</span>
+                    <div className="flex">
+                        {post!.categories?.map((e, i) => {
+                            return <span className="text-sm">{e.name}{i === (post!.categories!.length - 1) ? '' : <span>, &nbsp;</span>}</span>
+                        })}
+                    </div>
+
+
                 </div>
                 <div className="flex justify-between mb-3 items-end">
                     <div className="flex items-end">
@@ -64,7 +70,6 @@ export default function WorkPage() {
                     <div>
                         <span className="text-sm text-gray-700 font-light mr-2">{koDtf.format(post!.created_at)}</span>
                         <span className="text-sm text-gray-700 font-light">{koDtf.format(post!.updated_at)}</span>
-
                     </div>
 
                 </div>
