@@ -1,8 +1,9 @@
-import { Button, Input, TextField } from "@mui/material";
+import { Button, Input, NativeSelect, Select, TextField } from "@mui/material";
 import API from "API";
+import ListPushInput from "components/ListPushInput";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, SetStateAction, useEffect, useRef, useState } from "react";
 
 
 const MDEditor = dynamic(
@@ -55,12 +56,13 @@ export default function WorkPage() {
 
     const [title, setTitle] = useState<string>('');
     const [subtitle, setSubtitle] = useState<string>('');
-    const [categories, setCategories] = useState<Array<number>>([]);
-    const [fileNames, setFileNames] = useState<Array<string>>([]);
+    const [categories, setCategories] = useState<string[]>([]);
+    const [fileNames, setFileNames] = useState<string[]>([]);
     const [md, setMd] = useState<string>('') // for save
     const [urlCacheBreaker, setUrlCacheBreaker] = useState<string>('')
     const mdRef = useRef<string>('') // for read
-    const fileNamesRef = useRef<Array<string>>([])
+    const fileNamesRef = useRef<string[]>([])
+    const [allCategories, setAllCategories] = useState<Array<{ id: number, name: string }>>()
 
     let isSetListener = false
 
@@ -81,6 +83,16 @@ export default function WorkPage() {
 
 
     useEffect(() => {
+        API.getCategories().then((res) => {
+            if (res.status === 200) {
+                console.log(res)
+                const resCategories: Array<{ id: number, name: string }> = res.data
+                setAllCategories(resCategories)
+            } else {
+                alert('카테고리를 받아오지 못했습니다')
+            }
+        })
+
         if (router.isReady) {
             var x = new MutationObserver(function (e) {
                 const target = document.getElementsByClassName('w-md-editor-text-input')[0] as HTMLElement;
@@ -178,8 +190,9 @@ export default function WorkPage() {
                             onChange={(e) => { setTitle(e.target.value) }}
                         />
                     </span>
-                    <span className="text-sm">category</span>
+
                 </div>
+
                 <div className="flex justify-between mb-3 items-end">
                     <div className="items-end w-72">
                         <TextField
@@ -190,8 +203,35 @@ export default function WorkPage() {
                         />
                     </div>
                 </div>
+                <hr />
+                <div className="flex my-4">
+                    <div className="flex-col w-1/2">
+                        Categories
+                        <div className="flex">
+                            {categories.map((e) => {
+                                return <div style={{ cursor: 'pointer' }} onClick={() => { setCategories(categories.filter((v) => v !== e)) }}>
+                                    <span>{e} |&nbsp;</span>
+                                </div>
+                            })}
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col">
+                        <div style={{ height: '100px', maxHeight: '100px', overflow: 'scroll' }}>
+                            {allCategories && allCategories.map((e) => {
+                                return <div onClick={() => {
+                                    if (!categories.includes(e.name))
+                                        setCategories([...categories, e.name])
+                                }}>{e.name}</div>
+                            })}
+                        </div>
+
+                        <ListPushInput categoryList={categories} setCategoryList={setCategories} />
+                    </div>
+                </div>
             </div>
-            <div className="flex align-middle">
+            <hr />
+            <div className="flex align-middle my-4">
                 <img
                     src={API.getPostFileUrl({ postId: 'temp', fileName: 'thumbnail' }) + `?${urlCacheBreaker}`} alt=""
                     style={{ maxHeight: '100px' }}

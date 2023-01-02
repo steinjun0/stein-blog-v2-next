@@ -1,8 +1,14 @@
 import API from "API";
 import { isAxiosError } from "axios";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
+
+const Markdown = dynamic(
+    () => import("@uiw/react-markdown-preview").then((mod) => mod.default),
+    { ssr: false }
+);
 
 export default function WorkPage() {
     const router = useRouter()
@@ -64,9 +70,7 @@ export default function WorkPage() {
                 </div>
             </div>}
             <hr className="mb-7" />
-
-            {!isLoading && <div className="wmde-markdown wmde-markdown-color" dangerouslySetInnerHTML={{ __html: post!.body }}></div>}
-            {/* <MDEditor.Markdown source={md} style={{ whiteSpace: 'pre-wrap' }} /> */}
+            {!isLoading && <Markdown source={post!.body} />}
         </div>
     );
 }

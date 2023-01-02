@@ -140,7 +140,10 @@ export default {
         return postRes
     },
 
-
+    async getCategories() {
+        const categoryRes = await this.getAxios(`${API_URL}/post/category`)
+        return categoryRes
+    },
 
     // async getConsultSchedule(year, month, mentorId) {
     //     const scheduleRes = await this.getAxiosWithParams(`${API_URL}/consult/schedule`, { 'Year': year, 'Month': month, 'MentorID': +mentorId })
