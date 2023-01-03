@@ -157,7 +157,7 @@ export default {
         return res
     },
 
-    async postPost(data: { title: string, subtitle: string, body: string, categories?: Array<number>, files?: Array<string> }) {
+    async postPost(data: { title: string, subtitle: string, body: string, categories?: Array<string>, files?: Array<string> }) {
         const scheduleRes = await this.postAxios(`${API_URL}/post`, data)
         return scheduleRes
     },

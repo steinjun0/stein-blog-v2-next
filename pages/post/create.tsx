@@ -67,7 +67,7 @@ export default function WorkPage() {
     let isSetListener = false
 
     function onClickSave() {
-        type postPostDto = { title: string, subtitle: string, body: string, categories?: Array<number>, files?: Array<string> }
+        type postPostDto = { title: string, subtitle: string, body: string, categories?: Array<string>, files?: Array<string> }
         const data: postPostDto = {
             title, subtitle, categories, body: md, files: fileNames
         }
@@ -208,8 +208,8 @@ export default function WorkPage() {
                     <div className="flex-col w-1/2">
                         Categories
                         <div className="flex">
-                            {categories.map((e) => {
-                                return <div style={{ cursor: 'pointer' }} onClick={() => { setCategories(categories.filter((v) => v !== e)) }}>
+                            {categories.map((e, i) => {
+                                return <div key={i} style={{ cursor: 'pointer' }} onClick={() => { setCategories(categories.filter((v) => v !== e)) }}>
                                     <span>{e} |&nbsp;</span>
                                 </div>
                             })}
@@ -218,8 +218,8 @@ export default function WorkPage() {
 
                     <div className="flex flex-col">
                         <div style={{ height: '100px', maxHeight: '100px', overflow: 'scroll' }}>
-                            {allCategories && allCategories.map((e) => {
-                                return <div onClick={() => {
+                            {allCategories && allCategories.map((e, i) => {
+                                return <div key={i} onClick={() => {
                                     if (!categories.includes(e.name))
                                         setCategories([...categories, e.name])
                                 }}>{e.name}</div>

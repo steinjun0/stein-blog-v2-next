@@ -51,12 +51,12 @@ export default function WorkPage() {
         <div className='flex flex-col w-full mt-10'>
             {!isLoading && <div className="flex-col">
                 <div className="flex mb-2 justify-between items-end">
-                    <span className="text-3xl font-bold">
+                    <span className="text-3xl" style={{ fontWeight: 700 }}>
                         {post!.title}
                     </span>
                     <div className="flex">
                         {post!.categories?.map((e, i) => {
-                            return <span className="text-sm">{e.name}{i === (post!.categories!.length - 1) ? '' : <span>, &nbsp;</span>}</span>
+                            return <span className="text-sm" key={i}>{e.name}{i === (post!.categories!.length - 1) ? '' : <span>, &nbsp;</span>}</span>
                         })}
                     </div>
 
