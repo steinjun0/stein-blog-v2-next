@@ -72,3 +72,6 @@ a {
   font-weight: 900;
   src: url("/fonts/NotoSansKR-Black.otf");
 }
+
+/* swiper css */
+@import 'custom-swiper.css'

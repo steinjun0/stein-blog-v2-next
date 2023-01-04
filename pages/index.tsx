@@ -3,11 +3,13 @@ import { IPost } from 'components/Types';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
 import HomeTitle from '../components/HomeTitle';
 import useWindowSize from '../components/hooks/useWindowSize';
 
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from "swiper";
 import 'swiper/css'
+import "swiper/css/pagination";
 
 function getBreakPoint(width: number): string {
   if (width > 1536) {
@@ -75,6 +77,9 @@ export default function Home() {
           onSlideChange={() => console.log('slide change')}
           onSwiper={(swiper) => console.log(swiper)}
           className='mt-16 h-52'
+          pagination={true}
+          modules={[Pagination]}
+          color="black"
         >
           {selectIndex === 0 ?
             posts!.map((e, i) =>
