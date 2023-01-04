@@ -1,6 +1,7 @@
 import { Button, Input, NativeSelect, Select, TextField } from "@mui/material";
 import API from "API";
 import ListPushInput from "components/ListPushInput";
+import { IPost } from "components/Types";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { ChangeEvent, SetStateAction, useEffect, useRef, useState } from "react";
@@ -64,6 +65,8 @@ export default function WorkPage() {
     const fileNamesRef = useRef<string[]>([])
     const [allCategories, setAllCategories] = useState<Array<{ id: number, name: string }>>()
 
+    const postThumbnailLocationRef = useRef<'temp' | number>()
+
     let isSetListener = false
 
     function onClickSave() {
@@ -71,14 +74,26 @@ export default function WorkPage() {
         const data: postPostDto = {
             title, subtitle, categories, body: md, files: fileNames
         }
-        API.postPost(data).then((res) => {
-            if (res.status === 201) {
-                alert('업로드에 성공했습니다')
-                router.push(`/post/${res.data.postRes.id}`)
-            } else {
-                alert('업로드에 실패했습니다')
-            }
-        })
+        if (router.query.id === 'new') {
+            API.postPost(data).then((res) => {
+                if (res.status === 201) {
+                    alert('업로드에 성공했습니다')
+                    router.push(`/post/${res.data.postRes.id}`)
+                } else {
+                    alert('업로드에 실패했습니다')
+                }
+            })
+        } else {
+            API.patchPost(parseInt(`${router.query.id}`), data).then((res) => {
+                if (res.status === 200) {
+                    alert('수정에 성공했습니다')
+                    router.push(`/post/${router.query.id}`)
+                } else {
+                    alert('수정에 실패했습니다')
+                }
+            })
+        }
+
     }
 
 
@@ -94,6 +109,26 @@ export default function WorkPage() {
         })
 
         if (router.isReady) {
+            if (router.query.id === 'new') {
+                postThumbnailLocationRef.current = 'temp'
+            }
+            else if (!isNaN(parseInt(`${router.query.id}`))) {
+                postThumbnailLocationRef.current = parseInt(`${router.query.id}`)
+                console.log('parseInt(`${router.query.id}`)', parseInt(`${router.query.id}`))
+                API.getPost({ id: parseInt(`${router.query.id}`) }).then((res) => {
+                    if (res.status === 200) {
+                        const post: IPost = res.data
+                        setTitle(post.title)
+                        setSubtitle(post.subtitle)
+                        setMd(post.body)
+                        setCategories([...post.categories.map(e => e.name)])
+                        fileNamesRef.current = [...post.files.map(e => e.name)]
+                    } else {
+
+                    }
+                })
+            }
+
             var x = new MutationObserver(function (e) {
                 const target = document.getElementsByClassName('w-md-editor-text-input')[0] as HTMLElement;
 
@@ -121,7 +156,6 @@ export default function WorkPage() {
                         }
                     });
                 }
-
                 if (e[0].addedNodes.length > 0) {
                     const editorTextArea = document.getElementsByClassName('w-md-editor-aree w-md-editor-input')[0] as HTMLElement
                     // const editorPreview = document.getElementById("viewer")!.firstElementChild?.firstElementChild as HTMLElement
@@ -133,8 +167,6 @@ export default function WorkPage() {
                         editorTextArea.scrollTo(0, Math.round(editorPreview.scrollTop * ((editorTextArea.scrollHeight - editorTextArea.offsetHeight) / (editorPreview.scrollHeight - editorPreview.offsetHeight))))
                     }
                 }
-
-
             });
             x.observe(document.getElementById('MDEditor_parent')!, { childList: true });
         }
@@ -143,11 +175,11 @@ export default function WorkPage() {
     }, [router.isReady])
 
     function onChangeThumbnailInput(e: ChangeEvent<HTMLInputElement>) {
-        console.log('file loaded', e)
         if (e.target.files) {
             API.postFile({ file: e.target.files[0], name: `thumbnail` })
                 .then((res) => {
                     if (res.status === 201) {
+                        postThumbnailLocationRef.current = 'temp'
                         alert('썸네일이 업로드 되었습니다')
                         setUrlCacheBreaker(new Date().getMilliseconds().toString())
                     } else {
@@ -167,6 +199,7 @@ export default function WorkPage() {
                 let file = item.getAsFile();
                 API.postFile({ file: file, name: 'thumbnail' }).then((res) => {
                     if (res.status === 201) {
+                        postThumbnailLocationRef.current = 'temp'
                         alert('썸네일이 업로드 되었습니다')
                         setUrlCacheBreaker(new Date().getMilliseconds().toString())
                     } else {
@@ -177,9 +210,22 @@ export default function WorkPage() {
         }
     }
 
+    function onClickDelete() {
+        if (confirm('정말 삭제하시겠습니까?')) {
+            API.deletePost(+router.query.id!).then((res) => {
+                if (res.status === 200) {
+                    alert('삭제 되었습니다.')
+                    router.push('/post')
+                } else {
+                    alert('삭제를 실패했습니다.')
+                }
+            })
+        }
+    }
+
 
     return (
-        <div className='flex flex-col w-full mt-10'>
+        <div className='flex flex-col w-full my-10'>
             <div className="flex-col">
                 <div className="flex mb-2 justify-between items-end">
                     <span className="w-2/3">
@@ -190,6 +236,13 @@ export default function WorkPage() {
                             onChange={(e) => { setTitle(e.target.value) }}
                         />
                     </span>
+                    {router.query.id !== 'temp' &&
+                        <Button
+                            variant="outlined"
+                            color="error"
+                            onClick={() => { onClickDelete() }}>
+                            삭제
+                        </Button>}
 
                 </div>
 
@@ -233,7 +286,7 @@ export default function WorkPage() {
             <hr />
             <div className="flex align-middle my-4">
                 <img
-                    src={API.getPostFileUrl({ postId: 'temp', fileName: 'thumbnail' }) + `?${urlCacheBreaker}`} alt=""
+                    src={API.getPostFileUrl({ postId: postThumbnailLocationRef.current!, fileName: 'thumbnail' }) + `?${urlCacheBreaker}`} alt=""
                     style={{ maxHeight: '100px' }}
                 />
                 <div className="flex-col w-full ml-4">
@@ -268,7 +321,7 @@ export default function WorkPage() {
                 variant="outlined"
                 style={{ cursor: 'pointer' }}
                 onClick={() => { onClickSave() }}
-            >저장</Button>
+            >{router.query.id === 'temp' ? '저장' : '수정'}</Button>
         </div>
     );
 }
