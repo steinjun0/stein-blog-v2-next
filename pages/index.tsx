@@ -3,8 +3,11 @@ import { IPost } from 'components/Types';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import HomeTitle from '../components/HomeTitle';
 import useWindowSize from '../components/hooks/useWindowSize';
+
+import 'swiper/css'
 
 function getBreakPoint(width: number): string {
   if (width > 1536) {
@@ -27,7 +30,7 @@ function getMaxPostCount(breakPoint: string): number {
     '2xl': 4,
     'xl': 4,
     'lg': 3,
-    'md': 3,
+    'md': 2,
     'sm': 2,
     'None': 1
   }
@@ -47,13 +50,6 @@ export default function Home() {
         alert('post를 받아오지 못했습니다')
       }
     })
-    // const dummyPosts = [
-    //   { categories: ['cat1', 'cat2'], title: '이 글의 제목은 \n"무엇이 제목인가"', subtitle: '제목과 부제목에 대한 간단한 고찰' },
-    //   { categories: ['cat1', 'cat2'], title: '여러가지 상황\n미필적 고의도 범죄다', subtitle: '부제목은 무조건 1줄이내. 최대 27자' },
-    //   { categories: ['cat1', 'cat2'], title: '이 글의 제목은 \n"무엇이 제목인가"', subtitle: '일이삼사오육칠팔구십일이삼사오육칠' },
-    //   { categories: ['cat1', 'cat2'], title: '여러가지 상황', subtitle: '부제목의 길고 긴 길이.\n그것은 두줄이 되기에 충분했다' },
-    // ]
-    // setPosts(dummyPosts)
   }, [])
 
   return (
@@ -73,29 +69,38 @@ export default function Home() {
             </div>
           </div>
         </div>
-        {selectIndex ?
-          <section className="flex justify-between mt-16 items-center w-full h-52 ">
-            {['/images/Dapada.png', '/images/DapadaEdu.png', '/images/CareerDive.png', '/images/DapadaStock.png'].slice(0, getMaxPostCount(getBreakPoint(size.width))).map((e, i) =>
-              <div key={i} className='relative border-slate-200 border' style={{ overflow: 'hidden' }}>
-                <Image
-                  src={e}
-                  alt='profile'
-                  width={240}
-                  height={240 * 9 / 16}
-                />
-              </div>
-            )}
-          </section>
-          :
-          <section className="flex justify-between mt-16 items-center w-full h-52 border-slate-0 border-0">
-            {posts!.slice(0, getMaxPostCount(getBreakPoint(size.width))).map((e, i) =>
-              <div key={i} className="w-60 h-36 flex-col justify-center border-b-slate-400 border-b">
-                <span className='text-xs'>[{[...e.categories.map((cat) => cat.name)].toString()}]</span>
-                <Link href={'/post/1'}><h1 className='text-xl font-medium h-16 mt-1 whitespace-pre-wrap [&:hover]:underline'>{e.title}</h1></Link>
-                <p className='text-sm overflow-hidden whitespace-nowrap text-ellipsis mt-1'>{e.subtitle}</p>
-              </div>
-            )}
-          </section>}
+
+        <Swiper
+          slidesPerView={getMaxPostCount(getBreakPoint(size.width))}
+          onSlideChange={() => console.log('slide change')}
+          onSwiper={(swiper) => console.log(swiper)}
+          className='mt-16 h-52'
+        >
+          {selectIndex === 0 ?
+            posts!.map((e, i) =>
+              <SwiperSlide key={i} className='flex sm:justify-center xs:justify-start'>
+                <div className="w-60 h-36 flex-col justify-center border-b-slate-400 border-b">
+                  <span className='text-xs'>[{[...e.categories.map((cat) => cat.name)].toString()}]</span>
+                  <Link href={'/post/1'}><h1 className='text-xl font-medium h-16 mt-1 whitespace-pre-wrap [&:hover]:underline'>{e.title}</h1></Link>
+                  <p className='text-sm overflow-hidden whitespace-nowrap text-ellipsis mt-1'>{e.subtitle}</p>
+                </div>
+              </SwiperSlide>
+            ) :
+            ['/images/Dapada.png', '/images/DapadaEdu.png', '/images/CareerDive.png', '/images/CareerDive.png'].map((e, i) =>
+              <SwiperSlide className='flex sm:justify-center xs:justify-start'>
+                <div key={i} className='relative border-slate-200 border' style={{ overflow: 'hidden', height: `${240 * 9 / 16}px` }}>
+                  <Image
+                    src={e}
+                    alt='profile'
+                    width={240}
+                    height={240 * 9 / 16}
+                  />
+                </div>
+              </SwiperSlide>
+
+            )
+          }
+        </Swiper>
       </div>
 
     </div>
