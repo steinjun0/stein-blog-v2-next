@@ -11,7 +11,9 @@ export default function Post() {
 	const [posts, setPosts] = useState<{ id: number, image: string, categories: Array<{ name: string, id: number }>, title: string, subtitle: string, body: string }[]>([])
 	// const [postPage, setPostPage] = useState<number>(1);
 	const [postPage, setPostPage] = useState<number>(1)
-	let isGetAllPosts: boolean = false
+	const [isGetAllPosts, setIsGetAllPosts] = useState<boolean>(false)
+	const [isPendingApi, setIsPendingApi] = useState<boolean>(false)
+
 
 	useEffect(() => {
 		API.getPostList({ take: 4, page: postPage }).then((res) => {
@@ -24,17 +26,17 @@ export default function Post() {
 	}, [])
 
 	useEffect(() => {
-		console.log('isGetAllPosts', isGetAllPosts)
-		console.log('postPage', postPage)
-		if (!isGetAllPosts && scrollHook.scrollPercentage >= 80) {
+		if (!isGetAllPosts && !isPendingApi && scrollHook.scrollPercentage >= 80) {
+			setIsPendingApi(true)
 			API.getPostList({ take: 4, page: postPage + 1 }).then((res) => {
 				if (res.status === 200) {
 					if (res.data.length > 0) {
 						setPosts([...posts, ...res.data])
 						setPostPage(postPage + 1)
+						setIsPendingApi(false)
 					} else {
 						console.log('finish~!!!!!')
-						isGetAllPosts = true
+						setIsGetAllPosts(true)
 					}
 
 				} else {
