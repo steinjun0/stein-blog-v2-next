@@ -130,51 +130,56 @@ export default {
 
     // api
 
-    async getPostList() {
-        const postListRes = await this.getAxios(`${API_URL}/post`)
-        return postListRes
+    async getPostList(option?: { page?: number, take?: number }) {
+        if (option) {
+            const postListRes = await this.getAxios(`${API_URL}/post${option.page ? `?page=${option.page}` : ''}${option.take ? `&take=${option.take}` : ''}`)
+            return postListRes
+        } else {
+            const postListRes = await this.getAxios(`${API_URL}/post`)
+            return postListRes
+        }
     },
 
     async getPost({ id }: { id: number }) {
-        const postRes = await this.getAxios(`${API_URL}/post/${id}`)
+        const postRes = await this.getAxios(`${API_URL} / post / ${id}`)
         return postRes
     },
 
     async getCategories() {
-        const categoryRes = await this.getAxios(`${API_URL}/post/category`)
+        const categoryRes = await this.getAxios(`${API_URL} / post / category`)
         return categoryRes
     },
 
     // async getConsultSchedule(year, month, mentorId) {
-    //     const scheduleRes = await this.getAxiosWithParams(`${API_URL}/consult/schedule`, { 'Year': year, 'Month': month, 'MentorID': +mentorId })
+    //     const scheduleRes = await this.getAxiosWithParams(`${ API_URL } / consult / schedule`, { 'Year': year, 'Month': month, 'MentorID': +mentorId })
     //     return scheduleRes
     // },
 
     async postFile({ file, name }: { file: Blob, name?: string }) {
         const data = new FormData();
         data.append('file', file, name)
-        const res = await this.postAxiosFormData(`${API_URL}/file/post`, data)
+        const res = await this.postAxiosFormData(`${API_URL} / file / post`, data)
         return res
     },
 
     async postPost(data: { title: string, subtitle: string, body: string, categories?: Array<string>, files?: Array<string> }) {
-        const scheduleRes = await this.postAxios(`${API_URL}/post`, data)
+        const scheduleRes = await this.postAxios(`${API_URL} / post`, data)
         return scheduleRes
     },
 
     // async patchAccount(userData) {
-    //     const userRes = await this.patchAxios(`${API_URL}/account/update`, userData)
+    //     const userRes = await this.patchAxios(`${ API_URL } / account / update`, userData)
     //     return userRes
     // },
 
 
     async patchPost(postId: number, data: { title: string, subtitle: string, body: string, categories?: Array<string>, files?: Array<string> }) {
-        const postRes = await this.patchAxios(`${API_URL}/post/${postId}`, data)
+        const postRes = await this.patchAxios(`${API_URL} / post / ${postId}`, data)
         return postRes
     },
 
     async deletePost(postId: number) {
-        const postRes = await this.deleteAxios(`${API_URL}/post/${postId}`)
+        const postRes = await this.deleteAxios(`${API_URL} / post / ${postId}`)
         return postRes
     },
 
