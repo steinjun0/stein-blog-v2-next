@@ -3,12 +3,18 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import API from "API"
 import { marked } from "marked"
+import { useScroll } from "components/hooks/useScroll";
 
 
-export default function Work() {
+export default function Post() {
+	const scrollHook = useScroll();
 	const [posts, setPosts] = useState<{ id: number, image: string, categories: Array<{ name: string, id: number }>, title: string, subtitle: string, body: string }[]>([])
+	// const [postPage, setPostPage] = useState<number>(1);
+	const [postPage, setPostPage] = useState<number>(1)
+	let isGetAllPosts: boolean = false
+
 	useEffect(() => {
-		API.getPostList().then((res) => {
+		API.getPostList({ take: 4, page: postPage }).then((res) => {
 			if (res.status === 200) {
 				setPosts(res.data)
 			} else {
@@ -16,6 +22,27 @@ export default function Work() {
 			}
 		});
 	}, [])
+
+	useEffect(() => {
+		console.log('isGetAllPosts', isGetAllPosts)
+		console.log('postPage', postPage)
+		if (!isGetAllPosts && scrollHook.scrollPercentage >= 80) {
+			API.getPostList({ take: 4, page: postPage + 1 }).then((res) => {
+				if (res.status === 200) {
+					if (res.data.length > 0) {
+						setPosts([...posts, ...res.data])
+						setPostPage(postPage + 1)
+					} else {
+						console.log('finish~!!!!!')
+						isGetAllPosts = true
+					}
+
+				} else {
+					alert('Post를 받아오지 못하였습니다')
+				}
+			});
+		}
+	}, [scrollHook])
 
 	return (
 		<div className="flex-col w-full my-10 justify-start">
@@ -34,7 +61,7 @@ export default function Work() {
 					(post, i) => (
 						<div key={i} className="w-96 mt-6 justify-center border-gray-200 border rounded-sm overflow-hidden">
 							<Link href={`/post/${post.id}`}>
-								<div className="flex flex-col justify-center" style={{ maxHeight: 382, minHeight: 382 }}>
+								<div className="flex flex-col justify-center" style={{ maxHeight: 382, minHeight: 382, overflow: 'hidden' }}>
 									<img
 										src={API.getPostFileUrl({ postId: post.id, fileName: 'thumbnail' })}
 										alt={`${post.id}-thumnail`}
