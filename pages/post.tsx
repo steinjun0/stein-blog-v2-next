@@ -18,7 +18,7 @@ export default function Work() {
 	}, [])
 
 	return (
-		<div className="flex-col w-full mt-10 justify-start">
+		<div className="flex-col w-full my-10 justify-start">
 			<div className="flex items-end">
 				<h1 className="text-7xl mr-3 font-medium">Post</h1>
 				<span >Study · Engineering · Art · Life · etc.</span>
