@@ -92,8 +92,8 @@ export default function Home() {
               </SwiperSlide>
             ) :
             ['/images/Dapada.png', '/images/DapadaEdu.png', '/images/CareerDive.png', '/images/CareerDive.png'].map((e, i) =>
-              <SwiperSlide className='flex sm:justify-center xs:justify-start'>
-                <div key={i} className='relative border-slate-200 border' style={{ overflow: 'hidden', height: `${240 * 9 / 16}px` }}>
+              <SwiperSlide key={i} className='flex sm:justify-center xs:justify-start'>
+                <div className='relative border-slate-200 border' style={{ overflow: 'hidden', height: `${240 * 9 / 16}px` }}>
                   <Image
                     src={e}
                     alt='profile'
