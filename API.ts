@@ -168,15 +168,15 @@ export default {
     // },
 
 
-    // async patchConsultApprove(consultId) {
-    //     const consultRes = await this.patchAxios(`${API_URL}/consult/${consultId}/approve`)
-    //     return consultRes
-    // },
+    async patchPost(postId: number, data: { title: string, subtitle: string, body: string, categories?: Array<string>, files?: Array<string> }) {
+        const postRes = await this.patchAxios(`${API_URL}/post/${postId}`, data)
+        return postRes
+    },
 
-    // async deleteConsultSchedule(shceduleId) {
-    //     const deleteRes = await this.deleteAxios(`${API_URL}/consult/schedule/${shceduleId}`)
-    //     return deleteRes
-    // },
+    async deletePost(postId: number) {
+        const postRes = await this.deleteAxios(`${API_URL}/post/${postId}`)
+        return postRes
+    },
 
 
 }
