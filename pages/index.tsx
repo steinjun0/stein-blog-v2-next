@@ -86,7 +86,7 @@ export default function Home() {
               <SwiperSlide key={i} className='flex sm:justify-center xs:justify-start'>
                 <div className="w-60 h-36 flex-col justify-center border-b-slate-400 border-b">
                   <span className='text-xs'>[{[...e.categories.map((cat) => cat.name)].toString()}]</span>
-                  <Link href={'/post/1'}><h1 className='text-xl font-medium h-16 mt-1 whitespace-pre-wrap [&:hover]:underline'>{e.title}</h1></Link>
+                  <Link href={`/post/${e.id}`}><h1 className='text-xl font-medium h-16 mt-1 whitespace-pre-wrap [&:hover]:underline'>{e.title}</h1></Link>
                   <p className='text-sm overflow-hidden whitespace-nowrap text-ellipsis mt-1'>{e.subtitle}</p>
                 </div>
               </SwiperSlide>
