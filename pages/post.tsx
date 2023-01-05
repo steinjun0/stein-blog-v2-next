@@ -63,14 +63,16 @@ export default function Post() {
 		<div className="flex-col w-full my-10 justify-start">
 			<div className="flex items-end">
 				<h1 className="text-7xl mr-3 font-medium">Post</h1>
-				{
-					tagList.map(
-						(e, i) =>
-							<span key={i} className={e === tagFilter ? 'font-medium' : 'text-gray-400 cursor-pointer'} onClick={() => { setTagFilter(e) }}>
-								{e}{i < tagList.length - 1 ? <span className="text-gray-400">&nbsp;·&nbsp;</span> : ''}
-							</span>
-					)
-				}
+				<div className="flex flex-wrap">
+					{
+						tagList.map(
+							(e, i) =>
+								<div key={i} className={e === tagFilter ? 'font-medium' : 'text-gray-400 cursor-pointer'} onClick={() => { setTagFilter(e) }}>
+									{e}{i < tagList.length - 1 ? <span className="text-gray-400">&nbsp;·&nbsp;</span> : ''}
+								</div>
+						)
+					}
+				</div>
 			</div>
 			<Slide in={true} direction={'right'}>
 				<Divider style={{ marginLeft: '158px' }} color={'black'} />
