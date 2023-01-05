@@ -1,19 +1,5 @@
 import { Button, Input, NativeSelect, Select, TextField } from "@mui/material";
-import {
-    bold, italic,
-    strikethrough,
-    hr,
-    link,
-    quote,
-    code,
-    codeBlock,
-    image,
-    divider,
-    unorderedListCommand,
-    orderedListCommand,
-    checkedListCommand,
-    codeEdit, codeLive, codePreview, fullscreen
-} from "@uiw/react-md-editor";
+
 import API from "API";
 import ListPushInput from "components/ListPushInput";
 import { IPost } from "components/Types";
@@ -26,9 +12,7 @@ const MDEditor = dynamic(
     () => {
         const res = import("@uiw/react-md-editor")
         res.then((mod) => {
-            console.log('mod', mod)
             mod.constructor = () => {
-                console.log('hiasdfadsf')
             }
         })
         return res
@@ -352,19 +336,6 @@ export default function WorkPage() {
                     autoFocus
                     enableScroll
                     preview="edit"
-                    commands={[
-                        bold,
-                        italic,
-                        strikethrough,
-                        divider,
-                        quote,
-                        code,
-                        codeBlock,
-                        divider,
-                        unorderedListCommand,
-                        orderedListCommand,
-                        checkedListCommand,]}
-                    extraCommands={[codeEdit, codeLive, codePreview, fullscreen]}
                 />
             </div>
             <div id='md-preview' style={{ padding: '50px 0', height: '600px', maxHeight: '600px', overflow: 'scroll' }}>
