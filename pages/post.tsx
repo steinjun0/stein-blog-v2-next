@@ -13,10 +13,11 @@ export default function Post() {
 	const [postPage, setPostPage] = useState<number>(1)
 	const [isGetAllPosts, setIsGetAllPosts] = useState<boolean>(false)
 	const [isPendingApi, setIsPendingApi] = useState<boolean>(false)
-
+	const [tagList, setTagList] = useState<string[]>(['All', 'Study', 'Engineering', 'Art', 'Life', 'etc'])
+	const [tagFilter, setTagFilter] = useState<string>('All')
 
 	useEffect(() => {
-		API.getPostList({ take: 4, page: postPage }).then((res) => {
+		API.getPostList({ take: 4, page: postPage, tagFilter }).then((res) => {
 			if (res.status === 200) {
 				setPosts(res.data)
 			} else {
@@ -24,6 +25,19 @@ export default function Post() {
 			}
 		});
 	}, [])
+
+	useEffect(() => {
+		setPostPage(1)
+		API.getPostList({ take: 4, page: 1, tagFilter }).then((res) => {
+			if (res.status === 200) {
+				setPosts(res.data)
+			} else {
+				alert('Post를 받아오지 못하였습니다')
+			}
+		});
+	}, [tagFilter])
+
+
 
 	useEffect(() => {
 		if (!isGetAllPosts && !isPendingApi && scrollHook.scrollPercentage >= 80) {
@@ -35,7 +49,6 @@ export default function Post() {
 						setPostPage(postPage + 1)
 						setIsPendingApi(false)
 					} else {
-						console.log('finish~!!!!!')
 						setIsGetAllPosts(true)
 					}
 
@@ -50,13 +63,18 @@ export default function Post() {
 		<div className="flex-col w-full my-10 justify-start">
 			<div className="flex items-end">
 				<h1 className="text-7xl mr-3 font-medium">Post</h1>
-				<span >Study · Engineering · Art · Life · etc.</span>
+				{
+					tagList.map(
+						(e, i) =>
+							<span key={i} className={e === tagFilter ? 'font-medium' : 'text-gray-400 cursor-pointer'} onClick={() => { setTagFilter(e) }}>
+								{e}{i < tagList.length - 1 ? <span className="text-gray-400">&nbsp;·&nbsp;</span> : ''}
+							</span>
+					)
+				}
 			</div>
 			<Slide in={true} direction={'right'}>
 				<Divider style={{ marginLeft: '158px' }} color={'black'} />
 			</Slide>
-
-
 
 			<div className="flex flex-wrap xs:justify-center gap-3 xl:justify-between mt-4">
 				{posts.map(

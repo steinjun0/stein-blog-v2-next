@@ -130,9 +130,9 @@ export default {
 
     // api
 
-    async getPostList(option?: { page?: number, take?: number }) {
+    async getPostList(option?: { page?: number, take?: number, tagFilter?: string }) {
         if (option) {
-            const postListRes = await this.getAxios(`${API_URL}/post${option.page ? `?page=${option.page}` : ''}${option.take ? `&take=${option.take}` : ''}`)
+            const postListRes = await this.getAxios(`${API_URL}/post?${option.tagFilter ? `tagFilter=${option.tagFilter}&` : ''}${option.page ? `page=${option.page}&` : ''}${option.take ? `take=${option.take}&` : ''}`)
             return postListRes
         } else {
             const postListRes = await this.getAxios(`${API_URL}/post`)
