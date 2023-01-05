@@ -13,7 +13,7 @@ export default function Post() {
 	const [postPage, setPostPage] = useState<number>(1)
 	const [isGetAllPosts, setIsGetAllPosts] = useState<boolean>(false)
 	const [isPendingApi, setIsPendingApi] = useState<boolean>(false)
-	const [tagList, setTagList] = useState<string[]>(['All', 'Study', 'Engineering', 'Art', 'Life', 'etc'])
+	const [tagList, setTagList] = useState<string[]>(['All', 'Study', 'Engineering', 'Music', 'Art', 'etc'])
 	const [tagFilter, setTagFilter] = useState<string>('All')
 
 	useEffect(() => {
