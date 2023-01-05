@@ -1,4 +1,19 @@
 import { Button, Input, NativeSelect, Select, TextField } from "@mui/material";
+import {
+    bold, italic,
+    strikethrough,
+    hr,
+    link,
+    quote,
+    code,
+    codeBlock,
+    image,
+    divider,
+    unorderedListCommand,
+    orderedListCommand,
+    checkedListCommand,
+    codeEdit, codeLive, codePreview, fullscreen
+} from "@uiw/react-md-editor";
 import API from "API";
 import ListPushInput from "components/ListPushInput";
 import { IPost } from "components/Types";
@@ -96,7 +111,6 @@ export default function WorkPage() {
 
     }
 
-
     useEffect(() => {
         API.getCategories().then((res) => {
             if (res.status === 200) {
@@ -173,6 +187,23 @@ export default function WorkPage() {
 
 
     }, [router.isReady])
+
+    function onChangeImageInput(e: ChangeEvent<HTMLInputElement>, isThumbnail?: boolean) {
+        if (e.target.files) {
+            API.postFile({ file: e.target.files[0], name: isThumbnail ? `thumbnail` : getUnduplicatedName(e.target.files[0].name, fileNamesRef.current) })
+                .then((res) => {
+                    if (res.status === 201) {
+                        postThumbnailLocationRef.current = 'temp'
+                        alert('썸네일이 업로드 되었습니다')
+                        setUrlCacheBreaker(new Date().getMilliseconds().toString())
+                    } else {
+                        alert('썸네일을 업로드하지 못하였습니다')
+                    }
+                })
+        } else {
+            alert('input에 파일이 비었습니다')
+        }
+    }
 
     function onChangeThumbnailInput(e: ChangeEvent<HTMLInputElement>) {
         if (e.target.files) {
@@ -257,50 +288,59 @@ export default function WorkPage() {
                     </div>
                 </div>
                 <hr />
-                <div className="flex my-4">
-                    <div className="flex-col w-1/2">
-                        Categories
-                        <div className="flex">
-                            {categories.map((e, i) => {
-                                return <div key={i} style={{ cursor: 'pointer' }} onClick={() => { setCategories(categories.filter((v) => v !== e)) }}>
-                                    <span>{e} |&nbsp;</span>
-                                </div>
-                            })}
+                <div className="flex-col my-4">
+                    <span className="text-xl" style={{ fontWeight: 500 }}>Categories</span>
+                    <div className="flex my-4">
+                        <div className="flex-col w-1/2">
+                            <div className="flex">
+                                {categories.map((e, i) => {
+                                    return <div key={i} style={{ cursor: 'pointer' }} onClick={() => { setCategories(categories.filter((v) => v !== e)) }}>
+                                        <span>{e} |&nbsp;</span>
+                                    </div>
+                                })}
+                            </div>
                         </div>
-                    </div>
+                        <div className="flex flex-col">
+                            <div style={{ height: '100px', maxHeight: '100px', overflow: 'scroll' }}>
+                                {allCategories && allCategories.map((e, i) => {
+                                    return <div key={i} onClick={() => {
+                                        if (!categories.includes(e.name))
+                                            setCategories([...categories, e.name])
+                                    }}>{e.name}</div>
+                                })}
+                            </div>
 
-                    <div className="flex flex-col">
-                        <div style={{ height: '100px', maxHeight: '100px', overflow: 'scroll' }}>
-                            {allCategories && allCategories.map((e, i) => {
-                                return <div key={i} onClick={() => {
-                                    if (!categories.includes(e.name))
-                                        setCategories([...categories, e.name])
-                                }}>{e.name}</div>
-                            })}
+                            <ListPushInput categoryList={categories} setCategoryList={setCategories} />
                         </div>
-
-                        <ListPushInput categoryList={categories} setCategoryList={setCategories} />
                     </div>
                 </div>
             </div>
             <hr />
             <div className="flex align-middle my-4">
-                <img
-                    src={API.getPostFileUrl({ postId: postThumbnailLocationRef.current!, fileName: 'thumbnail' }) + `?${urlCacheBreaker}`} alt=""
-                    style={{ maxHeight: '100px' }}
-                />
-                <div className="flex-col w-full ml-4">
-                    <input
-                        type="file"
-                        onChange={onChangeThumbnailInput}
-                    />
-                    <TextField
-                        fullWidth
-                        variant="standard"
-                        onPaste={onPasteThumbnailText}
-                    />
+                <div className="flex-col">
+                    <span className="text-xl" style={{ fontWeight: 500 }}>Thumbnail upload</span>
+                    <div className="flex mt-4">
+                        <img
+                            src={API.getPostFileUrl({ postId: postThumbnailLocationRef.current!, fileName: 'thumbnail' }) + `?${urlCacheBreaker}`} alt=""
+                            style={{ maxHeight: '100px' }}
+                        />
+                        <div className="flex-col w-full ml-4">
+                            <input
+                                type="file"
+                                onChange={onChangeThumbnailInput}
+                            />
+                            <TextField
+                                fullWidth
+                                variant="standard"
+                                onPaste={onPasteThumbnailText}
+                            />
+                        </div>
+                    </div>
+
                 </div>
             </div>
+            <hr />
+
             <hr className="mb-7" />
             <div className="" id="MDEditor_parent">
                 <MDEditor
@@ -312,6 +352,19 @@ export default function WorkPage() {
                     autoFocus
                     enableScroll
                     preview="edit"
+                    commands={[
+                        bold,
+                        italic,
+                        strikethrough,
+                        divider,
+                        quote,
+                        code,
+                        codeBlock,
+                        divider,
+                        unorderedListCommand,
+                        orderedListCommand,
+                        checkedListCommand,]}
+                    extraCommands={[codeEdit, codeLive, codePreview, fullscreen]}
                 />
             </div>
             <div id='md-preview' style={{ padding: '50px 0', height: '600px', maxHeight: '600px', overflow: 'scroll' }}>
