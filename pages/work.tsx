@@ -21,10 +21,10 @@ export default function Work() {
                             onClick={() => setCategory(e)}>{e}</span>)}
             </div>
 
-            <div className="grid grid-cols-3 gap-0 mt-4">
+            <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-0 mt-4">
                 {['/images/DapadaSquare.png', '/images/CareerDiveSquare.png', '/images/DapadaEduSquare.png', '/images/DaconSquare.png'].map(
-                    (e, i) => <Link key={i} href={'/work/1'}>
-                        <div className="relative w-full h-0 cursor-pointer"
+                    (e, i) =>
+                        <div key={i} className="relative w-full h-0"
                             style={{ paddingBottom: '100%' }}>
                             <Image
                                 src={e}
@@ -32,8 +32,6 @@ export default function Work() {
                                 fill
                             />
                         </div>
-                    </Link>
-
                 )}
 
             </div>
