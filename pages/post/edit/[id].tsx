@@ -70,6 +70,8 @@ export default function WorkPage() {
     let isSendingApi = false
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
 
+    const [uploadImageUrl, setUploadImageUrl] = useState('')
+
     function onClickSave() {
         type postPostDto = { title: string, subtitle: string, body: string, categories?: Array<string>, files?: Array<string> }
         const data: postPostDto = {
@@ -153,6 +155,7 @@ export default function WorkPage() {
                 if (target !== undefined && !isSetListener) {
                     isSetListener = true
                     target.addEventListener('paste', async (event: any) => {
+                        console.log('paste!', event)
                         var items = (event.clipboardData || event.originalEvent.clipboardData).items;
                         for (var index in items) {
                             var item = items[index];
@@ -196,26 +199,28 @@ export default function WorkPage() {
 
     }, [router.isReady])
 
-    function onChangeThumbnailInput(e: ChangeEvent<HTMLInputElement>) {
+    function onChangeImageInput(e: ChangeEvent<HTMLInputElement>, isThumbnail?: boolean) {
         if (e.target.files) {
             if (!isSendingApi) {
                 isSendingApi = true
                 setIsDialogOpen(isSendingApi)
-                API.postFile({ file: e.target.files[0], name: `thumbnail` })
+                API.postFile({ file: e.target.files[0], name: isThumbnail ? `thumbnail` : getUnduplicatedName(e.target.files[0].name, fileNamesRef.current) })
                     .then((res) => {
                         if (res.status === 201) {
                             postThumbnailLocationRef.current = 'temp'
-                            alert('썸네일이 업로드 되었습니다')
+                            alert(`${isThumbnail ? '썸네일이' : '이미지가'} 업로드 되었습니다`)
                             setUrlCacheBreaker(new Date().getMilliseconds().toString())
+
+                            setUploadImageUrl(`<p align="center"><img src="${API.getPostFileUrl({ postId: router.query.id === 'new' ? 'temp' : +router.query.id!, fileName: res.data[0].filename })}" alt="${res.data[0].filename}" style="max-height: 300px"/></p>`)
                         } else {
-                            alert('썸네일을 업로드하지 못하였습니다')
+                            alert(`${isThumbnail ? '썸네일을' : '이미지를'} 업로드하지 못하였습니다`)
                         }
                         isSendingApi = false
                         setIsDialogOpen(isSendingApi)
                     })
             }
             else {
-                alert('썸네일 업로드 중입니다!')
+                alert(`${isThumbnail ? '썸네일' : '이미지'} 업로드 중입니다!`)
             }
         } else {
             alert('input에 파일이 비었습니다')
@@ -338,7 +343,9 @@ export default function WorkPage() {
                         <div className="flex-col w-full ml-4">
                             <input
                                 type="file"
-                                onChange={onChangeThumbnailInput}
+                                onChange={(e) => {
+                                    onChangeImageInput(e, true)
+                                }}
                             />
                             <TextField
                                 fullWidth
@@ -347,7 +354,30 @@ export default function WorkPage() {
                             />
                         </div>
                     </div>
-
+                </div>
+            </div>
+            <hr />
+            <div className="flex align-middle my-4">
+                <div className="flex-col">
+                    <span className="text-xl" style={{ fontWeight: 500 }}>Create image link</span>
+                    <div className="flex mt-4">
+                        <img
+                            src={uploadImageUrl} alt=""
+                            style={{ maxHeight: '100px' }}
+                        />
+                        <div className="flex-col w-full ml-4">
+                            <input
+                                type="file"
+                                onChange={(e) => {
+                                    onChangeImageInput(e)
+                                }}
+                            />
+                            <div
+                            >
+                                {uploadImageUrl}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <hr />
