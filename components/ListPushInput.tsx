@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import API from "API"
 import { useEffect } from "react";
-import { TextField } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 
 function ListPushInput({ categoryList, setCategoryList }: { categoryList: string[], setCategoryList: Dispatch<SetStateAction<string[]>> }) {
     const [categoryText, setCategoryText] = useState('');
@@ -26,7 +26,7 @@ function ListPushInput({ categoryList, setCategoryList }: { categoryList: string
 
 
     return <div>
-        <div>
+        <div className="flex">
             <TextField
                 onKeyPress={(e) => {
                     if (e.key === 'Enter' && categoryText !== '' && !categoryList.includes(categoryText)) {
@@ -40,6 +40,14 @@ function ListPushInput({ categoryList, setCategoryList }: { categoryList: string
                 fullWidth={true}
                 placeholder={'입력 후 Enter'}
             />
+            <Button
+                onClick={() => {
+                    if (categoryText !== '' && !categoryList.includes(categoryText)) {
+                        addNewCategory()
+                    }
+                }}>
+                확인
+            </Button>
         </div>
     </div>;
 }
