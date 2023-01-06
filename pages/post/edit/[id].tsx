@@ -1,4 +1,4 @@
-import { Button, Input, NativeSelect, Select, TextField } from "@mui/material";
+import { Button, Dialog, Input, NativeSelect, Select, TextField } from "@mui/material";
 
 import API from "API";
 import ListPushInput from "components/ListPushInput";
@@ -67,31 +67,51 @@ export default function WorkPage() {
     const postThumbnailLocationRef = useRef<'temp' | number>()
 
     let isSetListener = false
+    let isSendingApi = false
+    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
 
     function onClickSave() {
         type postPostDto = { title: string, subtitle: string, body: string, categories?: Array<string>, files?: Array<string> }
         const data: postPostDto = {
             title, subtitle, categories, body: md, files: fileNames
         }
-        if (router.query.id === 'new') {
-            API.postPost(data).then((res) => {
-                if (res.status === 201) {
-                    alert('업로드에 성공했습니다')
-                    router.push(`/post/${res.data.postRes.id}`)
-                } else {
-                    alert('업로드에 실패했습니다')
+        if (!isSendingApi) {
+            if (router.query.id === 'new') {
+                isSendingApi = true
+                setIsDialogOpen(isSendingApi)
+                try {
+                    API.postPost(data).then((res) => {
+                        if (res.status === 201) {
+                            alert('업로드에 성공했습니다')
+                            router.push(`/post/${res.data.postRes.id}`)
+                        } else {
+                            alert('업로드에 실패했습니다')
+                        }
+                        isSendingApi = false
+                        setIsDialogOpen(isSendingApi)
+                    })
+                } catch (error) {
+
                 }
-            })
+
+            } else {
+                isSendingApi = true
+                setIsDialogOpen(isSendingApi)
+                API.patchPost(parseInt(`${router.query.id}`), data).then((res) => {
+                    if (res.status === 200) {
+                        alert('수정에 성공했습니다')
+                        router.push(`/post/${router.query.id}`)
+                    } else {
+                        alert('수정에 실패했습니다')
+                    }
+                    isSendingApi = false
+                    setIsDialogOpen(isSendingApi)
+                })
+            }
         } else {
-            API.patchPost(parseInt(`${router.query.id}`), data).then((res) => {
-                if (res.status === 200) {
-                    alert('수정에 성공했습니다')
-                    router.push(`/post/${router.query.id}`)
-                } else {
-                    alert('수정에 실패했습니다')
-                }
-            })
+            alert('업로드 중입니다!')
         }
+
 
     }
 
@@ -141,6 +161,8 @@ export default function WorkPage() {
                                 let fileName: string = getUnduplicatedName(file.name, fileNamesRef.current)
 
                                 const res = await API.postFile({ file: file, name: fileName })
+                                isSendingApi = true
+                                setIsDialogOpen(isSendingApi)
                                 if (res.status === 201) {
                                     setFileNames(fileNames => [...fileNames, fileName])
                                     fileNamesRef.current = [...fileNamesRef.current, fileName]
@@ -150,6 +172,8 @@ export default function WorkPage() {
                                 } else {
                                     alert('이미지가 업로드 되지 못하였습니다!')
                                 }
+                                isSendingApi = false
+                                setIsDialogOpen(isSendingApi)
                             }
                         }
                     });
@@ -172,35 +196,27 @@ export default function WorkPage() {
 
     }, [router.isReady])
 
-    function onChangeImageInput(e: ChangeEvent<HTMLInputElement>, isThumbnail?: boolean) {
-        if (e.target.files) {
-            API.postFile({ file: e.target.files[0], name: isThumbnail ? `thumbnail` : getUnduplicatedName(e.target.files[0].name, fileNamesRef.current) })
-                .then((res) => {
-                    if (res.status === 201) {
-                        postThumbnailLocationRef.current = 'temp'
-                        alert('썸네일이 업로드 되었습니다')
-                        setUrlCacheBreaker(new Date().getMilliseconds().toString())
-                    } else {
-                        alert('썸네일을 업로드하지 못하였습니다')
-                    }
-                })
-        } else {
-            alert('input에 파일이 비었습니다')
-        }
-    }
-
     function onChangeThumbnailInput(e: ChangeEvent<HTMLInputElement>) {
         if (e.target.files) {
-            API.postFile({ file: e.target.files[0], name: `thumbnail` })
-                .then((res) => {
-                    if (res.status === 201) {
-                        postThumbnailLocationRef.current = 'temp'
-                        alert('썸네일이 업로드 되었습니다')
-                        setUrlCacheBreaker(new Date().getMilliseconds().toString())
-                    } else {
-                        alert('썸네일을 업로드하지 못하였습니다')
-                    }
-                })
+            if (!isSendingApi) {
+                isSendingApi = true
+                setIsDialogOpen(isSendingApi)
+                API.postFile({ file: e.target.files[0], name: `thumbnail` })
+                    .then((res) => {
+                        if (res.status === 201) {
+                            postThumbnailLocationRef.current = 'temp'
+                            alert('썸네일이 업로드 되었습니다')
+                            setUrlCacheBreaker(new Date().getMilliseconds().toString())
+                        } else {
+                            alert('썸네일을 업로드하지 못하였습니다')
+                        }
+                        isSendingApi = false
+                        setIsDialogOpen(isSendingApi)
+                    })
+            }
+            else {
+                alert('썸네일 업로드 중입니다!')
+            }
         } else {
             alert('input에 파일이 비었습니다')
         }
@@ -212,15 +228,23 @@ export default function WorkPage() {
             var item = items[index];
             if (item.kind === 'file') {
                 let file = item.getAsFile();
-                API.postFile({ file: file, name: 'thumbnail' }).then((res) => {
-                    if (res.status === 201) {
-                        postThumbnailLocationRef.current = 'temp'
-                        alert('썸네일이 업로드 되었습니다')
-                        setUrlCacheBreaker(new Date().getMilliseconds().toString())
-                    } else {
-                        alert('썸네일을 업로드하지 못하였습니다')
-                    }
-                })
+                if (!isSendingApi) {
+                    isSendingApi = true
+                    setIsDialogOpen(isSendingApi)
+                    API.postFile({ file: file, name: 'thumbnail' }).then((res) => {
+                        if (res.status === 201) {
+                            postThumbnailLocationRef.current = 'temp'
+                            alert('썸네일이 업로드 되었습니다')
+                            setUrlCacheBreaker(new Date().getMilliseconds().toString())
+                        } else {
+                            alert('썸네일을 업로드하지 못하였습니다')
+                        }
+                        isSendingApi = false
+                        setIsDialogOpen(isSendingApi)
+                    })
+                } else {
+                    alert('썸네일 업로드 중입니다!')
+                }
             }
         }
     }
@@ -241,6 +265,9 @@ export default function WorkPage() {
 
     return (
         <div className='flex flex-col w-full my-10'>
+            <Dialog onClose={() => { }} open={isDialogOpen}>
+                <div className="p-4">업로드 중입니다</div>
+            </Dialog>
             <div className="flex-col">
                 <div className="flex mb-2 justify-between items-end">
                     <span className="w-2/3">
@@ -333,7 +360,7 @@ export default function WorkPage() {
                         value ? setMd(value) : setMd('')
                         value ? mdRef.current = value : mdRef.current = ''
                     }}
-                    autoFocus
+                    autoFocus={false}
                     enableScroll
                     preview="edit"
                 />
@@ -345,7 +372,7 @@ export default function WorkPage() {
                 variant="outlined"
                 style={{ cursor: 'pointer' }}
                 onClick={() => { onClickSave() }}
-            >{router.query.id === 'temp' ? '저장' : '수정'}</Button>
+            >{router.query.id === 'new' ? '저장' : '수정'}</Button>
         </div>
     );
 }
