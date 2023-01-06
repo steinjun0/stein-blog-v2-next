@@ -4,17 +4,19 @@ import { useEffect, useState } from "react";
 import API from "API"
 import { marked } from "marked"
 import { useScroll } from "components/hooks/useScroll";
+import { IPost } from "components/Types";
 
 
 export default function Post() {
 	const scrollHook = useScroll();
-	const [posts, setPosts] = useState<{ id: number, image: string, categories: Array<{ name: string, id: number }>, title: string, subtitle: string, body: string }[]>([])
+	const [posts, setPosts] = useState<IPost[]>([])
 	// const [postPage, setPostPage] = useState<number>(1);
 	const [postPage, setPostPage] = useState<number>(1)
 	const [isGetAllPosts, setIsGetAllPosts] = useState<boolean>(false)
 	const [isPendingApi, setIsPendingApi] = useState<boolean>(false)
 	const [tagList, setTagList] = useState<string[]>(['All', 'Study', 'Engineering', 'Music', 'Art', 'etc'])
 	const [tagFilter, setTagFilter] = useState<string>('All')
+	const koDtf = new Intl.DateTimeFormat("ko", { dateStyle: "long" });
 
 	useEffect(() => {
 		API.getPostList({ take: 4, page: postPage, tagFilter }).then((res) => {
@@ -107,7 +109,7 @@ export default function Post() {
 											</div>
 										})}
 									</div>
-									<span className="text-gray-400">22.11.12</span>
+									<span className="text-gray-400">{koDtf.format(post.created_at)}</span>
 								</div>
 							</div>
 
