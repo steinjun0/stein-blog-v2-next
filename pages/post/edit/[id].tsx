@@ -151,7 +151,7 @@ export default function WorkPage() {
 
             var x = new MutationObserver(function (e) {
                 const target = document.getElementsByClassName('w-md-editor-text-input')[0] as HTMLElement;
-
+                console.log('target', target)
                 if (target !== undefined && !isSetListener) {
                     isSetListener = true
                     target.addEventListener('paste', async (event: any) => {
