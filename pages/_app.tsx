@@ -38,7 +38,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name="twitter:description" content={description} />
         <meta name="twitter:image" content="/stein-logo.svg" />
       </Head>
-      <nav className='flex md:py-4 xl:px-0 xs:p-4 '>
+      <nav className='flex md:py-4 xl:px-0 xs:p-4 p-4'>
         <Link href={'/'}>
           <div className='flex items-end'>
             <p className='text-3xl' style={{ fontWeight: 700 }}>stein</p>
