@@ -86,6 +86,10 @@ export default function WorkPage() {
                         if (res.status === 201) {
                             alert('업로드에 성공했습니다')
                             router.push(`/post/${res.data.postRes.id}`)
+
+                            new Array("temp_post", "temp_title", "temp_subtitle").forEach(element => {
+                                localStorage.removeItem(element)
+                            });
                         } else {
                             alert('업로드에 실패했습니다')
                         }
@@ -131,6 +135,12 @@ export default function WorkPage() {
         if (router.isReady) {
             if (router.query.id === 'new') {
                 postThumbnailLocationRef.current = 'temp'
+                if (localStorage.getItem('temp_post') !== null) {
+                    setMd(localStorage.getItem('temp_post')!)
+                    mdRef.current = localStorage.getItem('temp_post')!
+                }
+                localStorage.getItem('temp_title') && setTitle(localStorage.getItem('temp_title')!)
+                localStorage.getItem('temp_subtitle') && setSubtitle(localStorage.getItem('temp_subtitle')!)
             }
             else if (!isNaN(parseInt(`${router.query.id}`))) {
                 postThumbnailLocationRef.current = parseInt(`${router.query.id}`)
@@ -200,11 +210,11 @@ export default function WorkPage() {
     }, [router.isReady])
 
     function onChangeImageInput(e: ChangeEvent<HTMLInputElement>, isThumbnail?: boolean) {
-        if (e.target.files) {
+        if (e.target.files!.length > 0) {
             if (!isSendingApi) {
                 isSendingApi = true
                 setIsDialogOpen(isSendingApi)
-                API.postFile({ file: e.target.files[0], name: isThumbnail ? `thumbnail` : getUnduplicatedName(e.target.files[0].name, fileNamesRef.current) })
+                API.postFile({ file: e.target.files![0], name: isThumbnail ? `thumbnail` : getUnduplicatedName(e.target.files![0].name, fileNamesRef.current) })
                     .then((res) => {
                         if (res.status === 201) {
                             postThumbnailLocationRef.current = 'temp'
@@ -280,7 +290,10 @@ export default function WorkPage() {
                             fullWidth
                             InputProps={{ style: { fontWeight: 700, fontSize: '30px' } }}
                             value={title}
-                            onChange={(e) => { setTitle(e.target.value) }}
+                            onChange={(e) => {
+                                setTitle(e.target.value)
+                                router.query.id === 'new' && localStorage.setItem('temp_title', e.target.value)
+                            }}
                         />
                     </span>
                     {router.query.id !== 'temp' &&
@@ -299,7 +312,10 @@ export default function WorkPage() {
                             fullWidth
                             variant="standard"
                             value={subtitle}
-                            onChange={(e) => { setSubtitle(e.target.value) }}
+                            onChange={(e) => {
+                                setSubtitle(e.target.value)
+                                router.query.id === 'new' && localStorage.setItem('temp_subtitle', e.target.value)
+                            }}
                         />
                     </div>
                 </div>
@@ -344,6 +360,7 @@ export default function WorkPage() {
                             <input
                                 type="file"
                                 onChange={(e) => {
+                                    console.log('e', e)
                                     onChangeImageInput(e, true)
                                 }}
                             />
@@ -389,6 +406,7 @@ export default function WorkPage() {
                     onChange={(value) => {
                         value ? setMd(value) : setMd('')
                         value ? mdRef.current = value : mdRef.current = ''
+                        router.query.id === 'new' && value && localStorage.setItem('temp_post', value)
                     }}
                     autoFocus={false}
                     enableScroll
