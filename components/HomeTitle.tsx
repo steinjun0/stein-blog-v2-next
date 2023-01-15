@@ -9,15 +9,15 @@ export default function HomeTitle({ selectIndex, setSelectIndex }: { selectIndex
   const router = useRouter();
 
   return (
-    <div className='flex-col overflow-y-clip' >
+    <div className='flex-col overflow-y-clip' style={{ textDecorationThickness: '1px', textUnderlineOffset: '5px' }} >
       <div
         onClick={() => selectIndex == 0 ? router.push('post') : setSelectIndex(0)}
         onMouseEnter={() => setHoverIndex(0)}
         onMouseLeave={() => setHoverIndex(-1)}
         className="flex-col justify-start items-end"
-        style={{ cursor: 'pointer', overflowY: 'clip' }}
+        style={{ cursor: 'pointer', overflowY: 'clip', marginBottom: '1px' }}
       >
-        <div className="flex items-end">
+        <div className="flex items-end underline md:no-underline" style={{ paddingBottom: '1px' }}>
           {selectIndex === 0 ?
             <p className="transition-all" style={{ fontSize: 'min(13.5vw, 190px)', fontWeight: 700, lineHeight: '100%' }}>Post</p>
             :
@@ -35,11 +35,12 @@ export default function HomeTitle({ selectIndex, setSelectIndex }: { selectIndex
           </div>
         </div>
 
-        <div style={{ position: 'relative', overflow: 'hidden', width: '100%' }} >
+        <div className="hidden md:block" style={{ position: 'relative', overflow: 'hidden', width: '100%' }} >
           <Slide direction="right" in={selectIndex === 0 && hoverIndex == 0} >
             <hr className="border-black" style={{ width: '70%', borderWidth: '1px' }} />
           </Slide>
         </div>
+
       </div>
 
       <div
@@ -47,15 +48,15 @@ export default function HomeTitle({ selectIndex, setSelectIndex }: { selectIndex
         onMouseEnter={() => setHoverIndex(1)}
         onMouseLeave={() => setHoverIndex(-1)}
         className="flex-col justify-start items-end"
-        style={{ cursor: 'pointer', overflowY: 'clip' }}
+        style={{ cursor: 'pointer', overflowY: 'clip', paddingBottom: '1px' }}
       >
-        <div className="flex items-end">
+        <div className="flex items-end ">
           {selectIndex === 1 ?
-            <p className="transition-all " style={{ fontSize: 'min(13.5vw, 190px)', fontWeight: 700, lineHeight: '100%' }}>Work</p>
+            <p className="transition-all underline md:no-underline" style={{ fontSize: 'min(13.5vw, 190px)', fontWeight: 700, lineHeight: '100%' }}>Work</p>
             :
             <p
               onClick={() => setSelectIndex(1)}
-              className="transition-all"
+              className="transition-all underline md:no-underline"
               style={{ fontWeight: 700, lineHeight: '100%', WebkitTextStroke: 'calc(0.005em + 1px) #000', color: 'transparent', fontSize: 'min(15.5vw, 220px)' }}>
               Work
             </p>
@@ -68,7 +69,7 @@ export default function HomeTitle({ selectIndex, setSelectIndex }: { selectIndex
         </div>
 
 
-        <div style={{ position: 'relative', overflow: 'hidden', width: '100%' }} >
+        <div className="hidden md:flex" style={{ position: 'relative', overflow: 'hidden', width: '100%' }} >
           <Slide direction="right" in={selectIndex === 1 && hoverIndex == 1} >
             <hr className="border-black" style={{ width: '80%', borderWidth: '1px' }} />
           </Slide>
