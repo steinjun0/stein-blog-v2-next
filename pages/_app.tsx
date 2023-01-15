@@ -46,7 +46,7 @@ export default function App({ Component, pageProps }: AppProps) {
           </div>
         </Link>
       </nav>
-      <div className='flex justify-center px-4 xl:px-0'>
+      <div className='flex justify-center px-4 xl:px-0 mb-20'>
         <Component {...pageProps} />
       </div>
     </>
