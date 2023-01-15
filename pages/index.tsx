@@ -55,7 +55,7 @@ export default function Home() {
   }, [])
 
   return (
-    <div className='container flex flex-col justify-center' style={{ height: 'calc(100vh - 68px)' }}>
+    <div className='container flex flex-col justify-center' style={{ height: 'calc(100vh - 68px)', minHeight: 700 }}>
       <div className='flex-col'>
         <div className='flex justify-between items-center'>
           <div className='flex-col w-2/3'>
@@ -85,7 +85,7 @@ export default function Home() {
             posts!
               .filter((e) => process.env.NODE_ENV === 'development' || !e.categories.map(i => i.name).includes('test'))
               .map((e, i) =>
-                <SwiperSlide key={i} className='flex sm:justify-center xs:justify-start'>
+                <SwiperSlide key={i} className='flex justify-center '>
                   <div className="w-60 h-36 flex-col justify-center border-b-slate-400 border-b">
                     <span className='text-xs'>[{[...e.categories.map((cat) => cat.name)].toString().replaceAll(',', ', ')}]</span>
                     <Link href={`/post/${e.id}`}><h1 className='text-xl font-medium h-16 mt-1 whitespace-pre-wrap [&:hover]:underline'>{e.title}</h1></Link>
@@ -93,8 +93,8 @@ export default function Home() {
                   </div>
                 </SwiperSlide>
               ) :
-            ['/images/Dapada.png', '/images/DapadaEdu.png', '/images/CareerDive.png', '/images/CareerDive.png'].map((e, i) =>
-              <SwiperSlide key={i} className='flex sm:justify-center xs:justify-start'>
+            ['/images/Dapada.png', '/images/DapadaEdu.png', '/images/CareerDive.png', '/images/Dacon.png'].map((e, i) =>
+              <SwiperSlide key={i} className='flex justify-center'>
                 <div className='relative border-slate-200 border' style={{ overflow: 'hidden', height: `${240 * 9 / 16}px` }}>
                   <Image
                     src={e}
