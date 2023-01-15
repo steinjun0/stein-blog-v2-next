@@ -50,7 +50,7 @@ export default function WorkPage() {
     return (
         <div className='flex flex-col w-full mt-10'>
             {!isLoading && <div className="flex-col">
-                <div className="flex mb-2 justify-between items-end">
+                <div className="hidden md:flex mb-2 justify-between items-end">
                     <span className="text-3xl" style={{ fontWeight: 700 }}>
                         {post!.title}
                     </span>
@@ -59,9 +59,19 @@ export default function WorkPage() {
                             return <span className="text-sm" key={i}>{e.name}{i === (post!.categories!.length - 1) ? '' : <span>, &nbsp;</span>}</span>
                         })}
                     </div>
-
-
                 </div>
+
+                <div className="flex-col md:hidden mb-4 items-end">
+                    <div className="flex mb-2">
+                        {post!.categories?.map((e, i) => {
+                            return <span className="text-sm" key={i}>{e.name}{i === (post!.categories!.length - 1) ? '' : <span>, &nbsp;</span>}</span>
+                        })}
+                    </div>
+                    <span className="text-3xl" style={{ fontWeight: 700 }}>
+                        {post!.title}
+                    </span>
+                </div>
+
                 <div className="flex justify-between mb-3 items-end">
                     <div className="flex items-end">
                         <span className="mr-3">{post!.subtitle}</span>
