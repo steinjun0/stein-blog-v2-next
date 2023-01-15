@@ -9,7 +9,7 @@ export default function HomeTitle({ selectIndex, setSelectIndex }: { selectIndex
   const router = useRouter();
 
   return (
-    <div className='flex-col overflow-y-clip' style={{ textDecorationThickness: '1px', textUnderlineOffset: '5px' }} >
+    <div className='flex-col overflow-y-clip' style={{ textDecorationThickness: '1px', textUnderlineOffset: '5%' }} >
       <div
         onClick={() => selectIndex == 0 ? router.push('post') : setSelectIndex(0)}
         onMouseEnter={() => setHoverIndex(0)}
