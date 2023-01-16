@@ -22,6 +22,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name="description" content={description} />
         <meta name="author" content="Steinjun_0" />
         <meta name="robots" content="index, follow" />
+        <meta name="color-scheme" content="light only" />
 
         {/*  Facebook Meta Tags  */}
         <meta property="og:url" content={url} />

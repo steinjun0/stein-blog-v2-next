@@ -8,6 +8,7 @@ body {
   margin-left: auto;
   margin-right: auto;
   word-break: keep-all;
+  color-scheme: light only;
 }
 
 a {
@@ -18,7 +19,7 @@ a {
 * {
   box-sizing: border-box;
 }
-
+/*
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
@@ -29,7 +30,7 @@ a {
     background: black;
   }
 }
-
+*/
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
