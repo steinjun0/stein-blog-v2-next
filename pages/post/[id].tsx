@@ -19,7 +19,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     if (process.env.NODE_ENV === 'development') {
         data.body = data.body.replace('https://api.blog.steinjun.net', '//localhost:8888');
     }
-    console.log(new Date(data.created_at));
     return {
         props: {
             id: data.id,
