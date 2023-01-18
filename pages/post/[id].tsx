@@ -65,31 +65,31 @@ export default function WorkPage(props: {
 
     return (
         <div className='flex flex-col w-full mt-10'>
+            <Head>
+                <link rel="shortcut icon" href="/stein-logo.svg" />
+                <meta charSet="utf-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+                <title>{props.title}</title>
+                <meta name="description" content={props.subtitle} />
+                <meta name="author" content="Steinjun_0" />
+                <meta name="robots" content="index, follow" />
+
+                {/*  Facebook Meta Tags  */}
+                <meta property="og:url" content={`https://blog.steinjun.net/post/${router.query.id}`} />
+                <meta property="og:type" content="website" />
+                <meta property="og:title" content={props.title} />
+                <meta property="og:description" content={props.subtitle} />
+                <meta property="og:image" content={API.getPostFileUrl({ postId: props.id, fileName: 'thumbnail' })} />
+
+                {/* Twitter Meta Tags  */}
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta property="twitter:domain" content="blog.steinjun.net" />
+                <meta property="twitter:url" content={`https://blog.steinjun.net/post/${router.query.id}`} />
+                <meta name="twitter:title" content={props.title} />
+                <meta name="twitter:description" content={props.subtitle} />
+                <meta name="twitter:image" content={API.getPostFileUrl({ postId: props.id, fileName: 'thumbnail' })} />
+            </Head>
             <div className="flex-col">
-                <Head>
-                    <link rel="shortcut icon" href="/stein-logo.svg" />
-                    <meta charSet="utf-8" />
-                    <meta name="viewport" content="width=device-width, initial-scale=1" />
-                    <title>{props.title}</title>
-                    <meta name="description" content={props.subtitle} />
-                    <meta name="author" content="Steinjun_0" />
-                    <meta name="robots" content="index, follow" />
-
-                    {/*  Facebook Meta Tags  */}
-                    <meta property="og:url" content={`https://blog.steinjun.net/post/${router.query.id}`} />
-                    <meta property="og:type" content="website" />
-                    <meta property="og:title" content={props.title} />
-                    <meta property="og:description" content={props.subtitle} />
-                    <meta property="og:image" content={API.getPostFileUrl({ postId: props.id, fileName: 'thumbnail' })} />/
-
-                    {/* Twitter Meta Tags  */}
-                    <meta name="twitter:card" content="summary_large_image" />
-                    <meta property="twitter:domain" content="blog.steinjun.net" />
-                    <meta property="twitter:url" content={`https://blog.steinjun.net/post/${router.query.id}`} />
-                    <meta name="twitter:title" content={props.title} />
-                    <meta name="twitter:description" content={props.subtitle} />
-                    <meta name="twitter:image" content={API.getPostFileUrl({ postId: props.id, fileName: 'thumbnail' })} />
-                </Head>
                 <div className="hidden md:flex mb-2 justify-between items-end">
                     <span className="text-3xl" style={{ fontWeight: 700 }}>
                         {props.title}
