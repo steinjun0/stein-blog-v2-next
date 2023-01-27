@@ -20,7 +20,7 @@ export default function Document() {
         <meta property="og:type" content="website" />
         <meta property="og:title" content="stein-blog" />
         <meta property="og:description" content={description} />
-        <meta property="og:image" content="https://blog.steinjun.net/stein-logo.svg" />/
+        <meta property="og:image" content="https://blog.steinjun.net/stein-logo.svg" />
 
         {/* Twitter Meta Tags  */}
         <meta name="twitter:card" content="summary_large_image" />
