@@ -55,7 +55,8 @@ export default function Home() {
   }, [])
 
   return (
-    <div className='container flex flex-col justify-center' style={{ height: 'calc(100vh - 68px)', minHeight: 700 }}>
+    <div className='container flex flex-col justify-center' style={{ height: 'calc(100vh - 148px)', minHeight: 700 }}>
+      {/* calc(100vh - 150px) 68px(nav) + 80px(parent elem mb-20) */}
       <div className='flex-col'>
         <div className='flex justify-between items-center'>
           <div className='flex-col w-2/3'>
