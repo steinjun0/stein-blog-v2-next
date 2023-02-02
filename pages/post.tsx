@@ -1,10 +1,11 @@
-import { Divider, Slide } from "@mui/material";
+import { Divider, FormControl, InputLabel, MenuItem, Slide } from "@mui/material";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import API from "API"
 import { marked } from "marked"
 import { useScroll } from "components/hooks/useScroll";
 import { IPost } from "components/Types";
+import Select from '@mui/material/Select'
 
 
 export default function Post() {
@@ -63,18 +64,40 @@ export default function Post() {
 
 	return (
 		<div className="flex-col w-full my-10 justify-start">
-			<div className="flex items-end">
+			<div className="flex justify-between sm:justify-start items-end">
 				<h1 className="text-7xl mr-3 font-medium">Post</h1>
-				<div className="flex flex-wrap">
+
+				<div className="hidden sm:flex flex-wrap">
 					{
 						tagList.map(
 							(e, i) =>
-								<div key={i} className={e === tagFilter ? 'font-medium' : 'text-gray-400 cursor-pointer'} onClick={() => { setTagFilter(e) }}>
-									{e}{i < tagList.length - 1 ? <span className="text-gray-400">&nbsp;·&nbsp;</span> : ''}
+								<div key={i} className="flex items-end">
+									<div className="flex flex-col items-center">
+										{e === tagFilter && <span className="h-4">▾</span>}
+										<div className={e === tagFilter ? 'font-medium' : 'text-gray-400 cursor-pointer'} onClick={() => { setTagFilter(e) }}>
+											{e}
+										</div>
+									</div>
+									<div>
+										{i < tagList.length - 1 ? <span className="text-gray-400">&nbsp;·&nbsp;</span> : ''}
+									</div>
 								</div>
 						)
 					}
 				</div>
+
+				<FormControl variant="standard" className="flex sm:hidden w-40">
+					<InputLabel id="select-label">TAG</InputLabel>
+					<Select
+						onChange={(e) => { setTagFilter(e.target.value as string) }}
+						value={tagFilter}
+						label={'Tag'}
+						sx={{ boxShadow: 'none', '::before': { border: 0 } }}
+					>
+						{tagList.map((e, i) => <MenuItem value={e}>{e}</MenuItem>)}
+					</Select>
+				</FormControl>
+
 			</div>
 			<Slide in={true} direction={'right'}>
 				<Divider style={{ marginLeft: '158px' }} color={'black'} />
