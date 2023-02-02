@@ -86,17 +86,20 @@ export default function Post() {
 					}
 				</div>
 
-				<FormControl variant="standard" className="flex sm:hidden w-40">
-					<InputLabel id="select-label">TAG</InputLabel>
-					<Select
-						onChange={(e) => { setTagFilter(e.target.value as string) }}
-						value={tagFilter}
-						label={'Tag'}
-						sx={{ boxShadow: 'none', '::before': { border: 0 } }}
-					>
-						{tagList.map((e, i) => <MenuItem key={i} value={e}>{e}</MenuItem>)}
-					</Select>
-				</FormControl>
+				<div className="flex sm:hidden w-40">
+					<FormControl variant="standard" >
+						<InputLabel id="select-label">TAG</InputLabel>
+						<Select
+							onChange={(e) => { setTagFilter(e.target.value as string) }}
+							value={tagFilter}
+							label={'Tag'}
+							sx={{ boxShadow: 'none', '::before': { border: 0 } }}
+						>
+							{tagList.map((e, i) => <MenuItem key={i} value={e}>{e}</MenuItem>)}
+						</Select>
+					</FormControl>
+				</div>
+
 
 			</div>
 			<Slide in={true} direction={'right'}>
