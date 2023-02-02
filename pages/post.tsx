@@ -94,7 +94,7 @@ export default function Post() {
 						label={'Tag'}
 						sx={{ boxShadow: 'none', '::before': { border: 0 } }}
 					>
-						{tagList.map((e, i) => <MenuItem value={e}>{e}</MenuItem>)}
+						{tagList.map((e, i) => <MenuItem key={i} value={e}>{e}</MenuItem>)}
 					</Select>
 				</FormControl>
 
