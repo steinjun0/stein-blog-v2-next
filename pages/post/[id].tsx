@@ -112,7 +112,7 @@ export default function WorkPage(props: {
                     </span>
                 </div>
 
-                <div className="flex justify-between mb-3 items-end">
+                <div className="flex justify-between mb-3 items-end flex-wrap">
                     <div className="flex items-end">
                         <span className="mr-3">{props.subtitle}</span>
 
