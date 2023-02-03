@@ -57,7 +57,7 @@ export default function Work() {
                     (e, i) =>
                         <div key={i} className="relative w-full h-0"
                             style={{ paddingBottom: '100%' }}>
-                            <a href={e.link} target="_blank">
+                            <a href={e.link} target="_blank" rel="noreferrer">
                                 <Image
                                     src={e.image}
                                     alt='work'
