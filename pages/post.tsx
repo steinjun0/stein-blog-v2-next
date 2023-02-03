@@ -16,11 +16,11 @@ export default function Post() {
 	const [isGetAllPosts, setIsGetAllPosts] = useState<boolean>(false)
 	const [isPendingApi, setIsPendingApi] = useState<boolean>(false)
 	const [tagList, setTagList] = useState<string[]>(['All', 'Study', 'Engineering', 'Music', 'Art', 'etc'])
-	const [tagFilter, setTagFilter] = useState<string>('All')
+	const [tag, setTag] = useState<string>('All')
 	const koDtf = new Intl.DateTimeFormat("ko", { dateStyle: "long" });
 
 	useEffect(() => {
-		API.getPostList({ take: 4, page: postPage, tagFilter }).then((res) => {
+		API.getPostList({ take: 4, page: postPage, tagFilter: tag }).then((res) => {
 			if (res.status === 200) {
 				setPosts(res.data)
 			} else {
@@ -31,14 +31,14 @@ export default function Post() {
 
 	useEffect(() => {
 		setPostPage(1)
-		API.getPostList({ take: 4, page: 1, tagFilter }).then((res) => {
+		API.getPostList({ take: 4, page: 1, tagFilter: tag }).then((res) => {
 			if (res.status === 200) {
 				setPosts(res.data)
 			} else {
 				alert('Post를 받아오지 못하였습니다')
 			}
 		});
-	}, [tagFilter])
+	}, [tag])
 
 
 
@@ -73,8 +73,8 @@ export default function Post() {
 							(e, i) =>
 								<div key={i} className="flex items-end">
 									<div className="flex flex-col items-center">
-										{e === tagFilter && <span className="h-4">▾</span>}
-										<div className={e === tagFilter ? 'font-medium' : 'text-gray-400 cursor-pointer'} onClick={() => { setTagFilter(e) }}>
+										{e === tag && <span className="h-4">▾</span>}
+										<div className={e === tag ? 'font-medium' : 'text-gray-400 cursor-pointer'} onClick={() => { setTag(e) }}>
 											{e}
 										</div>
 									</div>
@@ -86,14 +86,14 @@ export default function Post() {
 					}
 				</div>
 
-				<div className="flex sm:hidden w-40">
+				<div className="flex sm:hidden w-40" style={{ marginBottom: '-2px' }}>
 					<FormControl variant="standard" className="w-full" >
 						<InputLabel id="select-label">TAG</InputLabel>
 						<Select
-							onChange={(e) => { setTagFilter(e.target.value as string) }}
-							value={tagFilter}
+							onChange={(e) => { setTag(e.target.value as string) }}
+							value={tag}
 							label={'Tag'}
-							sx={{ boxShadow: 'none', '::before': { border: 0 } }}
+							sx={{ boxShadow: 'none', '::before': { border: '0 !important' }, '::after': { border: 0 } }}
 						>
 							{tagList.map((e, i) => <MenuItem key={i} value={e}>{e}</MenuItem>)}
 						</Select>
