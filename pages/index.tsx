@@ -2,14 +2,15 @@ import API from 'API';
 import { IPost } from 'components/Types';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import React, { MutableRefObject, ReactNode, useEffect, useRef, useState } from 'react';
 import HomeTitle from '../components/HomeTitle';
 import useWindowSize from '../components/hooks/useWindowSize';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination } from "swiper";
+import { Autoplay, Pagination } from "swiper";
 import 'swiper/css'
 import "swiper/css/pagination";
+import "swiper/css/autoplay";
 
 function getBreakPoint(width: number): string {
   if (width > 1536) {
@@ -46,6 +47,41 @@ const imagesAndLink: { image: string, link: string }[] = [
   { image: '/images/Dacon.png', link: 'https://dacon.io/' }
 ]
 
+function imageMovementSequence(imageStyle: CSSStyleDeclaration) {
+  imageStyle.transition = 'rotate ease 0.2s,left ease 0.2s'
+  setTimeout(() => {
+    imageStyle.transformOrigin = '100% 100%'
+    imageStyle.rotate = '2deg'
+    imageStyle.left = '2%'
+  }, 1000)
+  setTimeout(() => {
+    imageStyle.rotate = '0deg'
+  }, 1200)
+  setTimeout(() => {
+    imageStyle.rotate = '2deg'
+    imageStyle.left = '4%'
+  }, 7500)
+  setTimeout(() => {
+    imageStyle.rotate = '0deg'
+  }, 7700)
+
+  setTimeout(() => {
+    imageStyle.transformOrigin = '0% 100%'
+    imageStyle.rotate = '-2deg'
+    imageStyle.left = '2%'
+  }, 8500)
+  setTimeout(() => {
+    imageStyle.rotate = '0deg'
+  }, 8700)
+  setTimeout(() => {
+    imageStyle.rotate = '-2deg'
+    imageStyle.left = '0px'
+  }, 9500)
+  setTimeout(() => {
+    imageStyle.rotate = '0deg'
+  }, 9700)
+}
+
 export default function Home() {
   const [posts, setPosts] = useState<IPost[]>([])
   const [selectIndex, setSelectIndex] = useState<number>(0)
@@ -61,6 +97,26 @@ export default function Home() {
     })
   }, [])
 
+
+  const imageWrapperRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    console.log('imageWrapperRef', imageWrapperRef)
+    console.log('imageWrapperRef', (imageWrapperRef.current?.firstElementChild as HTMLElement).style)
+    const imageStyle = (imageWrapperRef.current?.firstElementChild as HTMLElement).style
+
+
+
+    imageMovementSequence(imageStyle)
+    const imageShakingInterval = setInterval(() => {
+      imageMovementSequence(imageStyle)
+    }, 30000)
+
+    return () => {
+      clearInterval(imageShakingInterval)
+    }
+  }, [imageWrapperRef])
+
+
   return (
     <div className='container flex flex-col justify-center' style={{ height: 'calc(100vh - 68px)', marginBottom: -80, minHeight: 700 }}>
       {/* calc(100vh - 148px) 68px(nav) + 80px(parent elem mb-20) */}
@@ -70,7 +126,7 @@ export default function Home() {
             <HomeTitle selectIndex={selectIndex} setSelectIndex={setSelectIndex} />
           </div>
           <div className='flex w-1/3'>
-            <div className='relative w-full h-0' style={{ paddingBottom: '100%' }}>
+            <div className='relative w-full h-0' style={{ paddingBottom: '100%' }} ref={imageWrapperRef}>
               <Image
                 src={'/images/profile.png'}
                 alt='profile'
@@ -86,14 +142,15 @@ export default function Home() {
           onSwiper={(swiper) => console.log(swiper)}
           className='mt-16 h-52'
           pagination={true}
-          modules={[Pagination]}
+          autoplay={{ pauseOnMouseEnter: true, delay: 4000 }}
+          modules={[Pagination, Autoplay]}
           color="black"
         >
           {selectIndex === 0 ?
             posts!
               .filter((e) => process.env.NODE_ENV === 'development' || !e.categories.map(i => i.name).includes('test'))
               .map((e, i) =>
-                <SwiperSlide key={i} className='flex justify-center '>
+                <SwiperSlide key={i} className='flex justify-center'>
                   <div className="w-60 h-36 flex-col justify-center border-b-slate-400 border-b">
                     <span className='text-xs'>[{[...e.categories.map((cat) => cat.name)].toString().replaceAll(',', ', ')}]</span>
                     <Link href={`/post/${e.id}`}>
