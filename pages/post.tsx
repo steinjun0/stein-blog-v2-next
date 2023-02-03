@@ -87,7 +87,7 @@ export default function Post() {
 				</div>
 
 				<div className="flex sm:hidden w-40">
-					<FormControl variant="standard" >
+					<FormControl variant="standard" className="w-full" >
 						<InputLabel id="select-label">TAG</InputLabel>
 						<Select
 							onChange={(e) => { setTagFilter(e.target.value as string) }}

@@ -39,6 +39,13 @@ function getMaxPostCount(breakPoint: string): number {
   return maxPostCount[breakPoint]
 }
 
+const imagesAndLink: { image: string, link: string }[] = [
+  { image: '/images/Dapada.png', link: 'https://dapada.co.kr/app/' },
+  { image: '/images/DapadaEdu.png', link: 'https://careerdive.co.kr/' },
+  { image: '/images/CareerDive.png', link: 'https://dapada.co.kr/edu/' },
+  { image: '/images/Dacon.png', link: 'https://dacon.io/' }
+]
+
 export default function Home() {
   const [posts, setPosts] = useState<IPost[]>([])
   const [selectIndex, setSelectIndex] = useState<number>(0)
@@ -55,8 +62,8 @@ export default function Home() {
   }, [])
 
   return (
-    <div className='container flex flex-col justify-center' style={{ height: 'calc(100vh - 148px)', minHeight: 700 }}>
-      {/* calc(100vh - 150px) 68px(nav) + 80px(parent elem mb-20) */}
+    <div className='container flex flex-col justify-center' style={{ height: 'calc(100vh - 68px)', marginBottom: -80, minHeight: 700 }}>
+      {/* calc(100vh - 148px) 68px(nav) + 80px(parent elem mb-20) */}
       <div className='flex-col'>
         <div className='flex justify-between items-center'>
           <div className='flex-col w-2/3'>
@@ -89,20 +96,30 @@ export default function Home() {
                 <SwiperSlide key={i} className='flex justify-center '>
                   <div className="w-60 h-36 flex-col justify-center border-b-slate-400 border-b">
                     <span className='text-xs'>[{[...e.categories.map((cat) => cat.name)].toString().replaceAll(',', ', ')}]</span>
-                    <Link href={`/post/${e.id}`}><h1 className='text-xl font-medium h-16 mt-1 whitespace-pre-wrap [&:hover]:underline'>{e.title}</h1></Link>
-                    <p className='text-sm overflow-hidden whitespace-nowrap text-ellipsis mt-1'>{e.subtitle}</p>
+                    <Link href={`/post/${e.id}`}>
+                      <h1 className='text-xl font-medium h-16 mt-1 [&:hover]:underline overflow-hidden text-ellipsis whitespace-pre-wrap '
+                        style={{ overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', maxHeight: '3em' }}>
+                        {e.title}
+                      </h1>
+                    </Link>
+                    <p className='text-sm overflow-hidden whitespace-pre-wrap text-ellipsis mt-1'
+                      style={{ overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', maxHeight: '3em' }}
+                    >{e.subtitle}</p>
                   </div>
                 </SwiperSlide>
               ) :
-            ['/images/Dapada.png', '/images/DapadaEdu.png', '/images/CareerDive.png', '/images/Dacon.png'].map((e, i) =>
+            imagesAndLink.map((e, i) =>
               <SwiperSlide key={i} className='flex justify-center'>
                 <div className='relative border-slate-200 border' style={{ overflow: 'hidden', height: `${240 * 9 / 16}px` }}>
-                  <Image
-                    src={e}
-                    alt='profile'
-                    width={240}
-                    height={240 * 9 / 16}
-                  />
+                  <a href={e.link} target="_blank">
+                    <Image
+                      src={e.image}
+                      alt='profile'
+                      width={240}
+                      height={240 * 9 / 16}
+                    />
+                  </a>
+
                 </div>
               </SwiperSlide>
 
