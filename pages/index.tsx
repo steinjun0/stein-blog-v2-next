@@ -98,13 +98,9 @@ export default function Home() {
   }, [])
 
 
-  const imageWrapperRef = useRef<HTMLDivElement>(null);
+  const imageWrapperRef = useRef<HTMLAnchorElement>(null);
   useEffect(() => {
-    console.log('imageWrapperRef', imageWrapperRef)
-    console.log('imageWrapperRef', (imageWrapperRef.current?.firstElementChild as HTMLElement).style)
     const imageStyle = (imageWrapperRef.current?.firstElementChild as HTMLElement).style
-
-
 
     imageMovementSequence(imageStyle)
     const imageShakingInterval = setInterval(() => {
@@ -126,13 +122,13 @@ export default function Home() {
             <HomeTitle selectIndex={selectIndex} setSelectIndex={setSelectIndex} />
           </div>
           <div className='flex w-1/3'>
-            <div className='relative w-full h-0' style={{ paddingBottom: '100%' }} ref={imageWrapperRef}>
+            <Link href={'/profile'} className='relative w-full h-0' style={{ paddingBottom: '100%' }} ref={imageWrapperRef} >
               <Image
                 src={'/images/profile.png'}
                 alt='profile'
                 fill
               />
-            </div>
+            </Link>
           </div>
         </div>
 
@@ -168,7 +164,7 @@ export default function Home() {
             imagesAndLink.map((e, i) =>
               <SwiperSlide key={i} className='flex justify-center'>
                 <div className='relative border-slate-200 border' style={{ overflow: 'hidden', height: `${240 * 9 / 16}px` }}>
-                  <a href={e.link} target="_blank">
+                  <a href={e.link} target="_blank" rel="noreferrer">
                     <Image
                       src={e.image}
                       alt='profile'
