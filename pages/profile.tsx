@@ -1,10 +1,48 @@
-import { Button, Icon, IconButton } from "@mui/material";
+import { Button, Icon, IconButton, keyframes, styled } from "@mui/material";
 import zIndex from "@mui/material/styles/zIndex";
 import { MutableRefObject, RefObject, useEffect, useRef, useState } from "react";
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline';
 import ScreenRotationIcon from '@mui/icons-material/ScreenRotation';
-import Swal from "sweetalert2";
+
+
+const RotateIconKeyframes = keyframes`
+from {
+  transform: rotate(0deg);
+}
+
+20% {
+    transform: rotate(0deg);
+}
+
+25% {
+    transform: rotate(20deg);
+}
+
+30% {
+    transform: rotate(0deg);
+}
+
+70%{
+    transform: rotate(0deg);
+}
+
+75% {
+    transform: rotate(-20deg);
+}
+
+80% {
+    transform: rotate(0deg);
+}
+
+to {
+  transform: rotate(0deg);
+}
+`
+
+const RotateIcon = styled(ScreenRotationIcon)`
+  animation: ${RotateIconKeyframes} 3s infinite ease;
+`
 
 export default function Profile() {
 
@@ -119,28 +157,35 @@ export default function Profile() {
                     junyoung4737@gmail.com
                 </div>
             </div>
-            <ScreenRotationIcon />
 
-            <IconButton
-                sx={{
-                    color: 'black', boxShadow: 'none', border: '0px solid black',
-                    height: 100, width: 100,
-                    zIndex: 1, backgroundColor: 'white !important',
-                    '&>*': {
-                        fontSize: '70px',
-                    }
-                }}
-                onClick={() => {
-                    isStopAnimationRef.current = !isStopAnimationRef.current
-                    if (isStopButtonState === true) {
-                        requestPermission()
-                        window.requestAnimationFrame(moveCard)
-                    }
-                    setIsStopButtonState(!isStopButtonState)
-                }}
-            >
-                {isStopButtonState ? <PlayCircleOutlineIcon /> : <PauseCircleOutlineIcon />}
-            </IconButton>
+            <div className="flex md:hidden flex-col items-center">
+                {isStopButtonState ? <ScreenRotationIcon className="text-3xl" /> : <RotateIcon className="text-3xl" />}
+
+                <IconButton
+                    sx={{
+                        color: 'black', boxShadow: 'none', border: '0px solid black',
+                        height: 100, width: 100,
+                        zIndex: 1, backgroundColor: 'white !important',
+                        '&>*': {
+                            fontSize: '40px !important',
+                        }
+                    }}
+                    onClick={() => {
+                        isStopAnimationRef.current = !isStopAnimationRef.current
+                        if (isStopButtonState === true) {
+                            requestPermission()
+                            window.requestAnimationFrame(moveCard)
+                        }
+                        setIsStopButtonState(!isStopButtonState)
+                    }}
+                >
+                    {isStopButtonState ? <PlayCircleOutlineIcon /> : <PauseCircleOutlineIcon />}
+                </IconButton>
+            </div>
+            <div className="hidden md:flex">
+                <span className="text-xl">모바일로 접속해보세요!</span>
+            </div>
+
 
 
         </main >
