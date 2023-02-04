@@ -4,6 +4,7 @@ import { MutableRefObject, RefObject, useEffect, useRef, useState } from "react"
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline';
 import ScreenRotationIcon from '@mui/icons-material/ScreenRotation';
+import Swal from "sweetalert2";
 
 export default function Profile() {
 
@@ -11,8 +12,8 @@ export default function Profile() {
     const accXRef = useRef<number>(0)
     const accYRef = useRef<number>(0)
 
-    const isStopAnimationRef = useRef<boolean>(false)
-    const [isStopButtonState, setIsStopButtonState] = useState<boolean>(false)
+    const isStopAnimationRef = useRef<boolean>(true)
+    const [isStopButtonState, setIsStopButtonState] = useState<boolean>(true)
     function moveCard() {
         if (cardRef.current) {
             const cardStyle = cardRef.current!.style
@@ -47,37 +48,46 @@ export default function Profile() {
         }
 
     }
+
+    function catchDevOrientEvent(event: DeviceOrientationEvent) {
+        accXRef.current = event.gamma ?? 0
+        accYRef.current = event.beta ?? 0
+    }
+    function catchDevMotionEvent(event: DeviceMotionEvent) {
+        accXRef.current = event.acceleration!.x! * 2 ?? 0
+        accYRef.current = event.acceleration!.y! * 2 ?? 0
+    }
+
+    function requestPermission() {
+        if ((window.DeviceOrientationEvent as any).requestPermission) {
+            try {
+                (window.DeviceOrientationEvent as any).requestPermission()
+            } catch {
+                (window.DeviceOrientationEvent as any).requestPermission()
+                    .then((response: any) => {
+                        if (response == 'granted') {
+                            window.addEventListener('deviceorientation', (e) => {
+                                window.addEventListener("deviceorientation", catchDevOrientEvent, true);
+                            })
+                        }
+                    })
+                    .catch(console.error)
+            }
+        }
+    }
+
     useEffect(() => {
-        // cardRef: RefObject<HTMLDivElement>, accX: number | null, accY: number | null
-
-
-        function catchDevOrientEvent(event: DeviceOrientationEvent) {
-            accXRef.current = event.gamma ?? 0
-            accYRef.current = event.beta ?? 0
-            // moveCard(cardRef, event.gamma, event.beta)
-        }
-        function catchDevMotionEvent(event: DeviceMotionEvent) {
-            accXRef.current = event.acceleration!.x! * 2 ?? 0
-            accYRef.current = event.acceleration!.y! * 2 ?? 0
-            // moveCard(cardRef, event.acceleration!.x! * 2, event.acceleration!.y! * 2)
-        }
-
         if (cardRef) {
             if (window.DeviceOrientationEvent) {
-                if ((window.DeviceOrientationEvent as any).requestPermission) {
-                    (window.DeviceOrientationEvent as any).requestPermission()
-                }
                 window.addEventListener("deviceorientation", catchDevOrientEvent, true);
-                window.requestAnimationFrame(moveCard)
             } else if (window.DeviceMotionEvent) {
-                if ((window.DeviceMotionEvent as any).requestPermission) {
-                    (window.DeviceMotionEvent as any).requestPermission()
-                }
                 window.addEventListener('devicemotion', catchDevMotionEvent, true);
-                window.requestAnimationFrame(moveCard)
             } else {
                 alert('not supported gyro')
             }
+            cardRef.current!.style.left = `${(window.innerWidth - 277) / 2}px`
+            cardRef.current!.style.top = `${((window.innerHeight - 120) / 2) - 120}px`
+
         }
 
         return () => {
@@ -87,14 +97,13 @@ export default function Profile() {
     }, [cardRef])
 
     return (
-        <main className="flex flex-col justify-center items-center h-screen">
+        <main className="flex flex-col justify-center items-center" style={{ height: 'calc(100vh - 68px)', marginBottom: -80 }}>
             <div
                 className="text-lg p-4 border-black border-2"
                 style={{
                     position: 'fixed', zIndex: 2, backgroundColor: 'white',
                     width: '277px', height: '120px',
                     transition: 'left ease 0.1s, top ease 0.1s'
-                    // left: 'calc(100vw - 277px)', top: 'calc(100vh - 120px)'
                 }}
                 ref={cardRef}>
                 <div className="flex items-center">
@@ -110,30 +119,7 @@ export default function Profile() {
                     junyoung4737@gmail.com
                 </div>
             </div>
-            {/* <div className="text-lg">핸드폰을 움직여 보세요!</div> */}
             <ScreenRotationIcon />
-
-            {/* <Button
-                variant="contained"
-                sx={{
-                    color: 'black', boxShadow: 'none', border: '0px solid black',
-                    height: 100, width: 100,
-                    zIndex: 1, backgroundColor: 'white !important',
-                    '&>*': {
-                        fontSize: '70px',
-                    }
-                }}
-                onClick={() => {
-                    isStopAnimationRef.current = !isStopAnimationRef.current
-                    if (isStopButtonState === true) {
-                        window.requestAnimationFrame(moveCard)
-                    }
-                    setIsStopButtonState(!isStopButtonState)
-
-                }}
-            >
-                {isStopButtonState ? <PlayCircleOutlineIcon /> : <PauseCircleOutlineIcon />}
-            </Button> */}
 
             <IconButton
                 sx={{
@@ -147,16 +133,16 @@ export default function Profile() {
                 onClick={() => {
                     isStopAnimationRef.current = !isStopAnimationRef.current
                     if (isStopButtonState === true) {
+                        requestPermission()
                         window.requestAnimationFrame(moveCard)
                     }
                     setIsStopButtonState(!isStopButtonState)
-
                 }}
             >
                 {isStopButtonState ? <PlayCircleOutlineIcon /> : <PauseCircleOutlineIcon />}
             </IconButton>
 
 
-        </main>
+        </main >
     )
 }
