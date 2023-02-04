@@ -71,7 +71,6 @@ export default function Profile() {
             }
             if (accYRef.current !== null) {
                 const nextTop = presentTop + (accYRef.current * 0.3)
-                console.log('nextTop', nextTop, 'maxTop', maxTop)
                 if (nextTop <= 0) {
                     cardStyle.top = '0px'
                 } else if (nextTop >= maxTop) {
