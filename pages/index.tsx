@@ -11,6 +11,7 @@ import { Autoplay, Pagination } from "swiper";
 import 'swiper/css'
 import "swiper/css/pagination";
 import "swiper/css/autoplay";
+import { keyframes, styled } from '@mui/system';
 
 function getBreakPoint(width: number): string {
   if (width > 1536) {
@@ -47,40 +48,85 @@ const imagesAndLink: { image: string, link: string }[] = [
   { image: '/images/Dacon.png', link: 'https://dacon.io/' }
 ]
 
-function imageMovementSequence(imageStyle: CSSStyleDeclaration) {
-  imageStyle.transition = 'rotate ease 0.2s,left ease 0.2s'
-  setTimeout(() => {
-    imageStyle.transformOrigin = '100% 100%'
-    imageStyle.rotate = '2deg'
-    imageStyle.left = '2%'
-  }, 1000)
-  setTimeout(() => {
-    imageStyle.rotate = '0deg'
-  }, 1200)
-  setTimeout(() => {
-    imageStyle.rotate = '2deg'
-    imageStyle.left = '4%'
-  }, 7500)
-  setTimeout(() => {
-    imageStyle.rotate = '0deg'
-  }, 7700)
-
-  setTimeout(() => {
-    imageStyle.transformOrigin = '0% 100%'
-    imageStyle.rotate = '-2deg'
-    imageStyle.left = '2%'
-  }, 8500)
-  setTimeout(() => {
-    imageStyle.rotate = '0deg'
-  }, 8700)
-  setTimeout(() => {
-    imageStyle.rotate = '-2deg'
-    imageStyle.left = '0px'
-  }, 9500)
-  setTimeout(() => {
-    imageStyle.rotate = '0deg'
-  }, 9700)
+const MovingImageKeyframes = keyframes`
+from {
+  transform: rotate(0deg);
+  left : 0%;
 }
+
+8% {
+  transform-origin: 100% 100%;
+  transform: rotate(0deg);
+  left : 0%;
+}
+
+10% {
+  transform: rotate(2deg);
+  left : 2%;
+}
+
+12% {
+  transform: rotate(0deg);
+  left : 2%;
+}
+
+50% {
+  transform-origin: 100% 100%;
+  transform: rotate(0deg);
+  left : 2%;
+}
+
+52% {
+  transform: rotate(2deg);
+  left : 4%;
+}
+
+54% {
+  transform: rotate(0deg);
+  left : 4%;
+}
+
+70% {
+  transform-origin: 0% 100%;
+  transform: rotate(0deg);
+  left : 4%;
+}
+
+72% {
+  transform: rotate(-2deg);
+  left : 2%;
+}
+
+74% {
+  transform: rotate(0deg);
+  left : 2%;
+}
+
+80% {
+  transform-origin: 0% 100%;
+  transform: rotate(0deg);
+  left : 2%;
+}
+
+82% {
+  transform: rotate(-2deg);
+  left : 0%;
+}
+
+84% {
+  transform: rotate(0deg);
+  left : 0%;
+}
+
+to {
+  transform: rotate(0deg);
+  left : 0%;
+}
+`
+
+const MovingImage = styled(Image)`
+  animation: ${MovingImageKeyframes} 10s infinite ease;
+`
 
 export default function Home() {
   const [posts, setPosts] = useState<IPost[]>([])
@@ -97,22 +143,6 @@ export default function Home() {
     })
   }, [])
 
-
-  const imageWrapperRef = useRef<HTMLAnchorElement>(null);
-  useEffect(() => {
-    const imageStyle = (imageWrapperRef.current?.firstElementChild as HTMLElement).style
-
-    imageMovementSequence(imageStyle)
-    const imageShakingInterval = setInterval(() => {
-      imageMovementSequence(imageStyle)
-    }, 30000)
-
-    return () => {
-      clearInterval(imageShakingInterval)
-    }
-  }, [imageWrapperRef])
-
-
   return (
     <div className='container flex flex-col justify-center' style={{ height: 'calc(100vh - 68px)', marginBottom: -80, minHeight: 700 }}>
       {/* calc(100vh - 148px) 68px(nav) + 80px(parent elem mb-20) */}
@@ -122,8 +152,8 @@ export default function Home() {
             <HomeTitle selectIndex={selectIndex} setSelectIndex={setSelectIndex} />
           </div>
           <div className='flex w-1/3'>
-            <Link href={'/profile'} className='relative w-full h-0' style={{ paddingBottom: '100%' }} ref={imageWrapperRef} >
-              <Image
+            <Link href={'/profile'} className='relative w-full h-0' style={{ paddingBottom: '100%' }} >
+              <MovingImage
                 src={'/images/profile.png'}
                 alt='profile'
                 fill
