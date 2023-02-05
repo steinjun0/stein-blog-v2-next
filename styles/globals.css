@@ -19,6 +19,12 @@ a {
 * {
   box-sizing: border-box;
 }
+
+/* sweetalert2 custom*/
+.swal2-html-container {
+  word-break: keep-all !important;
+}
+
 /*
 @media (prefers-color-scheme: dark) {
   html {
@@ -77,3 +83,4 @@ a {
 
 /* swiper css */
 @import 'custom-swiper.css'
+
