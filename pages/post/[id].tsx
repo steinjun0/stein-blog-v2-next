@@ -48,18 +48,20 @@ export default function WorkPage(props: {
     const [post, setPost] = useState<IPost>()
 
     useEffect(() => {
-        let tempPost = {
-            id: props.id,
-            categories: props.categories,
-            title: props.title,
-            subtitle: props.subtitle,
-            body: props.body,
-            files: props.files,
-            created_at: new Date(props.created_at),
-            updated_at: new Date(props.updated_at)
+        if (props) {
+            let tempPost = {
+                id: props.id,
+                categories: props.categories,
+                title: props.title,
+                subtitle: props.subtitle,
+                body: props.body,
+                files: props.files,
+                created_at: new Date(props.created_at),
+                updated_at: new Date(props.updated_at)
+            }
+            setPost(tempPost)
         }
-        setPost(tempPost)
-    }, [])
+    }, [props])
 
     const koDtf = new Intl.DateTimeFormat("ko", { dateStyle: "medium" });
 

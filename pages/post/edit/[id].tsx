@@ -4,6 +4,7 @@ import API from "API";
 import ListPushInput from "components/ListPushInput";
 import { IPost } from "components/Types";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { ChangeEvent, SetStateAction, useEffect, useRef, useState } from "react";
 
@@ -66,8 +67,8 @@ export default function WorkPage() {
 
     const postThumbnailLocationRef = useRef<'temp' | number>()
 
-    let isSetListener = false
-    let isSendingApi = false
+    const isSetListenerRef = useRef<boolean>(false)
+    let isSendingApiRef = useRef<boolean>(false)
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
 
     const [uploadImageUrl, setUploadImageUrl] = useState('')
@@ -77,10 +78,10 @@ export default function WorkPage() {
         const data: postPostDto = {
             title, subtitle, categories, body: md, files: fileNames
         }
-        if (!isSendingApi) {
+        if (!isSendingApiRef.current) {
             if (router.query.id === 'new') {
-                isSendingApi = true
-                setIsDialogOpen(isSendingApi)
+                isSendingApiRef.current = true
+                setIsDialogOpen(isSendingApiRef.current)
                 try {
                     API.postPost(data).then((res) => {
                         if (res.status === 201) {
@@ -93,16 +94,16 @@ export default function WorkPage() {
                         } else {
                             alert('업로드에 실패했습니다')
                         }
-                        isSendingApi = false
-                        setIsDialogOpen(isSendingApi)
+                        isSendingApiRef.current = false
+                        setIsDialogOpen(isSendingApiRef.current)
                     })
                 } catch (error) {
 
                 }
 
             } else {
-                isSendingApi = true
-                setIsDialogOpen(isSendingApi)
+                isSendingApiRef.current = true
+                setIsDialogOpen(isSendingApiRef.current)
                 API.patchPost(parseInt(`${router.query.id}`), data).then((res) => {
                     if (res.status === 200) {
                         alert('수정에 성공했습니다')
@@ -110,8 +111,8 @@ export default function WorkPage() {
                     } else {
                         alert('수정에 실패했습니다')
                     }
-                    isSendingApi = false
-                    setIsDialogOpen(isSendingApi)
+                    isSendingApiRef.current = false
+                    setIsDialogOpen(isSendingApiRef.current)
                 })
             }
         } else {
@@ -162,8 +163,8 @@ export default function WorkPage() {
             var x = new MutationObserver(function (e) {
                 const target = document.getElementsByClassName('w-md-editor-text-input')[0] as HTMLElement;
                 console.log('target', target)
-                if (target !== undefined && !isSetListener) {
-                    isSetListener = true
+                if (target !== undefined && !isSetListenerRef.current) {
+                    isSetListenerRef.current = true
                     target.addEventListener('paste', async (event: any) => {
                         console.log('paste!', event)
                         var items = (event.clipboardData || event.originalEvent.clipboardData).items;
@@ -174,8 +175,8 @@ export default function WorkPage() {
                                 let fileName: string = getUnduplicatedName(file.name, fileNamesRef.current)
 
                                 const res = await API.postFile({ file: file, name: fileName })
-                                isSendingApi = true
-                                setIsDialogOpen(isSendingApi)
+                                isSendingApiRef.current = true
+                                setIsDialogOpen(isSendingApiRef.current)
                                 if (res.status === 201) {
                                     setFileNames(fileNames => [...fileNames, fileName])
                                     fileNamesRef.current = [...fileNamesRef.current, fileName]
@@ -185,8 +186,8 @@ export default function WorkPage() {
                                 } else {
                                     alert('이미지가 업로드 되지 못하였습니다!')
                                 }
-                                isSendingApi = false
-                                setIsDialogOpen(isSendingApi)
+                                isSendingApiRef.current = false
+                                setIsDialogOpen(isSendingApiRef.current)
                             }
                         }
                     });
@@ -211,9 +212,9 @@ export default function WorkPage() {
 
     function onChangeImageInput(e: ChangeEvent<HTMLInputElement>, isThumbnail?: boolean) {
         if (e.target.files!.length > 0) {
-            if (!isSendingApi) {
-                isSendingApi = true
-                setIsDialogOpen(isSendingApi)
+            if (!isSendingApiRef.current) {
+                isSendingApiRef.current = true
+                setIsDialogOpen(isSendingApiRef.current)
                 API.postFile({ file: e.target.files![0], name: isThumbnail ? `thumbnail` : getUnduplicatedName(e.target.files![0].name, fileNamesRef.current) })
                     .then((res) => {
                         if (res.status === 201) {
@@ -225,8 +226,8 @@ export default function WorkPage() {
                         } else {
                             alert(`${isThumbnail ? '썸네일을' : '이미지를'} 업로드하지 못하였습니다`)
                         }
-                        isSendingApi = false
-                        setIsDialogOpen(isSendingApi)
+                        isSendingApiRef.current = false
+                        setIsDialogOpen(isSendingApiRef.current)
                     })
             }
             else {
@@ -243,9 +244,9 @@ export default function WorkPage() {
             var item = items[index];
             if (item.kind === 'file') {
                 let file = item.getAsFile();
-                if (!isSendingApi) {
-                    isSendingApi = true
-                    setIsDialogOpen(isSendingApi)
+                if (!isSendingApiRef.current) {
+                    isSendingApiRef.current = true
+                    setIsDialogOpen(isSendingApiRef.current)
                     API.postFile({ file: file, name: 'thumbnail' }).then((res) => {
                         if (res.status === 201) {
                             postThumbnailLocationRef.current = 'temp'
@@ -254,8 +255,8 @@ export default function WorkPage() {
                         } else {
                             alert('썸네일을 업로드하지 못하였습니다')
                         }
-                        isSendingApi = false
-                        setIsDialogOpen(isSendingApi)
+                        isSendingApiRef.current = false
+                        setIsDialogOpen(isSendingApiRef.current)
                     })
                 } else {
                     alert('썸네일 업로드 중입니다!')
@@ -355,6 +356,8 @@ export default function WorkPage() {
                         <img
                             src={API.getPostFileUrl({ postId: postThumbnailLocationRef.current!, fileName: 'thumbnail' }) + `?${urlCacheBreaker}`} alt=""
                             style={{ maxHeight: '100px' }}
+                            fill
+                            sizes="100vw"
                         />
                         <div className="flex-col w-full ml-4">
                             <input
