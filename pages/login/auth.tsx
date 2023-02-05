@@ -9,12 +9,11 @@ declare global {
     }
 }
 
-export default function auth() {
+export default function Auth() {
     const router = useRouter()
 
     useEffect(() => {
         if (router.isReady) {
-            console.log(router.query)
             axios.post(`https://kauth.kakao.com/oauth/token`, null,
                 {
                     params: {
@@ -33,7 +32,6 @@ export default function auth() {
                 window.Kakao.API.request({
                     url: '/v2/user/me',
                 }).then((res: any) => {
-                    console.log('/v2/user/me', res)
                     localStorage.setItem('nickname', res.properties.nickname)
                     localStorage.setItem('profile_image', res.properties.profile_image)
                     localStorage.setItem('thumbnail_image', res.properties.thumbnail_image)
@@ -47,11 +45,6 @@ export default function auth() {
             })
         }
     }, [router.isReady])
-
-    useEffect(() => {
-        console.log('hi')
-    }, [])
-
 
     return <div>
 
