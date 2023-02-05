@@ -356,7 +356,6 @@ export default function WorkPage() {
                         <img
                             src={API.getPostFileUrl({ postId: postThumbnailLocationRef.current!, fileName: 'thumbnail' }) + `?${urlCacheBreaker}`} alt=""
                             style={{ maxHeight: '100px' }}
-                            fill
                             sizes="100vw"
                         />
                         <div className="flex-col w-full ml-4">
