@@ -4,10 +4,8 @@ import "styles/markdown.css";
 import "styles/markdown-editor.css";
 
 import type { AppProps } from 'next/app'
-import Link from 'next/link';
-import Head from 'next/head';
 import { createTheme, ThemeProvider } from '@mui/material';
-import { red } from '@mui/material/colors';
+import Gnb from 'components/Gnb';
 
 
 const theme = createTheme({
@@ -20,19 +18,11 @@ const theme = createTheme({
 
 
 export default function App({ Component, pageProps }: AppProps) {
-  const description = "Blog for Stein. Engineering, Music, Camera, Art, and Life."
-  const url = "https://blog.steinjun.net/"
   return (
     <>
       <ThemeProvider theme={theme}>
-        <nav className='flex md:py-4 xl:px-0 xs:p-4 p-4' >
-          <Link href={'/'}>
-            <div className='flex items-end'>
-              <p className='text-3xl' style={{ fontWeight: 700 }}>stein</p>
-              {/* <Image style={{ margin: '0 0px 4px 8px', }} src={'/stein-logo.svg'} alt={'logo'} width={24} height={24}></Image> */}
-            </div>
-          </Link>
-        </nav >
+        <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.1.0/kakao.min.js" integrity="sha384-dpu02ieKC6NUeKFoGMOKz6102CLEWi9+5RQjWSV0ikYSFFd8M3Wp2reIcquJOemx" crossOrigin="anonymous"></script>
+        <Gnb />
         <div className='flex justify-center px-4 xl:px-0 mb-20'>
           <Component {...pageProps} />
         </div>
