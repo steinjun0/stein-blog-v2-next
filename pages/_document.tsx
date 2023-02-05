@@ -1,4 +1,5 @@
 import { Html, Head, Main, NextScript } from 'next/document'
+import Script from 'next/script'
 
 export default function Document() {
   const description = "Blog for Stein. Engineering, Music, Camera, Art, and Life."
@@ -31,6 +32,10 @@ export default function Document() {
         <meta name="twitter:image" content="https://blog.steinjun.net/stein-logo.svg" />
       </Head>
       <body>
+        <Script src="https://t1.kakaocdn.net/kakao_js_sdk/2.1.0/kakao.min.js"
+          crossOrigin="anonymous"
+          strategy='beforeInteractive'
+        ></Script>
         <Main />
         <NextScript />
       </body>

@@ -7,7 +7,7 @@ declare global {
     }
 }
 
-export default function login() {
+export default function Login() {
 
     useEffect(() => {
         if (!window.Kakao.isInitialized()) {
