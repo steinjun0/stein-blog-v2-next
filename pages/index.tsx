@@ -164,8 +164,8 @@ export default function Home() {
 
         <Swiper
           slidesPerView={getMaxPostCount(getBreakPoint(size.width))}
-          onSlideChange={() => console.log('slide change')}
-          onSwiper={(swiper) => console.log(swiper)}
+          onSlideChange={() => { }}
+          onSwiper={(swiper) => { }}
           className='mt-16 h-52'
           pagination={true}
           autoplay={{ pauseOnMouseEnter: true, delay: 4000 }}
