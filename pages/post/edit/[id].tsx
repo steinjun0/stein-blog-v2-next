@@ -163,7 +163,6 @@ export default function WorkPage() {
 
             var x = new MutationObserver(function (e) {
                 const target = document.getElementsByClassName('w-md-editor-text-input')[0] as HTMLElement;
-                console.log('target', target)
                 if (target !== undefined && !isSetListenerRef.current) {
                     isSetListenerRef.current = true
                     target.addEventListener('paste', async (event: any) => {
@@ -414,22 +413,26 @@ export default function WorkPage() {
             <hr />
 
             <hr className="mb-7" />
-            <div className="" id="MDEditor_parent">
-                <MDEditor
-                    value={md}
-                    onChange={(value) => {
-                        value ? setMd(value) : setMd('')
-                        value ? mdRef.current = value : mdRef.current = ''
-                        router.query.id === 'new' && value && localStorage.setItem('temp_post', value)
-                    }}
-                    autoFocus={false}
-                    enableScroll
-                    preview="edit"
-                />
+            <div className="flex">
+                <div className="w-1/2" id="MDEditor_parent">
+                    <MDEditor
+                        value={md}
+                        onChange={(value) => {
+                            value ? setMd(value) : setMd('')
+                            value ? mdRef.current = value : mdRef.current = ''
+                            router.query.id === 'new' && value && localStorage.setItem('temp_post', value)
+                        }}
+                        autoFocus={false}
+                        enableScroll
+                        preview="edit"
+                        height={500}
+                    />
+                </div>
+                <div id='md-preview' className="w-1/2" style={{ padding: '20px 20px', height: '600px', maxHeight: '600px', overflow: 'scroll' }}>
+                    <Markdown source={md} />
+                </div>
             </div>
-            <div id='md-preview' style={{ padding: '50px 0', height: '600px', maxHeight: '600px', overflow: 'scroll' }}>
-                <Markdown source={md} />
-            </div>
+
             <Button
                 variant="outlined"
                 style={{ cursor: 'pointer' }}
