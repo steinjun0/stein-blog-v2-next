@@ -92,7 +92,9 @@ export default function Gnb() {
                     {localStorage.getItem('nickname') !== null && localStorage.getItem('nickname')![0]}
                 </Avatar>
             </IconButton> :
-            <Button variant='outlined' onClick={() => { router.push('/login') }}>
+            <Button style={{ height: 36 }}
+                variant='outlined'
+                onClick={() => { router.push('/login') }}>
                 Login
             </Button>
         }
