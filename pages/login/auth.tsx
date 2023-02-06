@@ -3,11 +3,6 @@ import { useRouter } from "next/router"
 import { GetServerSideProps } from "next/types"
 import { useEffect } from "react"
 
-declare global {
-    interface Window {
-        Kakao: any
-    }
-}
 
 export default function Auth() {
     const router = useRouter()

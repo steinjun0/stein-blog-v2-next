@@ -1,11 +1,6 @@
 import { Button } from "@mui/material";
 import { useEffect } from "react";
 
-declare global {
-    interface Window {
-        Kakao: any
-    }
-}
 
 export default function Login() {
 
