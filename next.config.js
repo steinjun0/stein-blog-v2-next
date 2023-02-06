@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ['dev-nest', 'localhost']
+    domains: ['dev-nest', 'localhost', 'api.blog.steinjun.net']
   }
 }
 
