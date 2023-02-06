@@ -157,6 +157,8 @@ export default function Home() {
                 src={'/images/profile.png'}
                 alt='profile'
                 fill
+                sizes="50vw"
+                priority
               />
             </Link>
           </div>

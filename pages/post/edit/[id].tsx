@@ -72,6 +72,7 @@ export default function WorkPage() {
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
 
     const [uploadImageUrl, setUploadImageUrl] = useState('')
+    const [uploadImageUrlForMD, setUploadImageUrlForMD] = useState('')
 
     function onClickSave() {
         type postPostDto = { title: string, subtitle: string, body: string, categories?: Array<string>, files?: Array<string> }
@@ -133,7 +134,7 @@ export default function WorkPage() {
             }
         })
 
-        if (router.isReady) {
+        if (router && router.isReady) {
             if (router.query.id === 'new') {
                 postThumbnailLocationRef.current = 'temp'
                 if (localStorage.getItem('temp_post') !== null) {
@@ -181,7 +182,7 @@ export default function WorkPage() {
                                     setFileNames(fileNames => [...fileNames, fileName])
                                     fileNamesRef.current = [...fileNamesRef.current, fileName]
 
-                                    const newMd: string = mdRef.current + `<p align="center"><img src="${API.getPostFileUrl({ postId: 'temp', fileName: fileName })}" alt="${fileName}" style="max-height: 300px"/></p>`
+                                    const newMd: string = mdRef.current + `<p align="center"><img src="${API.getServerPostImageUrl({ postId: 'temp', fileName: fileName })}" alt="${fileName}" style="max-height: 300px"/></p>`
                                     setMd(newMd)
                                 } else {
                                     alert('이미지가 업로드 되지 못하였습니다!')
@@ -208,7 +209,7 @@ export default function WorkPage() {
         }
 
 
-    }, [router.isReady])
+    }, [router.isReady, router])
 
     function onChangeImageInput(e: ChangeEvent<HTMLInputElement>, isThumbnail?: boolean) {
         if (e.target.files!.length > 0) {
@@ -222,7 +223,8 @@ export default function WorkPage() {
                             alert(`${isThumbnail ? '썸네일이' : '이미지가'} 업로드 되었습니다`)
                             setUrlCacheBreaker(new Date().getMilliseconds().toString())
 
-                            setUploadImageUrl(`<p align="center"><img src="${API.getPostFileUrl({ postId: router.query.id === 'new' ? 'temp' : +router.query.id!, fileName: res.data[0].filename })}" alt="${res.data[0].filename}" style="max-height: 300px"/></p>`)
+                            setUploadImageUrl(`${API.getServerPostImageUrl({ postId: 'temp', fileName: res.data[0].filename })}`)
+                            setUploadImageUrlForMD(`<p align="center"><img src="${API.getPostFileUrl({ postId: 'temp', fileName: res.data[0].filename })}" alt="${res.data[0].filename}" style="max-height: 300px"/></p>`)
                         } else {
                             alert(`${isThumbnail ? '썸네일을' : '이미지를'} 업로드하지 못하였습니다`)
                         }
@@ -353,11 +355,16 @@ export default function WorkPage() {
                 <div className="flex-col">
                     <span className="text-xl" style={{ fontWeight: 500 }}>Thumbnail upload</span>
                     <div className="flex mt-4">
-                        <img
-                            src={API.getPostFileUrl({ postId: postThumbnailLocationRef.current!, fileName: 'thumbnail' }) + `?${urlCacheBreaker}`} alt=""
-                            style={{ maxHeight: '100px' }}
-                            sizes="100vw"
-                        />
+                        {postThumbnailLocationRef.current &&
+                            <div className="relative w-60 h-28">
+                                <Image
+                                    src={API.getServerPostImageUrl({ postId: postThumbnailLocationRef.current!, fileName: 'thumbnail' }) + `?${urlCacheBreaker}`} alt=""
+                                    fill
+                                    className="object-contain"
+                                />
+                            </div>
+                        }
+
                         <div className="flex-col w-full ml-4">
                             <input
                                 type="file"
@@ -380,10 +387,13 @@ export default function WorkPage() {
                 <div className="flex-col">
                     <span className="text-xl" style={{ fontWeight: 500 }}>Create image link</span>
                     <div className="flex mt-4">
-                        <img
-                            src={uploadImageUrl} alt=""
-                            style={{ maxHeight: '100px' }}
-                        />
+                        <div className="relative w-60 h-28">
+                            <Image
+                                src={uploadImageUrl} alt=""
+                                className="object-contain"
+                                fill
+                            />
+                        </div>
                         <div className="flex-col w-full ml-4">
                             <input
                                 type="file"
@@ -391,9 +401,8 @@ export default function WorkPage() {
                                     onChangeImageInput(e)
                                 }}
                             />
-                            <div
-                            >
-                                {uploadImageUrl}
+                            <div>
+                                {uploadImageUrlForMD}
                             </div>
                         </div>
                     </div>

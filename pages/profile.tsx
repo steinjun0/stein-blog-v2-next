@@ -4,6 +4,7 @@ import { MutableRefObject, RefObject, useEffect, useRef, useState } from "react"
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline';
 import ScreenRotationIcon from '@mui/icons-material/ScreenRotation';
+import Image from "next/image";
 
 
 const RotateIconKeyframes = keyframes`
@@ -144,15 +145,15 @@ export default function Profile() {
                 }}
                 ref={cardRef}>
                 <div className="flex items-center">
-                    <img src="/images/icons/github.png" alt="github" style={{ objectFit: 'contain', width: '12px', marginRight: '4px', marginTop: '2px' }} />
+                    <Image width={14} height={14} src="/images/icons/github.png" alt="github" style={{ objectFit: 'contain', marginRight: '4px', marginTop: '4px' }} />
                     <a href="https://github.com/steinjun0" className="underline">steinjun0</a>
                 </div>
                 <div className="flex items-center">
-                    <img src="/images/icons/insta.png" alt="insta" style={{ objectFit: 'contain', width: '12px', marginRight: '4px', marginTop: '2px' }} />
+                    <Image width={14} height={14} src="/images/icons/insta.png" alt="insta" style={{ objectFit: 'contain', marginRight: '4px', marginTop: '4px' }} />
                     <a href="https://www.instagram.com/junyoungseok/" className="underline">junyoungseok</a>
                 </div>
                 <div className="flex items-center">
-                    <img src="/images/icons/mail.png" alt="mail" style={{ objectFit: 'contain', width: '12px', marginRight: '4px', marginTop: '2px' }} />
+                    <Image width={14} height={14} src="/images/icons/mail.png" alt="mail" style={{ objectFit: 'contain', marginRight: '4px', marginTop: '4px' }} />
                     junyoung4737@gmail.com
                 </div>
             </div>

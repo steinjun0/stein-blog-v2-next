@@ -121,10 +121,13 @@ export default {
         return API_URL
     },
 
+    getServerPostImageUrl({ postId, fileName }: { postId: number | 'temp', fileName: string }) {
+        return `${process.env.NEXT_PUBLIC_SERVER_API_URL}/file/post/${postId}/${fileName}`
+    },
+
     getPostFileUrl({ postId, fileName }: { postId: number | 'temp', fileName: string }) {
         return `${API_URL}/file/post/${postId}/${fileName}`
     },
-
 
     // api
 

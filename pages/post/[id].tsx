@@ -82,7 +82,7 @@ export default function WorkPage(props: {
                 <meta property="og:type" content="website" />
                 <meta property="og:title" content={props.title} />
                 <meta property="og:description" content={props.subtitle} />
-                <meta property="og:image" content={API.getPostFileUrl({ postId: props.id, fileName: 'thumbnail' })} />
+                <meta property="og:image" content={API.getServerPostImageUrl({ postId: props.id, fileName: 'thumbnail' })} />
 
                 {/* Twitter Meta Tags  */}
                 <meta name="twitter:card" content="summary_large_image" />
@@ -90,7 +90,7 @@ export default function WorkPage(props: {
                 <meta property="twitter:url" content={`https://blog.steinjun.net/post/${router.query.id}`} />
                 <meta name="twitter:title" content={props.title} />
                 <meta name="twitter:description" content={props.subtitle} />
-                <meta name="twitter:image" content={API.getPostFileUrl({ postId: props.id, fileName: 'thumbnail' })} />
+                <meta name="twitter:image" content={API.getServerPostImageUrl({ postId: props.id, fileName: 'thumbnail' })} />
             </Head>
             <div className="flex-col">
                 <div className="hidden md:flex mb-2 justify-between items-end">

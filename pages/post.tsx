@@ -6,6 +6,7 @@ import { marked } from "marked"
 import { useScroll } from "components/hooks/useScroll";
 import { IPost } from "components/Types";
 import Select from '@mui/material/Select'
+import Image from "next/image";
 
 
 export default function Post() {
@@ -113,10 +114,16 @@ export default function Post() {
 						(post, i) => (
 							<div key={i} className="w-96 mt-6 justify-center border-gray-200 border rounded-sm overflow-hidden">
 								<Link href={`/post/${post.id}`}>
-									<div className="flex flex-col justify-center" style={{ maxHeight: 382, minHeight: 382, overflow: 'hidden' }}>
-										<img
-											src={API.getPostFileUrl({ postId: post.id, fileName: 'thumbnail' })}
+									<div className="relative" style={{ maxHeight: 382, minHeight: 382, overflow: 'hidden' }}>
+										<Image
+											src={API.getServerPostImageUrl({ postId: post.id, fileName: 'thumbnail' })}
 											alt={`${post.id}-thumnail`}
+											fill
+											className="object-contain"
+											priority
+											sizes="(max-width: 812px) 100vw,
+											(max-width: 1208px) 50vw,
+											33vw"
 										/>
 									</div>
 								</Link>

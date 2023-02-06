@@ -13,7 +13,7 @@ export default function Auth() {
     const router = useRouter()
 
     useEffect(() => {
-        if (router.isReady) {
+        if (router && router.isReady) {
             axios.post(`https://kauth.kakao.com/oauth/token`, null,
                 {
                     params: {
@@ -44,7 +44,7 @@ export default function Auth() {
                 alert('Fail to get Kakao Access Token')
             })
         }
-    }, [router.isReady])
+    }, [router.isReady, router])
 
     return <div>
 
