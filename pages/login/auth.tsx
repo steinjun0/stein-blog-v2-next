@@ -19,7 +19,7 @@ export default function Auth() {
                     params: {
                         grant_type: 'authorization_code',
                         client_id: 'd7a844464da45dc0b7775bc28d740477',
-                        redirect_uri: 'http://localhost:3000/login/auth',
+                        redirect_uri: `${process.env.NEXT_PUBLIC_HOST}/login/auth`,
                         code: router.query.code
                     }
                 }

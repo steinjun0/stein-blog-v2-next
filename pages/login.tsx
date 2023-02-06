@@ -20,7 +20,7 @@ export default function Login() {
         console.log(window.Kakao)
         if (window.Kakao.isInitialized()) {
             const authRes = window.Kakao.Auth.authorize({
-                redirectUri: 'http://localhost:3000/login/auth',
+                redirectUri: `${process.env.NEXT_PUBLIC_HOST}/login/auth`,
                 scope: 'profile_nickname,profile_image'
             });
         }

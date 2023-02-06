@@ -14,7 +14,8 @@ const Markdown = dynamic(
 );
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-    const { data } = await API.getAxios(`https://api.blog.steinjun.net/post/${Number(context.query.id)}`);
+
+    const { data } = await API.getPost({ id: Number(context.query.id) });
     // data.body 
     if (process.env.NODE_ENV === 'development') {
         data.body = data.body.replace('https://api.blog.steinjun.net', '//localhost:8888');

@@ -1,8 +1,6 @@
 import axios from 'axios'
-import { AxiosError } from 'axios'
 
-const API_URL = process.env.NODE_ENV === 'production' ? 'https://api.blog.steinjun.net' : '//localhost:8888'
-
+const API_URL = process.platform === 'linux' ? process.env.NEXT_PUBLIC_SERVER_API_URL : process.env.NEXT_PUBLIC_API_URL
 // let accessToken = localStorage.getItem('AccessToken')
 let accessToken = null
 let tokenHeader: { Authorization: string } | null = null
