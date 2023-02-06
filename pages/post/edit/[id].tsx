@@ -388,11 +388,14 @@ export default function WorkPage() {
                     <span className="text-xl" style={{ fontWeight: 500 }}>Create image link</span>
                     <div className="flex mt-4">
                         <div className="relative w-60 h-28">
-                            <Image
-                                src={uploadImageUrl} alt=""
-                                className="object-contain"
-                                fill
-                            />
+                            {uploadImageUrl !== '' &&
+                                <Image
+                                    src={uploadImageUrl} alt=""
+                                    className="object-contain"
+                                    fill
+                                />
+                            }
+
                         </div>
                         <div className="flex-col w-full ml-4">
                             <input
