@@ -1,14 +1,47 @@
 import { Logout } from "@mui/icons-material";
 import { Avatar, Button, Divider, IconButton, ListItemIcon, Menu, MenuItem } from "@mui/material"
+import { styled } from "@mui/system";
 import axios from "axios";
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import Swal from "sweetalert2";
 
-export default function Gnb() {
+const Nav = styled('nav')((props) => (
+    {
+        maxWidth: '1240px',
+        marginLeft: '0',
+        [props.theme.breakpoints.up(1240)]: {
+            marginLeft: 'calc(50vw - 620px)',
+        }
+    }
+))
 
+function useScroll() {
+    const [scroll, setScroll] = useState<{
+        x: number,
+        y: number,
+    }>();
+    function onScroll() {
+        setScroll({
+            x: window.scrollX,
+            y: window.scrollY,
+        })
+    }
+    useEffect(() => {
+        if (window) {
+            window.addEventListener('scroll', onScroll)
+        }
+        return () => {
+            window.removeEventListener('scroll', onScroll)
+        }
+    }, [])
+    return scroll
+}
+
+export default function Gnb() {
     const router = useRouter()
+    const scroll = useScroll()
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -67,8 +100,22 @@ export default function Gnb() {
         }
     }, [router.asPath])
 
+    useEffect(() => {
+        if (scroll) {
+            if (scroll.x >= 30) {
 
-    return <nav className='flex md:py-4 xl:px-0 xs:p-4 p-4 justify-between items-end' >
+            }
+        }
+    }, [scroll])
+
+
+
+    return <Nav
+        className='flex md:py-4 xl:px-0 xs:p-4 p-4 justify-between items-end bg-white fixed top-0 left-0 w-screen z-10'
+        style={{
+            borderBottom: (router.asPath !== '/' && (scroll && scroll.y >= 30)) ? '1px solid #e5e7eb' : '1px solid transparent',
+            transition: 'border-bottom ease 0.5s'
+        }}>
         <Link href={'/'}>
             <div className='flex items-end justify-between'>
                 <p className='text-3xl' style={{ fontWeight: 700 }}>stein</p>
@@ -93,6 +140,7 @@ export default function Gnb() {
                 </Avatar>
             </IconButton> :
             <Button style={{ height: 36 }}
+                color='primary'
                 variant='outlined'
                 onClick={() => { router.push('/login') }}>
                 Login
@@ -143,5 +191,5 @@ export default function Gnb() {
                 Logout
             </MenuItem>
         </Menu>
-    </nav >
+    </Nav >
 }

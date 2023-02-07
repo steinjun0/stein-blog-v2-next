@@ -22,7 +22,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <>
       <ThemeProvider theme={theme}>
         <Gnb />
-        <div className='flex justify-center px-4 xl:px-0 mb-20'>
+        <div className='flex justify-center px-4 xl:px-0 my-20'>
           <Component {...pageProps} />
         </div>
       </ThemeProvider>
