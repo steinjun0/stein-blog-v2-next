@@ -67,7 +67,7 @@ export default function WorkPage(props: {
     const koDtf = new Intl.DateTimeFormat("ko", { dateStyle: "medium" });
 
     return (
-        <div className='flex flex-col w-full mt-10'>
+        <div className='flex flex-col w-full max-w-2xl mt-10'>
             <Head>
                 <link rel="shortcut icon" href="/stein-logo.svg" />
                 <meta charSet="utf-8" />
