@@ -146,30 +146,26 @@ export default function WorkPage() {
             }
             else if (!isNaN(parseInt(`${router.query.id}`))) {
                 postThumbnailLocationRef.current = parseInt(`${router.query.id}`)
-                console.log('parseInt(`${router.query.id}`)', parseInt(`${router.query.id}`))
                 API.getPost({ id: parseInt(`${router.query.id}`) }).then((res) => {
-                    if (res.status === 200) {
-                        const post: IPost = res.data
-                        setTitle(post.title)
-                        setSubtitle(post.subtitle)
-                        setMd(post.body)
-                        setCategories([...post.categories.map(e => e.name)])
-                        fileNamesRef.current = [...post.files.map(e => e.name)]
-                    } else {
-
-                    }
-                })
+                    const post: IPost = res.data
+                    setTitle(post.title)
+                    setSubtitle(post.subtitle)
+                    setMd(post.body)
+                    setCategories([...post.categories.map(e => e.name)])
+                    fileNamesRef.current = [...post.files.map(e => e.name)]
+                }).catch(() => { })
             }
 
-            var x = new MutationObserver(function (e) {
+
+            const mdEditorPasteObserver = new MutationObserver(function (e) {
                 const target = document.getElementsByClassName('w-md-editor-text-input')[0] as HTMLElement;
                 if (target !== undefined && !isSetListenerRef.current) {
                     isSetListenerRef.current = true
                     target.addEventListener('paste', async (event: any) => {
                         console.log('paste!', event)
-                        var items = (event.clipboardData || event.originalEvent.clipboardData).items;
-                        for (var index in items) {
-                            var item = items[index];
+                        let items = (event.clipboardData || event.originalEvent.clipboardData).items;
+                        for (let index in items) {
+                            let item = items[index];
                             if (item.kind === 'file') {
                                 let file = item.getAsFile();
                                 let fileName: string = getUnduplicatedName(file.name, fileNamesRef.current)
@@ -204,7 +200,7 @@ export default function WorkPage() {
                     }
                 }
             });
-            x.observe(document.getElementById('MDEditor_parent')!, { childList: true });
+            mdEditorPasteObserver.observe(document.getElementById('MDEditor_parent')!, { childList: true });
         }
 
 

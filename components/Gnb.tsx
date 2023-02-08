@@ -98,6 +98,45 @@ export default function Gnb() {
                     }
                 })
         }
+        const adminUrlList = ['/post/edit/[id]']
+        if (adminUrlList.includes(router.pathname)) {
+            if (accessToken) {
+                window.Kakao.Auth.setAccessToken(`${accessToken}`);
+                window.Kakao.API.request({
+                    url: '/v2/user/me',
+                }).then((res: any) => {
+                    localStorage.setItem('nickname', res.properties.nickname)
+                    localStorage.setItem('profile_image', res.properties.profile_image)
+                    localStorage.setItem('thumbnail_image', res.properties.thumbnail_image)
+                    localStorage.setItem('thumbnail_image', res.properties.thumbnail_image)
+                    localStorage.setItem('id', res.id)
+                    // TODO: api로 변경해야함
+                    if (res.id !== 2651014525) {
+                        Swal.fire({
+                            title: '허가되지 않은 사용자',
+                            text: '여긴 허가된 사용자만 접속할 수 있는 uri입니다',
+                            icon: 'warning',
+                            color: 'black',
+                            confirmButtonColor: 'black',
+                            iconColor: 'black'
+                        }).then(() => {
+                            router.push('/')
+                        })
+                    }
+                })
+            } else {
+                Swal.fire({
+                    title: '허가되지 않은 사용자',
+                    text: '여긴 허가된 사용자만 접속할 수 있는 uri입니다',
+                    icon: 'warning',
+                    color: 'black',
+                    confirmButtonColor: 'black',
+                    iconColor: 'black'
+                }).then(() => {
+                    router.push('/')
+                })
+            }
+        }
     }, [router.asPath])
 
     useEffect(() => {
