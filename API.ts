@@ -151,6 +151,11 @@ export default {
         return categoryRes
     },
 
+    async getBaekjoonData() {
+        const baekjoonRes = await this.getAxios(`${API_URL}/etc/baekjoon/solved-problems`)
+        return baekjoonRes
+    },
+
     // async getConsultSchedule(year, month, mentorId) {
     //     const scheduleRes = await this.getAxiosWithParams(`${ API_URL }/consult/schedule`, { 'Year': year, 'Month': month, 'MentorID': +mentorId })
     //     return scheduleRes

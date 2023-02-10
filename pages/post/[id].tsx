@@ -1,5 +1,4 @@
 import API from "API";
-import { isAxiosError } from "axios";
 import { IPost } from "components/Types";
 import { GetServerSidePropsContext } from "next";
 import dynamic from "next/dynamic";
@@ -63,6 +62,19 @@ export default function WorkPage(props: {
             setPost(tempPost)
         }
     }, [props])
+
+    useEffect(() => {
+        if (router.isReady && router.query.id === '10') {
+            API.getBaekjoonData().then((res: { data: { solvedacTierImg: string, solved: number, rating: number } }) => {
+                if (document.getElementById('baekjoon-tier'))
+                    document.getElementById('baekjoon-tier')?.setAttribute('src', res.data.solvedacTierImg)
+                if (document.getElementById('solved-num'))
+                    document.getElementById('solved-num')!.innerHTML = `${res.data.solved}문제`
+                if (document.getElementById('baekjun-rating'))
+                    document.getElementById('baekjun-rating')!.innerHTML = `${res.data.rating}등`
+            })
+        }
+    }, [router.isReady])
 
     const koDtf = new Intl.DateTimeFormat("ko", { dateStyle: "medium" });
 
