@@ -8,7 +8,8 @@ module.exports = {
   ],
   theme: {
     fontFamily: [
-      'NotoSansKR'
+      'Pretendard',
+      // 'NotoSansKR', 'Spoqa Han Sans Neo'
     ],
     extend: {},
     screens: {

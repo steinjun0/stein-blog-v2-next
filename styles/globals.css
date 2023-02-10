@@ -2,8 +2,9 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: NotoSansKR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+  font-family: Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  /* Spoqa Han Sans Neo, NotoSansKR, */
   max-width: 1240px;
   margin-left: auto;
   margin-right: auto;
@@ -45,42 +46,132 @@ a {
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities'; */
 
-@font-face {
+/* @font-face {
   font-family: "NotoSansKR";
   font-weight: 100;
-  src: url("/fonts/NotoSansKR-Thin.otf");
+  src: url("/fonts/NotoSansKR/NotoSansKR-Thin.otf");
 }
 
 @font-face {
   font-family: "NotoSansKR";
   font-weight: 300;
-  src: url("/fonts/NotoSansKR-Light.otf");
+  src: url("/fonts/NotoSansKR/NotoSansKR-Light.otf");
 }
 
 @font-face {
   font-family: "NotoSansKR";
   font-weight: 400;
-  src: url("/fonts/NotoSansKR-Regular.otf");
+  src: url("/fonts/NotoSansKR/NotoSansKR-Regular.otf");
 }
 
 @font-face {
   font-family: "NotoSansKR";
   font-weight: 500;
-  src: url("/fonts/NotoSansKR-Medium.otf");
+  src: url("/fonts/NotoSansKR/NotoSansKR-Medium.otf");
 }
 
 @font-face {
   font-family: "NotoSansKR";
   font-weight: 700;
-  src: url("/fonts/NotoSansKR-Bold.otf");
+  src: url("/fonts/NotoSansKR/NotoSansKR-Bold.otf");
 }
 
 @font-face {
   font-family: "NotoSansKR";
   font-weight: 900;
-  src: url("/fonts/NotoSansKR-Black.otf");
+  src: url("/fonts/NotoSansKR/NotoSansKR-Black.otf");
+}
+
+@font-face {
+  font-family: "Spoqa Han Sans Neo";
+  font-weight: 100;
+  src: url("/fonts/SpoqaHanSansNeo/SpoqaHanSansNeo-Thin.otf");
+}
+
+@font-face {
+  font-family: "Spoqa Han Sans Neo";
+  font-weight: 300;
+  src: url("/fonts/SpoqaHanSansNeo/SpoqaHanSansNeo-Light.otf");
+}
+
+@font-face {
+  font-family: "Spoqa Han Sans Neo";
+  font-weight: 400;
+  src: url("/fonts/SpoqaHanSansNeo/SpoqaHanSansNeo-Regular.otf");
+}
+
+@font-face {
+  font-family: "Spoqa Han Sans Neo";
+  font-weight: 500;
+  src: url("/fonts/SpoqaHanSansNeo/SpoqaHanSansNeo-Medium.otf");
+}
+
+@font-face {
+  font-family: "Spoqa Han Sans Neo";
+  font-weight: 700;
+  src: url("/fonts/SpoqaHanSansNeo/SpoqaHanSansNeo-Bold.otf");
+}
+
+@font-face {
+  font-family: "Spoqa Han Sans Neo";
+  font-weight: 900;
+  src: url("/fonts/SpoqaHanSansNeo/SpoqaHanSansNeo-Bold.otf");
+} */
+
+@font-face {
+  font-family: "Pretendard";
+  font-weight: 100;
+  src: url("/fonts/Pretendard/Pretendard-Thin.subset.woff2");
+}
+
+@font-face {
+  font-family: "Pretendard";
+  font-weight: 200;
+  src: url("/fonts/Pretendard/Pretendard-ExtraLight.subset.woff2");
+}
+
+@font-face {
+  font-family: "Pretendard";
+  font-weight: 300;
+  src: url("/fonts/Pretendard/Pretendard-Light.subset.woff2");
+}
+
+@font-face {
+  font-family: "Pretendard";
+  font-weight: 400;
+  src: url("/fonts/Pretendard/Pretendard-Regular.subset.woff2");
+}
+
+
+@font-face {
+  font-family: "Pretendard";
+  font-weight: 500;
+  src: url("/fonts/Pretendard/Pretendard-Medium.subset.woff2");
+}
+
+@font-face {
+  font-family: "Pretendard";
+  font-weight: 600;
+  src: url("/fonts/Pretendard/Pretendard-SemiBold.subset.woff2");
+}
+
+@font-face {
+  font-family: "Pretendard";
+  font-weight: 700;
+  src: url("/fonts/Pretendard/Pretendard-Bold.subset.woff2");
+}
+
+@font-face {
+  font-family: "Pretendard";
+  font-weight: 800;
+  src: url("/fonts/Pretendard/Pretendard-ExtraBold.subset.woff2");
+}
+
+@font-face {
+  font-family: "Pretendard";
+  font-weight: 900;
+  src: url("/fonts/Pretendard/Pretendard-Black.subset.woff2");
 }
 
 /* swiper css */
 @import 'custom-swiper.css'
-
