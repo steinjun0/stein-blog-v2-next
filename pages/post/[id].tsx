@@ -105,18 +105,7 @@ export default function WorkPage(props: {
                 <meta name="twitter:image" content={API.getServerPostImageUrl({ postId: props.id, fileName: 'thumbnail' })} />
             </Head>
             <div className="flex-col">
-                <div className="hidden md:flex mb-2 justify-between items-end">
-                    <span className="text-3xl" style={{ fontWeight: 700 }}>
-                        {props.title}
-                    </span>
-                    <div className="flex">
-                        {props.categories?.map((e, i) => {
-                            return <span className="text-sm" key={i}>{e.name}{i === (props.categories!.length - 1) ? '' : <span>, &nbsp;</span>}</span>
-                        })}
-                    </div>
-                </div>
-
-                <div className="flex-col md:hidden mb-4 items-end">
+                <div className="flex-col mb-4 items-end">
                     <div className="flex mb-2">
                         {props.categories?.map((e, i) => {
                             return <span className="text-sm" key={i}>{e.name}{i === (props.categories!.length - 1) ? '' : <span>, &nbsp;</span>}</span>
