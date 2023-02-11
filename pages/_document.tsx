@@ -3,13 +3,13 @@ import Script from 'next/script'
 
 declare global {
   interface Window {
-    Kakao: any
+    Kakao: any,
+    dataLayer: any
   }
 }
-
+const description = "Blog for Stein. Engineering, Music, Camera, Art, and Life."
+const url = "https://blog.steinjun.net/"
 export default function Document() {
-  const description = "Blog for Stein. Engineering, Music, Camera, Art, and Life."
-  const url = "https://blog.steinjun.net/"
   return (
     <Html>
       <Head>
