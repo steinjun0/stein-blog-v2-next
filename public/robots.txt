@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://blog.steinjun.net
+
+# Sitemaps
+Sitemap: https://blog.steinjun.net/sitemap.xml
