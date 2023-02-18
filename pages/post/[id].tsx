@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { numberWithCommas } from "util";
 
 
 const Markdown = dynamic(
@@ -69,9 +70,13 @@ export default function WorkPage(props: {
                 if (document.getElementById('baekjoon-tier'))
                     document.getElementById('baekjoon-tier')?.setAttribute('src', res.data.solvedacTierImg)
                 if (document.getElementById('solved-num'))
-                    document.getElementById('solved-num')!.innerHTML = `${res.data.solved}문제`
+                    document.getElementById('solved-num')!.innerHTML = `${numberWithCommas(res.data.solved)}문제`
                 if (document.getElementById('baekjun-rating'))
-                    document.getElementById('baekjun-rating')!.innerHTML = `${res.data.rating}등`
+                    document.getElementById('baekjun-rating')!.innerHTML = `${numberWithCommas(res.data.rating)}등`
+            })
+            API.getSolvedacData().then((res) => {
+                if (document.getElementById('solvedac-rating'))
+                    document.getElementById('solvedac-rating')!.innerHTML = `${numberWithCommas(res.data.rank)}등`
             })
         }
     }, [router.isReady])

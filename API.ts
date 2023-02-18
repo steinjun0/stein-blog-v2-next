@@ -22,16 +22,17 @@ export function handleDates(body: string) {
     const jsonBody: { string: any } = JSON.parse(body)
 
     function recursiveChanger(json: { string: any }) {
-        for (const key of Object.keys(json)) {
-            const value = json[key as keyof { string: any }];
-            if (typeof value === 'object')
-                recursiveChanger(value)
-            else if (isIsoDateString(value)) {
-                json[key as keyof { string: any }] = new Date(value);
+        if (json !== null) {
+            for (const key of Object.keys(json)) {
+                const value = json[key as keyof { string: any }];
+                if (typeof value === 'object')
+                    recursiveChanger(value)
+                else if (isIsoDateString(value)) {
+                    json[key as keyof { string: any }] = new Date(value);
+                }
             }
         }
     }
-
     recursiveChanger(jsonBody)
     return jsonBody
 }
@@ -149,14 +150,20 @@ export default {
         return categoryRes
     },
 
+
+    async getIsAdmin({ accessToken }: { accessToken: string }) {
+        const isAdminRes = await this.getAxios(`${API_URL}/etc/auth/admin?access-token=${accessToken}`)
+        return isAdminRes
+    },
+
     async getBaekjoonData() {
         const baekjoonRes = await this.getAxios(`${API_URL}/etc/baekjoon/solved-problems`)
         return baekjoonRes
     },
 
-    async getIsAdmin({ accessToken }: { accessToken: string }) {
-        const isAdminRes = await this.getAxios(`${API_URL}/etc/auth/admin?access-token=${accessToken}`)
-        return isAdminRes
+    async getSolvedacData() {
+        const solvedacRes = await this.getAxios(`${API_URL}/etc/solvedac/data`)
+        return solvedacRes
     },
 
     // async getConsultSchedule(year, month, mentorId) {
