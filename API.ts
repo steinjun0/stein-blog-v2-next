@@ -37,8 +37,6 @@ export function handleDates(body: string) {
 }
 
 
-
-
 export default {
     // api default
 
@@ -154,6 +152,11 @@ export default {
     async getBaekjoonData() {
         const baekjoonRes = await this.getAxios(`${API_URL}/etc/baekjoon/solved-problems`)
         return baekjoonRes
+    },
+
+    async getIsAdmin({ accessToken }: { accessToken: string }) {
+        const isAdminRes = await this.getAxios(`${API_URL}/etc/auth/admin?access-token=${accessToken}`)
+        return isAdminRes
     },
 
     // async getConsultSchedule(year, month, mentorId) {
