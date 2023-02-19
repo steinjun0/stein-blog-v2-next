@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { numberWithCommas } from "util";
+import { numberWithCommas } from "utils";
 
 
 const Markdown = dynamic(

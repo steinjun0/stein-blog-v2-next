@@ -55,7 +55,7 @@ export default function App({ Component, pageProps }: AppProps) {
         src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
       /> */}
       <ThemeProvider theme={theme} >
-        <Gnb />
+        {/* <Gnb /> */}
         <div className='flex justify-center px-4 xl:px-0 my-20'>
           <Component {...pageProps} />
         </div>
