@@ -12,8 +12,8 @@ export default function PostCard2({ post }: { post: IPost }) {
             style={{
                 background: '#f0f0f0',
                 padding: '24px',
-                filter: 'drop-shadow(20px 20px 20px #bebebe)',
-                boxShadow: 'inset -12px -12px 12px #e0e0e0'
+                filter: 'drop-shadow(20px 20px 20px #bebebe) drop-shadow(20px 20px 20px #bebebe)',
+                // boxShadow: '-12px -12px 12px #fff'
                 // boxShadow: '20px 20px 46px #bebebe,  inset 0 0 20px #e0e0e0'
                 // -20px -20px 46px #ffffff,
             }}>
@@ -50,8 +50,8 @@ export default function PostCard2({ post }: { post: IPost }) {
                 style={{
                     background: '#ffffff',
                     padding: '40px',
-                    filter: 'drop-shadow(20px 20px 10px #ddd)',
-                    boxShadow: 'inset -6px -6px 6px #ddd, inset 3px 3px 3px #f0f0f0',
+                    filter: 'drop-shadow(20px 20px 10px #ddd) drop-shadow(-10px -10px 10px #fff)',
+                    boxShadow: 'inset -6px -6px 6px #ddd',
                 }}
             >
                 <h1 className='text-2xl whitespace-pre-wrap [&:hover]:underline' style={{ fontWeight: '700', minHeight: '64px' }}>{post.title}</h1>
