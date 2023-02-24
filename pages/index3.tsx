@@ -87,7 +87,7 @@ export default function Post() {
 					.filter(e => process.env.NODE_ENV === 'development' || !e.categories.map(i => i.name).includes('test'))
 					.map(
 						(post, i) => (
-							<PostCard post={post} />
+							<PostCard key={i} post={post} />
 						)
 					)
 				}

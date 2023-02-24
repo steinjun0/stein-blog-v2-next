@@ -154,7 +154,7 @@ export default function Home() {
           posts!
             .filter((e) => process.env.NODE_ENV === 'development' || !e.categories.map(i => i.name).includes('test'))
             .map((post, i) =>
-              <PostCard2 post={post} />
+              <PostCard2 key={i} post={post} />
             )
         }
       </div>
