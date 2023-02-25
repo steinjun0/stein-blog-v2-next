@@ -2,7 +2,7 @@ import API from 'API';
 import { IPost } from 'components/Types';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { MutableRefObject, ReactNode, useEffect, useRef, useState } from 'react';
+import React, { MutableRefObject, PropsWithChildren, ReactNode, useEffect, useRef, useState } from 'react';
 import HomeTitle from '../components/HomeTitle';
 import useWindowSize from '../components/hooks/useWindowSize';
 
@@ -14,6 +14,9 @@ import "swiper/css/autoplay";
 import { keyframes, styled } from '@mui/system';
 import PostCard from 'components/PostCard';
 import PostCard2 from 'components/PostCard2';
+import PostCard3 from 'components/PostCard3';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { AppProps } from 'next/app';
 
 function getBreakPoint(width: number): string {
   if (width > 1536) {
@@ -130,6 +133,25 @@ const MovingImage = styled(Image)`
   animation: ${MovingImageKeyframes} 10s infinite ease;
 `
 
+function Section(props: { title: string, subtitle: string, link: string } & PropsWithChildren) {
+
+  return <div className="flex flex-col justify-start">
+    <div>
+      <Link className='flex items-end w-fit' href={'/post'}>
+        <h1
+          className='no-underline hover:underline'
+          style={{ fontSize: '36px', fontWeight: '600', marginTop: '24px' }}>{props.title}</h1>
+        <ChevronRightIcon className='my-2' style={{ fontSize: '36px' }} />
+      </Link>
+    </div>
+    <h6 style={{ fontSize: '16px', fontWeight: '400', marginTop: '4px' }}>{props.subtitle}</h6>
+    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-8 justify-center'>
+      {props.children}
+    </div>
+  </div>
+}
+
+
 export default function Home() {
   const [posts, setPosts] = useState<IPost[]>([])
   const [selectIndex, setSelectIndex] = useState<number>(0)
@@ -146,19 +168,36 @@ export default function Home() {
   }, [])
 
   return (
-    <div className="flex-col w-full my-10 justify-start">
-      <h1 style={{ fontSize: '36px', fontWeight: '600', marginTop: '24px' }}>최근 게시물</h1>
-      <h6 style={{ fontSize: '16px', fontWeight: '400', marginTop: '4px' }}>가장 최근 올라온 게시글을 확인하세요!</h6>
-      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-8 justify-center'>
+    <div className="flex flex-col w-full my-10 justify-start gap-24">
+      <Section title='추천 게시물' subtitle='개발에 관심있다면 이런 글은 어떠세요?' link='/post'>
         {
           posts!
             .filter((e) => process.env.NODE_ENV === 'development' || !e.categories.map(i => i.name).includes('test'))
             .map((post, i) =>
-              <PostCard2 key={i} post={post} />
+              <PostCard3 key={i} post={post} />
             )
         }
-      </div>
-    </div>
+      </Section>
 
+      <Section title='정기 게시물' subtitle='항상 업데이트된 내용을 전달해드립니다!' link='/post'>
+        {
+          posts!
+            .filter((e) => process.env.NODE_ENV === 'development' || !e.categories.map(i => i.name).includes('test'))
+            .map((post, i) =>
+              <PostCard3 key={i} post={post} />
+            )
+        }
+      </Section>
+
+      <Section title='최근 게시물' subtitle='가장 최근 올라온 게시글을 확인하세요!' link='/post'>
+        {
+          posts!
+            .filter((e) => process.env.NODE_ENV === 'development' || !e.categories.map(i => i.name).includes('test'))
+            .map((post, i) =>
+              <PostCard3 key={i} post={post} />
+            )
+        }
+      </Section>
+    </div>
   );
 }
