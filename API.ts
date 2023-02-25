@@ -145,6 +145,11 @@ export default {
         return postRes
     },
 
+    async getPostsByIds({ ids }: { ids: number[] }) {
+        const postRes = await this.getAxios(`${API_URL}/post?${ids.map(id => `ids=${id}&`).join('')}`)
+        return postRes
+    },
+
     async getCategories() {
         const categoryRes = await this.getAxios(`${API_URL}/post/category`)
         return categoryRes

@@ -153,25 +153,45 @@ function Section(props: { title: string, subtitle: string, link: string } & Prop
 
 
 export default function Home() {
-  const [posts, setPosts] = useState<IPost[]>([])
+  const [recentPosts, setRecentPosts] = useState<IPost[]>([])
+  const [recommendPosts, setRecommendPosts] = useState<IPost[]>([])
+  const [periodicalPosts, setPeriodicalPosts] = useState<IPost[]>([])
   const [selectIndex, setSelectIndex] = useState<number>(0)
 
   const size = useWindowSize();
   useEffect(() => {
-    API.getPostList({ page: 1, take: 6 }).then((res) => {
+
+    API.getPostsByIds({ ids: [13, 12, 11, 9] }).then((res) => {
       if (res.status === 200) {
-        setPosts(res.data)
+        setRecommendPosts(res.data)
       } else {
         alert('post를 받아오지 못했습니다')
       }
     })
+
+    API.getPostsByIds({ ids: [10] }).then((res) => {
+      if (res.status === 200) {
+        setPeriodicalPosts(res.data)
+      } else {
+        alert('post를 받아오지 못했습니다')
+      }
+    })
+
+    API.getPostList({ page: 1, take: 6 }).then((res) => {
+      if (res.status === 200) {
+        setRecentPosts(res.data)
+      } else {
+        alert('post를 받아오지 못했습니다')
+      }
+    })
+
   }, [])
 
   return (
     <div className="flex flex-col w-full my-10 justify-start gap-24">
       <Section title='추천 게시물' subtitle='개발에 관심있다면 이런 글은 어떠세요?' link='/post'>
         {
-          posts!
+          recommendPosts!
             .filter((e) => process.env.NODE_ENV === 'development' || !e.categories.map(i => i.name).includes('test'))
             .map((post, i) =>
               <PostCard3 key={i} post={post} />
@@ -181,7 +201,7 @@ export default function Home() {
 
       <Section title='정기 게시물' subtitle='항상 업데이트된 내용을 전달해드립니다!' link='/post'>
         {
-          posts!
+          periodicalPosts!
             .filter((e) => process.env.NODE_ENV === 'development' || !e.categories.map(i => i.name).includes('test'))
             .map((post, i) =>
               <PostCard3 key={i} post={post} />
@@ -191,7 +211,7 @@ export default function Home() {
 
       <Section title='최근 게시물' subtitle='가장 최근 올라온 게시글을 확인하세요!' link='/post'>
         {
-          posts!
+          recentPosts!
             .filter((e) => process.env.NODE_ENV === 'development' || !e.categories.map(i => i.name).includes('test'))
             .map((post, i) =>
               <PostCard3 key={i} post={post} />
