@@ -1,12 +1,6 @@
-import { Divider, FormControl, InputLabel, MenuItem, Slide } from "@mui/material";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import API from "API"
-import { marked } from "marked"
-import { useScroll } from "components/hooks/useScroll";
 import { IPost } from "components/Types";
-import Select from '@mui/material/Select'
-import Image from "next/image";
 import { useRouter } from "next/router";
 import PostCard from "components/PostCard";
 
@@ -16,10 +10,10 @@ export default function Post() {
 
 	const [posts, setPosts] = useState<IPost[]>([])
 	const postNextPageRef = useRef<number>(1);
-	const [tagList, setTagList] = useState<string[]>(['All', 'Study', 'Engineering', 'Music', 'Art', 'etc'])
+	// const [tagList, setTagList] = useState<string[]>(['All', 'Study', 'Engineering', 'Music', 'Art', 'etc'])
 	const tagRef = useRef<string>('All')
 	const [tag, setTag] = useState<string>('All')
-	const koDtf = new Intl.DateTimeFormat("ko", { dateStyle: "long" });
+	// const koDtf = new Intl.DateTimeFormat("ko", { dateStyle: "long" });
 	const bottomElementRef = useRef<HTMLDivElement>(null)
 
 	async function getPosts(page: number, tag: string) {

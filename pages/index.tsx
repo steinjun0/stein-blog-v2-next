@@ -2,56 +2,16 @@ import API from 'API';
 import { IPost } from 'components/Types';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { MutableRefObject, PropsWithChildren, ReactNode, useEffect, useRef, useState } from 'react';
-import HomeTitle from '../components/HomeTitle';
+import React, { PropsWithChildren, useEffect, useState } from 'react';
 import useWindowSize from '../components/hooks/useWindowSize';
 
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Pagination } from "swiper";
 import 'swiper/css'
 import "swiper/css/pagination";
 import "swiper/css/autoplay";
 import { keyframes, styled } from '@mui/system';
 import PostCard from 'components/PostCard';
-import PostCard2 from 'components/PostCard2';
-import PostCard from 'components/PostCard';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { AppProps } from 'next/app';
 
-function getBreakPoint(width: number): string {
-  if (width > 1536) {
-    return '2xl'
-  } else if (width > 1280) {
-    return 'xl'
-  } else if (width > 1024) {
-    return 'lg'
-  } else if (width > 768) {
-    return 'md'
-  } else if (width > 640) {
-    return 'sm'
-  } else {
-    return 'None'
-  }
-}
-
-function getMaxPostCount(breakPoint: string): number {
-  const maxPostCount: { [key: string]: number } = {
-    '2xl': 4,
-    'xl': 4,
-    'lg': 3,
-    'md': 2,
-    'sm': 2,
-    'None': 1
-  }
-  return maxPostCount[breakPoint]
-}
-
-const imagesAndLink: { image: string, link: string }[] = [
-  { image: '/images/Dapada.png', link: 'https://dapada.co.kr/app/' },
-  { image: '/images/DapadaEdu.png', link: 'https://careerdive.co.kr/' },
-  { image: '/images/CareerDive.png', link: 'https://dapada.co.kr/edu/' },
-  { image: '/images/Dacon.png', link: 'https://dacon.io/' }
-]
 
 const MovingImageKeyframes = keyframes`
 from {
@@ -129,10 +89,6 @@ to {
 }
 `
 
-const MovingImage = styled(Image)`
-  animation: ${MovingImageKeyframes} 10s infinite ease;
-`
-
 const MovingContainer = styled('div')({
   animation: `${MovingImageKeyframes} 10s infinite ease`,
 })
@@ -160,9 +116,7 @@ export default function Home() {
   const [recentPosts, setRecentPosts] = useState<IPost[]>([])
   const [recommendPosts, setRecommendPosts] = useState<IPost[]>([])
   const [periodicalPosts, setPeriodicalPosts] = useState<IPost[]>([])
-  const [selectIndex, setSelectIndex] = useState<number>(0)
 
-  const size = useWindowSize();
   useEffect(() => {
     const recommendPostIds = [13, 12, 11]
     const periodicalPostIds = [10]
