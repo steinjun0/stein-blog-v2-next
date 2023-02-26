@@ -57,7 +57,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <ThemeProvider theme={theme} >
         <Gnb />
         <div className='flex justify-center'>
-          <div className='flex justify-center px-4 xl:px-0 my-20' style={{ maxWidth: '1240px' }}>
+          <div className='flex justify-center px-4 xl:px-0 my-20 w-screen' style={{ maxWidth: '1240px' }}>
             <Component {...pageProps} />
           </div>
         </div>
