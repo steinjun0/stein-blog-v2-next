@@ -149,7 +149,7 @@ function Section(props: { title: string, subtitle: string, link: string } & Prop
       </Link>
     </div>
     <h6 style={{ fontSize: '16px', fontWeight: '400', marginTop: '4px' }}>{props.subtitle}</h6>
-    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-8 justify-center'>
+    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-8 justify-center' style={{ minHeight: '574px' }}>
       {props.children}
     </div>
   </div>
