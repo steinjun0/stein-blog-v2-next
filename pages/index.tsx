@@ -14,7 +14,7 @@ import "swiper/css/autoplay";
 import { keyframes, styled } from '@mui/system';
 import PostCard from 'components/PostCard';
 import PostCard2 from 'components/PostCard2';
-import PostCard3 from 'components/PostCard3';
+import PostCard from 'components/PostCard';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { AppProps } from 'next/app';
 
@@ -243,7 +243,7 @@ export default function Home() {
           recommendPosts!
             .filter((e) => process.env.NODE_ENV === 'development' || !e.categories.map(i => i.name).includes('test'))
             .map((post, i) =>
-              <PostCard3 key={i} post={post} />
+              <PostCard key={i} post={post} />
             )
         }
       </Section>
@@ -253,7 +253,7 @@ export default function Home() {
           periodicalPosts!
             .filter((e) => process.env.NODE_ENV === 'development' || !e.categories.map(i => i.name).includes('test'))
             .map((post, i) =>
-              <PostCard3 key={i} post={post} />
+              <PostCard key={i} post={post} />
             )
         }
       </Section>
@@ -263,7 +263,7 @@ export default function Home() {
           recentPosts!
             .filter((e) => process.env.NODE_ENV === 'development' || !e.categories.map(i => i.name).includes('test'))
             .map((post, i) =>
-              <PostCard3 key={i} post={post} />
+              <PostCard key={i} post={post} />
             )
         }
       </Section>

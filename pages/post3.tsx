@@ -8,7 +8,7 @@ import { IPost } from "components/Types";
 import Select from '@mui/material/Select'
 import Image from "next/image";
 import { useRouter } from "next/router";
-import PostCard3 from "components/PostCard3";
+import PostCard from "components/PostCard";
 
 
 export default function Post() {
@@ -115,7 +115,7 @@ export default function Post() {
 						.filter(e => process.env.NODE_ENV === 'development' || !e.categories.map(i => i.name).includes('test'))
 						.map(
 							(post, i) => (
-								<PostCard3 key={i} post={post} className="min-w-full" />
+								<PostCard key={i} post={post} className="min-w-full" />
 								// <Link key={i} href={`/post/${post.id}`}>
 								// 	<div className="w-96 mt-6 justify-center border-gray-200 border rounded-sm overflow-hidden">
 								// 		<div className="relative" style={{ maxHeight: 382, minHeight: 382, overflow: 'hidden' }}>
