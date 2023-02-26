@@ -133,6 +133,10 @@ const MovingImage = styled(Image)`
   animation: ${MovingImageKeyframes} 10s infinite ease;
 `
 
+const MovingContainer = styled('div')({
+  animation: `${MovingImageKeyframes} 10s infinite ease`,
+})
+
 function Section(props: { title: string, subtitle: string, link: string } & PropsWithChildren) {
 
   return <div className="flex flex-col justify-start">
@@ -196,6 +200,44 @@ export default function Home() {
 
   return (
     <div className="flex flex-col w-full my-10 justify-start gap-24">
+
+      <div className='flex flex-col gap-8 md:flex-row'>
+        <div className='flex p-4 md:p-0 md:w-1/2 min-[1023.9px]:w-1/3'>
+          <Link href={'/profile'} className='relative w-full h-0' style={{ paddingBottom: '100%' }} >
+            <Image
+              src={'/images/profile.png'}
+              alt='profile'
+              fill
+              sizes="100vw,
+              (min-width: 768px) 50vw,
+              (min-width: 768px) 33vw"
+              priority
+            />
+          </Link>
+        </div>
+        <div className='flex flex-col justify-center items-start md:w-1/2 min-[1023.9px]:w-2/3'>
+          <div className='flex flex-col p-4'>
+            <MovingContainer>
+              <Link href={'/profile'} className='relative w-full h-0' style={{ paddingBottom: '100%' }} >
+                <h1 className='hover:underline cursor-pointer w-fit' style={{ fontSize: '48px', fontWeight: '700' }}>stein</h1>
+              </Link>
+            </MovingContainer>
+
+            <pre style={{ fontSize: '24px', wordBreak: 'keep-all', whiteSpace: 'pre-wrap', lineHeight: '1.75rem' }}>
+              Web Developer
+              <br />
+              <br />
+              University of Seoul<br />
+              <span>&#9;</span>Electrical and Computer Engineering
+              <br />
+              <br />
+              Love with <br />
+              <span>&#9;</span>Web, Music, Piano, Guitar, and Drawing
+            </pre>
+          </div>
+        </div>
+      </div>
+
       <Section title='추천 게시물' subtitle='개발에 관심있다면 이런 글은 어떠세요?' link='/post'>
         {
           recommendPosts!
