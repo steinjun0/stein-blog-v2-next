@@ -160,24 +160,31 @@ export default function Home() {
 
   const size = useWindowSize();
   useEffect(() => {
-
-    API.getPostsByIds({ ids: [13, 12, 11, 9] }).then((res) => {
+    const recommendPostIds = [13, 12, 11]
+    const periodicalPostIds = [10]
+    API.getPostsByIds({ ids: recommendPostIds }).then((res) => {
       if (res.status === 200) {
-        setRecommendPosts(res.data)
+        setRecommendPosts(res.data.sort(
+          (a: IPost, b: IPost) => recommendPostIds.indexOf(a.id) - recommendPostIds.indexOf(b.id)
+        )
+        )
       } else {
         alert('post를 받아오지 못했습니다')
       }
     })
 
-    API.getPostsByIds({ ids: [10] }).then((res) => {
+    API.getPostsByIds({ ids: periodicalPostIds }).then((res) => {
       if (res.status === 200) {
-        setPeriodicalPosts(res.data)
+        setPeriodicalPosts(res.data.sort(
+          (a: IPost, b: IPost) => periodicalPostIds.indexOf(a.id) - periodicalPostIds.indexOf(b.id)
+        )
+        )
       } else {
         alert('post를 받아오지 못했습니다')
       }
     })
 
-    API.getPostList({ page: 1, take: 6 }).then((res) => {
+    API.getPostList({ page: 1, take: 3 }).then((res) => {
       if (res.status === 200) {
         setRecentPosts(res.data)
       } else {
@@ -218,6 +225,14 @@ export default function Home() {
             )
         }
       </Section>
+
+      <Link className='flex items-end no-underline hover:underline' href={'/post'}>
+        <div className='flex justify-center items-center w-full border-gray-200 border rounded-sm p-4'>
+          <h1
+            style={{ fontSize: '24px', fontWeight: '600' }}>전체 게시글 보러가기</h1>
+          <ChevronRightIcon className='my-2' style={{ fontSize: '36px' }} />
+        </div>
+      </Link>
     </div>
   );
 }
