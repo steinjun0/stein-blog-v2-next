@@ -2,51 +2,16 @@ import API from 'API';
 import { IPost } from 'components/Types';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { MutableRefObject, ReactNode, useEffect, useRef, useState } from 'react';
-import HomeTitle from '../components/HomeTitle';
+import React, { PropsWithChildren, useEffect, useState } from 'react';
 import useWindowSize from '../components/hooks/useWindowSize';
 
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Pagination } from "swiper";
 import 'swiper/css'
 import "swiper/css/pagination";
 import "swiper/css/autoplay";
 import { keyframes, styled } from '@mui/system';
+import PostCard from 'components/PostCard';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
-function getBreakPoint(width: number): string {
-  if (width > 1536) {
-    return '2xl'
-  } else if (width > 1280) {
-    return 'xl'
-  } else if (width > 1024) {
-    return 'lg'
-  } else if (width > 768) {
-    return 'md'
-  } else if (width > 640) {
-    return 'sm'
-  } else {
-    return 'None'
-  }
-}
-
-function getMaxPostCount(breakPoint: string): number {
-  const maxPostCount: { [key: string]: number } = {
-    '2xl': 4,
-    'xl': 4,
-    'lg': 3,
-    'md': 2,
-    'sm': 2,
-    'None': 1
-  }
-  return maxPostCount[breakPoint]
-}
-
-const imagesAndLink: { image: string, link: string }[] = [
-  { image: '/images/Dapada.png', link: 'https://dapada.co.kr/app/' },
-  { image: '/images/DapadaEdu.png', link: 'https://careerdive.co.kr/' },
-  { image: '/images/CareerDive.png', link: 'https://dapada.co.kr/edu/' },
-  { image: '/images/Dacon.png', link: 'https://dacon.io/' }
-]
 
 const MovingImageKeyframes = keyframes`
 from {
@@ -124,95 +89,146 @@ to {
 }
 `
 
-const MovingImage = styled(Image)`
-  animation: ${MovingImageKeyframes} 10s infinite ease;
-`
+const MovingContainer = styled('div')({
+  animation: `${MovingImageKeyframes} 10s infinite ease`,
+})
+
+function Section(props: { title: string, subtitle: string, link: string } & PropsWithChildren) {
+
+  return <div className="flex flex-col justify-start">
+    <div>
+      <Link className='flex items-end w-fit' href={'/post'}>
+        <h1
+          className='no-underline hover:underline'
+          style={{ fontSize: '36px', fontWeight: '600', marginTop: '24px' }}>{props.title}</h1>
+        <ChevronRightIcon className='my-2' style={{ fontSize: '36px' }} />
+      </Link>
+    </div>
+    <h6 style={{ fontSize: '16px', fontWeight: '400', marginTop: '4px' }}>{props.subtitle}</h6>
+    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-8 justify-center' style={{ minHeight: '574px' }}>
+      {props.children}
+    </div>
+  </div>
+}
+
 
 export default function Home() {
-  const [posts, setPosts] = useState<IPost[]>([])
-  const [selectIndex, setSelectIndex] = useState<number>(0)
+  const [recentPosts, setRecentPosts] = useState<IPost[]>([])
+  const [recommendPosts, setRecommendPosts] = useState<IPost[]>([])
+  const [periodicalPosts, setPeriodicalPosts] = useState<IPost[]>([])
 
-  const size = useWindowSize();
   useEffect(() => {
-    API.getPostList({ page: 1, take: 4 }).then((res) => {
+    const recommendPostIds = [13, 12, 11]
+    const periodicalPostIds = [10]
+    API.getPostsByIds({ ids: recommendPostIds }).then((res) => {
       if (res.status === 200) {
-        setPosts(res.data)
+        setRecommendPosts(res.data.sort(
+          (a: IPost, b: IPost) => recommendPostIds.indexOf(a.id) - recommendPostIds.indexOf(b.id)
+        )
+        )
       } else {
         alert('post를 받아오지 못했습니다')
       }
     })
+
+    API.getPostsByIds({ ids: periodicalPostIds }).then((res) => {
+      if (res.status === 200) {
+        setPeriodicalPosts(res.data.sort(
+          (a: IPost, b: IPost) => periodicalPostIds.indexOf(a.id) - periodicalPostIds.indexOf(b.id)
+        )
+        )
+      } else {
+        alert('post를 받아오지 못했습니다')
+      }
+    })
+
+    API.getPostList({ page: 1, take: 3 }).then((res) => {
+      if (res.status === 200) {
+        setRecentPosts(res.data)
+      } else {
+        alert('post를 받아오지 못했습니다')
+      }
+    })
+
   }, [])
 
   return (
-    <div className='container flex flex-col justify-center' style={{ height: 'calc(100vh - 68px)', marginBottom: -80, minHeight: 700 }}>
-      {/* calc(100vh - 148px) 68px(nav) + 80px(parent elem mb-20) */}
-      <div className='flex-col'>
-        <div className='flex justify-between items-center'>
-          <div className='flex-col w-2/3'>
-            <HomeTitle selectIndex={selectIndex} setSelectIndex={setSelectIndex} />
-          </div>
-          <div className='flex w-1/3'>
-            <Link href={'/profile'} className='relative w-full h-0' style={{ paddingBottom: '100%' }} >
-              <MovingImage
-                src={'/images/profile.png'}
-                alt='profile'
-                fill
-                sizes="50vw"
-                priority
-              />
-            </Link>
+    <div className="flex flex-col w-full my-10 justify-start gap-24">
+
+      <div className='flex flex-col gap-8 md:flex-row'>
+        <div className='flex p-4 md:p-0 md:w-1/2 min-[1023.9px]:w-1/3'>
+          <Link href={'/profile'} className='relative w-full h-0' style={{ paddingBottom: '100%' }} >
+            <Image
+              src={'/images/profile.png'}
+              alt='profile'
+              fill
+              sizes="100vw,
+              (min-width: 768px) 50vw,
+              (min-width: 768px) 33vw"
+              priority
+            />
+          </Link>
+        </div>
+        <div className='flex flex-col justify-center items-start md:w-1/2 min-[1023.9px]:w-2/3'>
+          <div className='flex flex-col p-4'>
+            <MovingContainer>
+              <Link href={'/profile'} className='relative w-full h-0' style={{ paddingBottom: '100%' }} >
+                <h1 className='hover:underline cursor-pointer w-fit' style={{ fontSize: '48px', fontWeight: '700' }}>stein</h1>
+              </Link>
+            </MovingContainer>
+
+            <pre style={{ fontSize: '24px', wordBreak: 'keep-all', whiteSpace: 'pre-wrap', lineHeight: '1.75rem' }}>
+              Web Developer
+              <br />
+              <br />
+              University of Seoul<br />
+              <span>&#9;</span>Electrical and Computer Engineering
+              <br />
+              <br />
+              Love with <br />
+              <span>&#9;</span>Web, Music, Piano, Guitar, and Drawing
+            </pre>
           </div>
         </div>
-
-        <Swiper
-          slidesPerView={getMaxPostCount(getBreakPoint(size.width))}
-          onSlideChange={() => { }}
-          onSwiper={(swiper) => { }}
-          className='mt-16 h-52'
-          pagination={true}
-          autoplay={{ pauseOnMouseEnter: true, delay: 4000 }}
-          modules={[Pagination, Autoplay]}
-          color="black"
-        >
-          {selectIndex === 0 ?
-            posts!
-              .filter((e) => process.env.NODE_ENV === 'development' || !e.categories.map(i => i.name).includes('test'))
-              .map((e, i) =>
-                <SwiperSlide key={i} className='flex justify-center'>
-                  <div className="w-60 h-36 flex-col justify-center border-b-slate-400 border-b">
-                    <span className='text-xs'>[{[...e.categories.map((cat) => cat.name)].toString().replaceAll(',', ', ')}]</span>
-                    <Link href={`/post/${e.id}`}>
-                      <h1 className='text-xl font-medium h-16 mt-1 [&:hover]:underline overflow-hidden text-ellipsis whitespace-pre-wrap '
-                        style={{ overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', maxHeight: '3em' }}>
-                        {e.title}
-                      </h1>
-                    </Link>
-                    <p className='text-sm overflow-hidden whitespace-pre-wrap text-ellipsis mt-1'
-                      style={{ overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', maxHeight: '3em' }}
-                    >{e.subtitle}</p>
-                  </div>
-                </SwiperSlide>
-              ) :
-            imagesAndLink.map((e, i) =>
-              <SwiperSlide key={i} className='flex justify-center'>
-                <div className='relative border-slate-200 border' style={{ overflow: 'hidden', height: `${240 * 9 / 16}px` }}>
-                  <a href={e.link} target="_blank" rel="noreferrer">
-                    <Image
-                      src={e.image}
-                      alt='profile'
-                      width={240}
-                      height={240 * 9 / 16}
-                    />
-                  </a>
-
-                </div>
-              </SwiperSlide>
-
-            )
-          }
-        </Swiper>
       </div>
 
+      <Section title='추천 게시물' subtitle='개발에 관심있다면 이런 글은 어떠세요?' link='/post'>
+        {
+          recommendPosts!
+            .filter((e) => process.env.NODE_ENV === 'development' || !e.categories.map(i => i.name).includes('test'))
+            .map((post, i) =>
+              <PostCard key={i} post={post} />
+            )
+        }
+      </Section>
+
+      <Section title='정기 게시물' subtitle='항상 업데이트된 내용을 전달해드립니다!' link='/post'>
+        {
+          periodicalPosts!
+            .filter((e) => process.env.NODE_ENV === 'development' || !e.categories.map(i => i.name).includes('test'))
+            .map((post, i) =>
+              <PostCard key={i} post={post} />
+            )
+        }
+      </Section>
+
+      <Section title='최근 게시물' subtitle='가장 최근 올라온 게시글을 확인하세요!' link='/post'>
+        {
+          recentPosts!
+            .filter((e) => process.env.NODE_ENV === 'development' || !e.categories.map(i => i.name).includes('test'))
+            .map((post, i) =>
+              <PostCard key={i} post={post} />
+            )
+        }
+      </Section>
+
+      <Link className='flex items-end no-underline hover:underline' href={'/post'}>
+        <div className='flex justify-center items-center w-full border-gray-200 border rounded-sm p-4'>
+          <h1
+            style={{ fontSize: '24px', fontWeight: '600' }}>전체 게시글 보러가기</h1>
+          <ChevronRightIcon className='my-2' style={{ fontSize: '36px' }} />
+        </div>
+      </Link>
     </div>
   );
 }
