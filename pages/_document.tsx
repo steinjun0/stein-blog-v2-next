@@ -7,10 +7,10 @@ declare global {
     dataLayer: any
   }
 }
-
 export default function Document() {
   return (
     <Html>
+      <Head />
       <body>
         <Script src="https://t1.kakaocdn.net/kakao_js_sdk/2.1.0/kakao.min.js"
           crossOrigin="anonymous"
