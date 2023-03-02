@@ -32,10 +32,34 @@ export default function App({ Component, pageProps }: AppProps) {
       router.events.off('routeChangeComplete', handleRouteChange)
     }
   }, [router.events])
-
+  const description = "Blog for Stein. Engineering, Music, Camera, Art, and Life."
+  const url = "https://blog.steinjun.net/"
   return (
     <>
       <Head>
+        <title key="title">stein-blog</title>
+        <link rel="shortcut icon" href="https://blog.steinjun.net/stein-logo.svg" />
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta key="description" name="description" content={description} />
+        <meta key="author" name="author" content="Steinjun_0" />
+        <meta name="robots" content="index, follow" />
+        <meta name="color-scheme" content="light only" />
+
+        {/*  Facebook Meta Tags  */}
+        <meta key="og:url" property="og:url" content={url} />
+        <meta key="og:type" property="og:type" content="website" />
+        <meta key="og:title" property="og:title" content="stein-blog" />
+        <meta key="og:description" property="og:description" content={description} />
+        <meta key="og:image" property="og:image" content="https://blog.steinjun.net/stein-logo.svg" />
+
+        {/* Twitter Meta Tags  */}
+        <meta key="twitter:card" name="twitter:card" content="summary_large_image" />
+        <meta key="twitter:domain" property="twitter:domain" content="blog.steinjun.net" />
+        <meta key="twitter:url" property="twitter:url" content={url} />
+        <meta key="twitter:title" name="twitter:title" content="stein-blog" />
+        <meta key="twitter:description" name="twitter:description" content={description} />
+        <meta key="twitter:image" name="twitter:image" content="https://blog.steinjun.net/stein-logo.svg" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-F6WWRZZP6J"></script>
         <script
           dangerouslySetInnerHTML={{

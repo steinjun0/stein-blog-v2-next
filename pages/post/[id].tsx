@@ -87,27 +87,24 @@ export default function WorkPage(props: {
         <div className='flex flex-col w-full max-w-2xl mt-10'>
             <Head>
                 <link rel="shortcut icon" href="/stein-logo.svg" />
-                <meta charSet="utf-8" />
-                <meta name="viewport" content="width=device-width, initial-scale=1" />
-                <title>{props.title}</title>
-                <meta name="description" content={props.subtitle} />
-                <meta name="author" content="Steinjun_0" />
-                <meta name="robots" content="index, follow" />
+                <title key="title">{props.title}</title>
+                <meta key="description" name="description" content={props.subtitle} />
+                <meta key="author" name="author" content="Steinjun_0" />
 
                 {/*  Facebook Meta Tags  */}
-                <meta property="og:url" content={`https://blog.steinjun.net/post/${router.query.id}`} />
-                <meta property="og:type" content="website" />
-                <meta property="og:title" content={props.title} />
-                <meta property="og:description" content={props.subtitle} />
-                <meta property="og:image" content={API.getServerPostImageUrl({ postId: props.id, fileName: 'thumbnail' })} />
+                <meta key="og:url" property="og:url" content={`https://blog.steinjun.net/post/${router.query.id}`} />
+                <meta key="og:type" property="og:type" content="website" />
+                <meta key="og:title" property="og:title" content={props.title} />
+                <meta key="og:description" property="og:description" content={props.subtitle} />
+                <meta key="og:image" property="og:image" content={API.getServerPostImageUrl({ postId: props.id, fileName: 'thumbnail' })} />
 
                 {/* Twitter Meta Tags  */}
-                <meta name="twitter:card" content="summary_large_image" />
-                <meta property="twitter:domain" content="blog.steinjun.net" />
-                <meta property="twitter:url" content={`https://blog.steinjun.net/post/${router.query.id}`} />
-                <meta name="twitter:title" content={props.title} />
-                <meta name="twitter:description" content={props.subtitle} />
-                <meta name="twitter:image" content={API.getServerPostImageUrl({ postId: props.id, fileName: 'thumbnail' })} />
+                <meta key="twitter:card" name="twitter:card" content="summary_large_image" />
+                <meta key="twitter:domain" property="twitter:domain" content="blog.steinjun.net" />
+                <meta key="twitter:url" property="twitter:url" content={`https://blog.steinjun.net/post/${router.query.id}`} />
+                <meta key="twitter:title" name="twitter:title" content={props.title} />
+                <meta key="twitter:description" name="twitter:description" content={props.subtitle} />
+                <meta key="twitter:image" name="twitter:image" content={API.getServerPostImageUrl({ postId: props.id, fileName: 'thumbnail' })} />
             </Head>
             <div className="flex-col">
                 <div className="flex-col mb-4 items-end">
