@@ -1,5 +1,6 @@
 import { TextField } from "@mui/material";
-import { SocketRefContext } from "pages/village/square";
+import useKeyStatus from "components/hooks/useKeyStatus";
+import { SocketContext } from "pages/village/square";
 import { useState, useRef, useContext, useEffect } from "react";
 import { IMessage } from "./types";
 
@@ -8,19 +9,33 @@ export default function ChatBlock() {
     const [messages, setMessages] = useState<IMessage[]>([]);
     const [isOpenChat, setIsOpenChat] = useState<boolean>(false);
     const chatDivRef = useRef<HTMLDivElement>(null);
-    const socketRef = useContext(SocketRefContext);
+    const textFieldRef = useRef<HTMLInputElement>(null);
+    const socket = useContext(SocketContext);
+
+    const keyStatus = useKeyStatus();
+    useEffect(() => {
+        if (keyStatus.code === 'Enter') {
+            textFieldRef.current?.focus();
+        } else if (keyStatus.code === 'Escape') {
+            textFieldRef.current?.blur();
+        }
+    }, [keyStatus]);
 
     useEffect(() => {
-        if (socketRef) {
-            socketRef.current?.on("message", (message: IMessage) => {
+        if (socket) {
+            socket?.on('connect', () => {
+                console.log('connected!!');
+            });
+            socket?.on("message", (message: IMessage) => {
+                console.log('message', message);
                 setMessages((prev) => [...prev, message]);
             });
         }
 
         return () => {
-            socketRef && socketRef!.current && socketRef!.current.close();
+            socket?.close();
         };
-    }, [socketRef]);
+    }, [socket]);
 
     useEffect(() => {
         chatDivRef.current?.scrollTo(0, chatDivRef.current.scrollHeight);
@@ -43,6 +58,7 @@ export default function ChatBlock() {
 
             <TextField
                 className="w-full"
+                inputRef={textFieldRef}
                 style={{
                     backgroundColor: isOpenChat ? '#ffff' : '#eee4',
                 }}
@@ -56,9 +72,10 @@ export default function ChatBlock() {
                     setIsOpenChat(false);
                 }}
                 onKeyDown={(e) => {
+                    e.stopPropagation();
                     if (e.keyCode === 13 && messageInput.replace(/ /g, '') !== '') {
                         e.preventDefault();
-                        socketRef?.current!.emit('message', messageInput);
+                        socket?.emit('message', messageInput);
                         setMessageInput('');
                     }
                 }}

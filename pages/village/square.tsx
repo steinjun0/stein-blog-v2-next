@@ -36,8 +36,8 @@ function GameScreen() {
             setIsClient(true);
         }
     }, [router]);
-    const socketRef = useContext(SocketRefContext);
-    socketRef!.current?.on("pos", (positions: string) => {
+    const socket = useContext(SocketContext);
+    socket?.on("pos", (positions: string) => {
         setPawnPositions(JSON.parse(positions).map((e: string) => JSON.parse(e)));
     });
 
@@ -65,17 +65,22 @@ function GameScreen() {
 }
 
 
-export const SocketRefContext = createContext<MutableRefObject<Socket<ServerToClientEvents, ClientToServerEvents> | undefined> | null>(null);
+export const SocketContext = createContext<Socket<ServerToClientEvents, ClientToServerEvents> | undefined | null>(null);
 
+export const uniqueColors = ['#FFA07A', '#8BAAFF', '#8BAA8B', '#FFD700'];
 export default function Square() {
-    const socketRef = useRef<Socket<ServerToClientEvents, ClientToServerEvents>>();
+    // const socketRef = useRef<Socket<ServerToClientEvents, ClientToServerEvents>>();
+    const [socket, setSocket] = useState<Socket<ServerToClientEvents, ClientToServerEvents>>();
     const [gameScreenHeight, setGameScreenHeight] = useState<number | undefined>();
+
     useEffect(() => {
         setGameScreenHeight(document.documentElement.clientWidth);
-        socketRef.current = io(process.env.NEXT_PUBLIC_WEBSOCKET_URL as string);
+        console.log('connect');
+        setSocket(io(process.env.NEXT_PUBLIC_WEBSOCKET_URL as string));
         return () => {
-            socketRef.current!.disconnect();
-            socketRef.current!.close();
+            console.log('disconnect');
+            socket?.disconnect();
+            socket?.close();
         };
     }, []);
     return (
@@ -90,12 +95,12 @@ export default function Square() {
                 minWidth: gameScreenHeight
             }}
         >
-            <SocketRefContext.Provider value={socketRef}>
+            <SocketContext.Provider value={socket}>
                 <GameScreen />
                 <div className="fixed w-96">
                     <ChatBlock />
                 </div>
-            </SocketRefContext.Provider>
+            </SocketContext.Provider>
         </div>
     );
 }

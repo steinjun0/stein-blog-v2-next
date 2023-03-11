@@ -1,5 +1,5 @@
 import useFrame from "components/hooks/useFrame";
-import { SocketRefContext } from "pages/village/square";
+import { SocketContext } from "pages/village/square";
 import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import { ICharacterPos, TCharacterCommand } from "./types";
 
@@ -7,10 +7,10 @@ export default function MainCharacter(props: { commands: Set<TCharacterCommand>;
     const [pos, setPos] = useState<ICharacterPos>({ top: 0, left: 0 });
     const renderingTiming = useFrame(60);
     const speed = 5;
-    const socketRef = useContext(SocketRefContext);
+    const socket = useContext(SocketContext);
 
     useEffect(() => {
-        socketRef?.current!.emit("pos", JSON.stringify(pos));
+        socket?.emit("pos", JSON.stringify(pos));
     }, [pos]);
 
     useLayoutEffect(() => {
