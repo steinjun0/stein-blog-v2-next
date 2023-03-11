@@ -55,7 +55,7 @@ function GameScreen() {
         setCharacterCommands(characterCommandsTemp.current);
     }, [inputKeyStatus]);
     return (
-        <div className="w-full h-full bg-[#FFF0E6]">
+        <div className="w-full h-full bg-[#FFF0E6] relative">
             {pawnPositions.map((pos, index) => {
                 return <PawnCharacter key={index} pos={pos} index={index} />;
             })}

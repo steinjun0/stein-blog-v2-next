@@ -57,8 +57,8 @@ export default function MainCharacter(props: { commands: Set<TCharacterCommand>;
     }, [renderingTiming]);
     return (
         <div style={{
-            backgroundColor: "#00FFFF", borderRadius: '100%', width: '40px', height: '40px',
-            position: 'relative',
+            backgroundColor: "#00FFFF", borderRadius: '100%', width: '60px', height: '60px',
+            position: 'absolute',
             top: pos.top, left: pos.left
         }}>
 

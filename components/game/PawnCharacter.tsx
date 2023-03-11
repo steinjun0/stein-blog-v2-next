@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect, useLayoutEffect } from "react";
 import { ICharacterPos } from "./types";
 
-const uniqueColors = ['#FFD700', '#8B008B', '#8B008B', '#FFA07A'];
+const uniqueColors = ['#FFA07A', '#8BAAFF', '#8BAA8B', '#FFD700'];
 export default function PawnCharacter(props: { pos: ICharacterPos, index: number; }) {
     const [pos, setPos] = useState<{ top: number, left: number; }>({ top: 0, left: 0 });
 
@@ -12,8 +12,8 @@ export default function PawnCharacter(props: { pos: ICharacterPos, index: number
 
     return (
         <div style={{
-            backgroundColor: uniqueColors[props.index], borderRadius: '100%', width: '40px', height: '40px',
-            position: 'relative',
+            backgroundColor: uniqueColors[props.index], borderRadius: '100%', width: '60px', height: '60px',
+            position: 'absolute',
             top: pos.top, left: pos.left,
             display: 'flex',
             justifyContent: 'center', alignItems: 'center',
