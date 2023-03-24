@@ -1,196 +1,57 @@
 import API from 'API';
 import { IPost } from 'components/Types';
-import Image from 'next/image';
 import Link from 'next/link';
-import React, { PropsWithChildren, useEffect, useState } from 'react';
-import useWindowSize from '../components/hooks/useWindowSize';
+import React, { useEffect, useState } from 'react';
 
-import 'swiper/css'
-import "swiper/css/pagination";
-import "swiper/css/autoplay";
-import { keyframes, styled } from '@mui/system';
 import PostCard from 'components/PostCard';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-
-
-const MovingImageKeyframes = keyframes`
-from {
-  transform: rotate(0deg);
-  left : 0%;
-}
-
-8% {
-  transform-origin: 100% 100%;
-  transform: rotate(0deg);
-  left : 0%;
-}
-
-10% {
-  transform: rotate(2deg);
-  left : 2%;
-}
-
-12% {
-  transform: rotate(0deg);
-  left : 2%;
-}
-
-50% {
-  transform-origin: 100% 100%;
-  transform: rotate(0deg);
-  left : 2%;
-}
-
-52% {
-  transform: rotate(2deg);
-  left : 4%;
-}
-
-54% {
-  transform: rotate(0deg);
-  left : 4%;
-}
-
-70% {
-  transform-origin: 0% 100%;
-  transform: rotate(0deg);
-  left : 4%;
-}
-
-72% {
-  transform: rotate(-2deg);
-  left : 2%;
-}
-
-74% {
-  transform: rotate(0deg);
-  left : 2%;
-}
-
-80% {
-  transform-origin: 0% 100%;
-  transform: rotate(0deg);
-  left : 2%;
-}
-
-82% {
-  transform: rotate(-2deg);
-  left : 0%;
-}
-
-84% {
-  transform: rotate(0deg);
-  left : 0%;
-}
-
-to {
-  transform: rotate(0deg);
-  left : 0%;
-}
-`
-
-const MovingContainer = styled('div')({
-  animation: `${MovingImageKeyframes} 10s infinite ease`,
-})
-
-function Section(props: { title: string, subtitle: string, link: string } & PropsWithChildren) {
-
-  return <div className="flex flex-col justify-start">
-    <div>
-      <Link className='flex items-end w-fit' href={'/post'}>
-        <h1
-          className='no-underline hover:underline'
-          style={{ fontSize: '36px', fontWeight: '600', marginTop: '24px' }}>{props.title}</h1>
-        <ChevronRightIcon className='my-2' style={{ fontSize: '36px' }} />
-      </Link>
-    </div>
-    <h6 style={{ fontSize: '16px', fontWeight: '400', marginTop: '4px' }}>{props.subtitle}</h6>
-    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-8 justify-center' style={{ minHeight: '574px' }}>
-      {props.children}
-    </div>
-  </div>
-}
-
+import Profile from 'organisms/index/Profile';
+import Section from 'organisms/index/Section';
 
 export default function Home() {
-  const [recentPosts, setRecentPosts] = useState<IPost[]>([])
-  const [recommendPosts, setRecommendPosts] = useState<IPost[]>([])
-  const [periodicalPosts, setPeriodicalPosts] = useState<IPost[]>([])
+  const [recentPosts, setRecentPosts] = useState<IPost[]>([]);
+  const [recommendPosts, setRecommendPosts] = useState<IPost[]>([]);
+  const [periodicalPosts, setPeriodicalPosts] = useState<IPost[]>([]);
 
   useEffect(() => {
-    const recommendPostIds = [15, 12, 11]
-    const periodicalPostIds = [10]
+    const recommendPostIds = [15, 12, 11];
+    const periodicalPostIds = [10];
     API.getPostsByIds({ ids: recommendPostIds }).then((res) => {
       if (res.status === 200) {
         setRecommendPosts(res.data.sort(
           (a: IPost, b: IPost) => recommendPostIds.indexOf(a.id) - recommendPostIds.indexOf(b.id)
         )
-        )
+        );
       } else {
-        alert('post를 받아오지 못했습니다')
+        alert('post를 받아오지 못했습니다');
       }
-    })
+    });
 
     API.getPostsByIds({ ids: periodicalPostIds }).then((res) => {
       if (res.status === 200) {
         setPeriodicalPosts(res.data.sort(
           (a: IPost, b: IPost) => periodicalPostIds.indexOf(a.id) - periodicalPostIds.indexOf(b.id)
         )
-        )
+        );
       } else {
-        alert('post를 받아오지 못했습니다')
+        alert('post를 받아오지 못했습니다');
       }
-    })
+    });
 
     API.getPostList({ page: 1, take: 3 }).then((res) => {
       if (res.status === 200) {
-        setRecentPosts(res.data)
+        setRecentPosts(res.data);
       } else {
-        alert('post를 받아오지 못했습니다')
+        alert('post를 받아오지 못했습니다');
       }
-    })
+    });
 
-  }, [])
+  }, []);
 
   return (
     <div className="flex flex-col w-full my-10 justify-start gap-24">
 
-      <div className='flex flex-col gap-8 md:flex-row'>
-        <div className='flex p-4 md:p-0 md:w-1/2 min-[1023.9px]:w-1/3'>
-          <Link href={'/profile'} className='relative w-full h-0' style={{ paddingBottom: '100%' }} >
-            <Image
-              src={'/images/profile.png'}
-              alt='profile'
-              fill
-              sizes="100vw,
-              (min-width: 768px) 50vw,
-              (min-width: 768px) 33vw"
-              priority
-            />
-          </Link>
-        </div>
-        <div className='flex flex-col justify-center items-start md:w-1/2 min-[1023.9px]:w-2/3'>
-          <div className='flex flex-col p-4'>
-            <MovingContainer>
-              <Link href={'/profile'} className='relative w-full h-0' style={{ paddingBottom: '100%' }} >
-                <h1 className='hover:underline cursor-pointer w-fit' style={{ fontSize: '48px', fontWeight: '700' }}>stein</h1>
-              </Link>
-            </MovingContainer>
-
-            <pre style={{ fontSize: '24px', wordBreak: 'keep-all', whiteSpace: 'pre-wrap', lineHeight: '1.75rem' }}>
-              Web Developer
-              <br />
-              <br />
-              University of Seoul<br />
-              <span>&#9;</span>Electrical and Computer Engineering
-              <br />
-              <br />
-              Love with <br />
-              <span>&#9;</span>Web, Music, Piano, Guitar, and Drawing
-            </pre>
-          </div>
-        </div>
-      </div>
+      <Profile />
 
       <Section title='추천 게시물' subtitle='개발에 관심있다면 이런 글은 어떠세요?' link='/post'>
         {
