@@ -1,18 +1,17 @@
-import API from "API"
-import { marked } from "marked"
-import Link from "next/link"
-import post from "pages/post"
+import API from "API";
+import { marked } from "marked";
+import Link from "next/link";
 import Image from "next/image";
-import { IPost } from "./Types";
+import { IPost } from "../../components/Types";
 import { HTMLAttributes, useRef } from "react";
 
-export default function PostCard({ post, ...props }: { post: IPost } & HTMLAttributes<HTMLDivElement>) {
+export default function PostCard({ post, ...props }: { post: IPost; } & HTMLAttributes<HTMLDivElement>) {
     const koDtf = new Intl.DateTimeFormat("ko", { dateStyle: "long" });
-    const titleRef = useRef<HTMLHeadingElement>(null)
-    return <div {...props} className="mt-6 justify-center border-gray-200 border rounded-sm overflow-hidden" style={{ minHeight: '574px' }}>
+    const titleRef = useRef<HTMLHeadingElement>(null);
+    return <div {...props} className="justify-center border-gray-200 border rounded-sm overflow-hidden" style={{ minHeight: '574px' }}>
         <Link href={`/post/${post.id}`} className="flex h-full">
-            <div className="flex flex-col justify-between">
-                <div className="relative" style={{ maxHeight: 382, minHeight: 382, overflow: 'hidden' }}>
+            <div className="flex flex-col justify-between w-full">
+                <div className="relative" style={{ maxHeight: 382, minHeight: 382, overflow: 'hidden', maxWidth: '100%' }}>
                     <Image
                         src={API.getServerPostImageUrl({ postId: post.id, fileName: 'thumbnail' })}
                         alt={`${post.id}-thumnail`}
@@ -20,8 +19,8 @@ export default function PostCard({ post, ...props }: { post: IPost } & HTMLAttri
                         className="object-contain"
                         priority
                         sizes="(max-width: 812px) 100vw,
-                    (max-width: 1208px) 50vw,
-                    33vw"
+                                (max-width: 1208px) 50vw,
+                                33vw"
                     />
                 </div>
                 <div className="flex flex-col justify-between p-4 pb-3 border-t border-gray-200 h-full">
@@ -41,7 +40,7 @@ export default function PostCard({ post, ...props }: { post: IPost } & HTMLAttri
                             {post.categories.map((e, i) => {
                                 return <div key={i} className="bg-gray-700 rounded-sm text-white" style={{ padding: '2px 4px', fontWeight: 400 }}>
                                     <span>{e.name}</span>
-                                </div>
+                                </div>;
                             })}
                         </div>
                         <span className="text-gray-400">{koDtf.format(post.created_at)}</span>
@@ -50,5 +49,5 @@ export default function PostCard({ post, ...props }: { post: IPost } & HTMLAttri
 
             </div>
         </Link>
-    </div>
+    </div>;
 }

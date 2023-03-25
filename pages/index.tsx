@@ -3,7 +3,7 @@ import { IPost } from 'components/Types';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 
-import PostCard from 'components/PostCard';
+import PostCard from 'organisms/common/PostCard';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Profile from 'organisms/index/Profile';
 import Section from 'organisms/index/Section';

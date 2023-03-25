@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import API from "API";
 import { IPost } from "components/Types";
 import { useRouter } from "next/router";
-import PostCard from "components/PostCard";
+import PostCard from 'organisms/common/PostCard';
 
 
 export default function Post() {
@@ -72,10 +72,9 @@ export default function Post() {
 
 						<h6 style={{ fontSize: '16px', fontWeight: '400', marginTop: '4px' }}>가장 최근 올라온 게시글을 확인하세요!</h6>
 					</div>
-
 				</div>
 
-				<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center'>
+				<div className='mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 gap-y-16 justify-center'>
 					{posts
 						.filter(e => process.env.NODE_ENV === 'development' || !e.categories.map(i => i.name).includes('test'))
 						.map(
