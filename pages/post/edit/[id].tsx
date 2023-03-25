@@ -2,12 +2,12 @@ import { Button, Dialog, Input, NativeSelect, Select, TextField } from "@mui/mat
 
 import API from "API";
 import ListPushInput from "components/ListPushInput";
-import { IPost } from "components/Types";
+import { IPost } from "interfaces/post";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { ChangeEvent, SetStateAction, useEffect, useRef, useState } from "react";
-
+import { ClipboardEvent } from 'react';
 
 const MDEditor = dynamic(
     () => {
@@ -51,6 +51,19 @@ function getUnduplicatedName(originFileName: string, fileNames: Array<string>): 
     }
 
 }
+
+function getFilesFromClipboard(e: ClipboardEvent<HTMLDivElement>) {
+    const items = e.clipboardData?.items;
+    const images = [];
+    for (const item of items) {
+        if (item.kind === 'file' && item.type.includes('image/')) {
+            const file = item.getAsFile();
+            images.push(file);
+        }
+    }
+    return images;
+}
+
 
 export default function WorkPage() {
     const router = useRouter();
@@ -233,30 +246,40 @@ export default function WorkPage() {
         }
     }
 
-    function onPasteThumbnailText(e: any) {
-        var items = (e.clipboardData || e.originalEvent.clipboardData).items;
-        for (var index in items) {
-            var item = items[index];
-            if (item.kind === 'file') {
-                let file = item.getAsFile();
-                if (!isSendingApiRef.current) {
-                    isSendingApiRef.current = true;
-                    setIsDialogOpen(isSendingApiRef.current);
-                    API.postFile({ file: file, name: 'thumbnail' }).then((res) => {
-                        if (res.status === 201) {
-                            postThumbnailLocationRef.current = 'temp';
-                            alert('썸네일이 업로드 되었습니다');
-                            setUrlCacheBreaker(new Date().getMilliseconds().toString());
-                        } else {
-                            alert('썸네일을 업로드하지 못하였습니다');
-                        }
-                        isSendingApiRef.current = false;
-                        setIsDialogOpen(isSendingApiRef.current);
-                    });
+    function uploadImages(image: File, imageType: string) {
+        if (!isSendingApiRef.current) {
+            isSendingApiRef.current = true;
+            setIsDialogOpen(isSendingApiRef.current);
+            API.postFile({ file: image!, name: imageType === 'thumbnail' ? 'thumbnail' : getUnduplicatedName(image.name, fileNamesRef.current) }).then((res) => {
+                if (res.status === 201) {
+                    postThumbnailLocationRef.current = 'temp';
+                    alert(`${imageType} 업로드 되었습니다`);
+                    setUrlCacheBreaker(new Date().getMilliseconds().toString());
+
+                    setUploadImageUrl(`${API.getServerPostImageUrl({ postId: 'temp', fileName: res.data[0].filename })}`);
+                    setUploadImageUrlForMD(`<p align="center"><img src="${API.getPostFileUrl({ postId: 'temp', fileName: res.data[0].filename })}" alt="${res.data[0].filename}" style="max-height: 300px"/></p>`);
                 } else {
-                    alert('썸네일 업로드 중입니다!');
+                    alert(`${imageType} 업로드하지 못하였습니다`);
                 }
-            }
+                isSendingApiRef.current = false;
+                setIsDialogOpen(isSendingApiRef.current);
+            });
+        } else {
+            alert(`${imageType} 업로드 중입니다!`);
+        }
+    }
+
+    function onPasteThumbnailInput(e: ClipboardEvent<HTMLDivElement>) {
+        const images = getFilesFromClipboard(e);
+        for (const image of images) {
+            uploadImages(image!, 'thumbnail');
+        }
+    }
+
+    function onPasteImageTextInput(e: ClipboardEvent<HTMLDivElement>) {
+        const images = getFilesFromClipboard(e);
+        for (const image of images) {
+            uploadImages(image!, 'image');
         }
     }
 
@@ -369,7 +392,9 @@ export default function WorkPage() {
                             <TextField
                                 fullWidth
                                 variant="standard"
-                                onPaste={onPasteThumbnailText}
+                                onPaste={(e) => {
+                                    onPasteThumbnailInput(e);
+                                }}
                             />
                         </div>
                     </div>
@@ -395,6 +420,13 @@ export default function WorkPage() {
                                 type="file"
                                 onChange={(e) => {
                                     onChangeImageInput(e);
+                                }}
+                            />
+                            <TextField
+                                fullWidth
+                                variant="standard"
+                                onPaste={(e) => {
+                                    onPasteImageTextInput(e);
                                 }}
                             />
                             <div>
