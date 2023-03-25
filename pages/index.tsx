@@ -1,5 +1,5 @@
 import API from 'API';
-import { IPost } from 'components/Types';
+import { IPost } from 'interfaces/post';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 

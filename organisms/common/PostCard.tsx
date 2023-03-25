@@ -2,7 +2,7 @@ import API from "API";
 import { marked } from "marked";
 import Link from "next/link";
 import Image from "next/image";
-import { IPost } from "../../components/Types";
+import { IPost } from "interfaces/post";
 import { HTMLAttributes, useRef } from "react";
 
 export default function PostCard({ post, ...props }: { post: IPost; } & HTMLAttributes<HTMLDivElement>) {

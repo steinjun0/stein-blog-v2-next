@@ -1,11 +1,11 @@
-import '../styles/globals.css'
+import '../styles/globals.css';
 
 import "styles/markdown.css";
 import "styles/markdown-editor.css";
 
-import type { AppProps } from 'next/app'
+import type { AppProps } from 'next/app';
 import { createTheme, ThemeProvider } from '@mui/material';
-import Gnb from 'components/Gnb';
+import Gnb from 'organisms/Gnb';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import Head from 'next/head';
@@ -22,18 +22,18 @@ const theme = createTheme({
 
 
 export default function App({ Component, pageProps }: AppProps) {
-  const router = useRouter()
+  const router = useRouter();
   useEffect(() => {
     const handleRouteChange = (url: string) => {
-      gtag.pageview(url)
-    }
-    router.events.on('routeChangeComplete', handleRouteChange)
+      gtag.pageview(url);
+    };
+    router.events.on('routeChangeComplete', handleRouteChange);
     return () => {
-      router.events.off('routeChangeComplete', handleRouteChange)
-    }
-  }, [router.events])
-  const description = "Blog for Stein. Engineering, Music, Camera, Art, and Life."
-  const url = "https://blog.steinjun.net/"
+      router.events.off('routeChangeComplete', handleRouteChange);
+    };
+  }, [router.events]);
+  const description = "Blog for Stein. Engineering, Music, Camera, Art, and Life.";
+  const url = "https://blog.steinjun.net/";
   return (
     <>
       <Head>

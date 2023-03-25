@@ -1,4 +1,4 @@
-import useFrame from "components/hooks/useFrame";
+import useFrame from "hooks/useFrame";
 import { SocketContext } from "pages/village/square";
 import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import { ICharacterPos, TCharacterCommand } from "./types";

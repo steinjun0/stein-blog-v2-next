@@ -2,7 +2,7 @@ import ChatBlock from "components/game/ChatBlock";
 import MainCharacter from "components/game/MainCharacter";
 import PawnCharacter from "components/game/PawnCharacter";
 import { ClientToServerEvents, ICharacterPos, IMessage, ServerToClientEvents, TCharacterCommand } from "components/game/types";
-import useKeyStatus from "components/hooks/useKeyStatus";
+import useKeyStatus from "hooks/useKeyStatus";
 import { useRouter } from "next/router";
 import { createContext, MutableRefObject, Ref, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";

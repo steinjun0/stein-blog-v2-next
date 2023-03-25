@@ -1,5 +1,5 @@
 import { TextField } from "@mui/material";
-import useKeyStatus from "components/hooks/useKeyStatus";
+import useKeyStatus from "hooks/useKeyStatus";
 import { SocketContext } from "pages/village/square";
 import { useState, useRef, useContext, useEffect } from "react";
 import { IMessage } from "./types";

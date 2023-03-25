@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import API from "API";
-import { IPost } from "components/Types";
+import { IPost } from "interfaces/post";
 import { useRouter } from "next/router";
 import PostCard from 'organisms/common/PostCard';
 
