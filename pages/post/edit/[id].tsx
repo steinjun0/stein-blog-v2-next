@@ -2,21 +2,21 @@ import { Button, Dialog, Input, NativeSelect, Select, TextField } from "@mui/mat
 
 import API from "API";
 import ListPushInput from "components/ListPushInput";
-import { IPost } from "components/Types";
+import { IPost } from "interfaces/post";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { ChangeEvent, SetStateAction, useEffect, useRef, useState } from "react";
-
+import { ClipboardEvent } from 'react';
 
 const MDEditor = dynamic(
     () => {
-        const res = import("@uiw/react-md-editor")
+        const res = import("@uiw/react-md-editor");
         res.then((mod) => {
             mod.constructor = () => {
-            }
-        })
-        return res
+            };
+        });
+        return res;
     },
     { ssr: false }
 );
@@ -27,238 +27,259 @@ const Markdown = dynamic(
 );
 
 function getUnduplicatedName(originFileName: string, fileNames: Array<string>): string {
-    let fileName: string = originFileName
-    let resultName: string = ''
+    let fileName: string = originFileName;
+    let resultName: string = '';
     while (true) {
         if (fileNames.includes(fileName)) {
-            const checkIdxDuplication = /\(+[0-9]+\).*$/.exec(fileName)
+            const checkIdxDuplication = /\(+[0-9]+\).*$/.exec(fileName);
             if (checkIdxDuplication) { // name(n).ext 존재
-                const numberAndExt = checkIdxDuplication[0]
-                let dupIdx: number = +numberAndExt.slice(1, numberAndExt.indexOf(')'))
+                const numberAndExt = checkIdxDuplication[0];
+                let dupIdx: number = +numberAndExt.slice(1, numberAndExt.indexOf(')'));
 
-                resultName = fileName.slice(0, checkIdxDuplication.index) + `(${++dupIdx})` + numberAndExt.slice(numberAndExt.lastIndexOf('.'))
+                resultName = fileName.slice(0, checkIdxDuplication.index) + `(${++dupIdx})` + numberAndExt.slice(numberAndExt.lastIndexOf('.'));
                 while (fileNames.includes(resultName)) {
-                    resultName = fileName.slice(0, checkIdxDuplication.index) + `(${++dupIdx})` + numberAndExt.slice(numberAndExt.lastIndexOf('.'))
+                    resultName = fileName.slice(0, checkIdxDuplication.index) + `(${++dupIdx})` + numberAndExt.slice(numberAndExt.lastIndexOf('.'));
                 }
-                return resultName
+                return resultName;
             } else { // name.ext 존재
-                fileName = fileName.slice(0, fileName.lastIndexOf('.')) + '(1)' + fileName.slice(fileName.lastIndexOf('.'))
-                continue
+                fileName = fileName.slice(0, fileName.lastIndexOf('.')) + '(1)' + fileName.slice(fileName.lastIndexOf('.'));
+                continue;
             }
         } else {
-            return fileName
+            return fileName;
         }
     }
 
 }
 
+function getFilesFromClipboard(e: ClipboardEvent<HTMLDivElement>) {
+    const items = e.clipboardData?.items;
+    const images = [];
+    for (const item of items) {
+        if (item.kind === 'file' && item.type.includes('image/')) {
+            const file = item.getAsFile();
+            images.push(file);
+        }
+    }
+    return images;
+}
+
+
 export default function WorkPage() {
-    const router = useRouter()
+    const router = useRouter();
 
     const [title, setTitle] = useState<string>('');
     const [subtitle, setSubtitle] = useState<string>('');
     const [categories, setCategories] = useState<string[]>([]);
     const [fileNames, setFileNames] = useState<string[]>([]);
-    const [md, setMd] = useState<string>('') // for save
-    const [urlCacheBreaker, setUrlCacheBreaker] = useState<string>('')
-    const mdRef = useRef<string>('') // for read
-    const fileNamesRef = useRef<string[]>([])
-    const [allCategories, setAllCategories] = useState<Array<{ id: number, name: string }>>()
+    const [md, setMd] = useState<string>(''); // for save
+    const [urlCacheBreaker, setUrlCacheBreaker] = useState<string>('');
+    const mdRef = useRef<string>(''); // for read
+    const fileNamesRef = useRef<string[]>([]);
+    const [allCategories, setAllCategories] = useState<Array<{ id: number, name: string; }>>();
 
-    const postThumbnailLocationRef = useRef<'temp' | number>()
+    const postThumbnailLocationRef = useRef<'temp' | number>();
 
-    const isSetListenerRef = useRef<boolean>(false)
-    let isSendingApiRef = useRef<boolean>(false)
-    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
+    const isSetListenerRef = useRef<boolean>(false);
+    let isSendingApiRef = useRef<boolean>(false);
+    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
-    const [uploadImageUrl, setUploadImageUrl] = useState('')
-    const [uploadImageUrlForMD, setUploadImageUrlForMD] = useState('')
+    const [uploadImageUrl, setUploadImageUrl] = useState('');
+    const [uploadImageUrlForMD, setUploadImageUrlForMD] = useState('');
 
     function onClickSave() {
-        type postPostDto = { title: string, subtitle: string, body: string, categories?: Array<string>, files?: Array<string> }
+        type postPostDto = { title: string, subtitle: string, body: string, categories?: Array<string>, files?: Array<string>; };
         const data: postPostDto = {
             title, subtitle, categories, body: md, files: fileNames
-        }
+        };
         if (!isSendingApiRef.current) {
             if (router.query.id === 'new') {
-                isSendingApiRef.current = true
-                setIsDialogOpen(isSendingApiRef.current)
+                isSendingApiRef.current = true;
+                setIsDialogOpen(isSendingApiRef.current);
                 try {
                     API.postPost(data).then((res) => {
                         if (res.status === 201) {
-                            alert('업로드에 성공했습니다')
-                            router.push(`/post/${res.data.postRes.id}`)
+                            alert('업로드에 성공했습니다');
+                            router.push(`/post/${res.data.postRes.id}`);
 
                             new Array("temp_post", "temp_title", "temp_subtitle").forEach(element => {
-                                localStorage.removeItem(element)
+                                localStorage.removeItem(element);
                             });
                         } else {
-                            alert('업로드에 실패했습니다')
+                            alert('업로드에 실패했습니다');
                         }
-                        isSendingApiRef.current = false
-                        setIsDialogOpen(isSendingApiRef.current)
-                    })
+                        isSendingApiRef.current = false;
+                        setIsDialogOpen(isSendingApiRef.current);
+                    });
                 } catch (error) {
 
                 }
 
             } else {
-                isSendingApiRef.current = true
-                setIsDialogOpen(isSendingApiRef.current)
+                isSendingApiRef.current = true;
+                setIsDialogOpen(isSendingApiRef.current);
                 API.patchPost(parseInt(`${router.query.id}`), data).then((res) => {
                     if (res.status === 200) {
-                        alert('수정에 성공했습니다')
-                        router.push(`/post/${router.query.id}`)
+                        alert('수정에 성공했습니다');
+                        router.push(`/post/${router.query.id}`);
                     } else {
-                        alert('수정에 실패했습니다')
+                        alert('수정에 실패했습니다');
                     }
-                    isSendingApiRef.current = false
-                    setIsDialogOpen(isSendingApiRef.current)
-                })
+                    isSendingApiRef.current = false;
+                    setIsDialogOpen(isSendingApiRef.current);
+                });
             }
         } else {
-            alert('업로드 중입니다!')
+            alert('업로드 중입니다!');
         }
-
-
     }
 
     useEffect(() => {
         API.getCategories().then((res) => {
             if (res.status === 200) {
-                console.log(res)
-                const resCategories: Array<{ id: number, name: string }> = res.data
-                setAllCategories(resCategories)
+                console.log(res);
+                const resCategories: Array<{ id: number, name: string; }> = res.data;
+                setAllCategories(resCategories);
             } else {
-                alert('카테고리를 받아오지 못했습니다')
+                alert('카테고리를 받아오지 못했습니다');
             }
-        })
+        });
 
         if (router && router.isReady) {
             if (router.query.id === 'new') {
-                postThumbnailLocationRef.current = 'temp'
+                postThumbnailLocationRef.current = 'temp';
                 if (localStorage.getItem('temp_post') !== null) {
-                    setMd(localStorage.getItem('temp_post')!)
-                    mdRef.current = localStorage.getItem('temp_post')!
+                    setMd(localStorage.getItem('temp_post')!);
+                    mdRef.current = localStorage.getItem('temp_post')!;
                 }
-                localStorage.getItem('temp_title') && setTitle(localStorage.getItem('temp_title')!)
-                localStorage.getItem('temp_subtitle') && setSubtitle(localStorage.getItem('temp_subtitle')!)
+                localStorage.getItem('temp_title') && setTitle(localStorage.getItem('temp_title')!);
+                localStorage.getItem('temp_subtitle') && setSubtitle(localStorage.getItem('temp_subtitle')!);
             }
             else if (!isNaN(parseInt(`${router.query.id}`))) {
-                postThumbnailLocationRef.current = parseInt(`${router.query.id}`)
+                postThumbnailLocationRef.current = parseInt(`${router.query.id}`);
                 API.getPost({ id: parseInt(`${router.query.id}`) }).then((res) => {
-                    const post: IPost = res.data
-                    setTitle(post.title)
-                    setSubtitle(post.subtitle)
-                    setMd(post.body)
-                    setCategories([...post.categories.map(e => e.name)])
-                    fileNamesRef.current = [...post.files.map(e => e.name)]
-                }).catch(() => { })
+                    const post: IPost = res.data;
+                    setTitle(post.title);
+                    setSubtitle(post.subtitle);
+                    setMd(post.body);
+                    setCategories([...post.categories.map(e => e.name)]);
+                    fileNamesRef.current = [...post.files.map(e => e.name)];
+                }).catch(() => { });
             }
 
 
             const mdEditorPasteObserver = new MutationObserver(function (e) {
                 const target = document.getElementsByClassName('w-md-editor-text-input')[0] as HTMLElement;
                 if (target !== undefined && !isSetListenerRef.current) {
-                    isSetListenerRef.current = true
+                    isSetListenerRef.current = true;
                     target.addEventListener('paste', async (event: any) => {
-                        console.log('paste!', event)
+                        console.log('paste!', event);
                         let items = (event.clipboardData || event.originalEvent.clipboardData).items;
                         for (let index in items) {
                             let item = items[index];
                             if (item.kind === 'file') {
                                 let file = item.getAsFile();
-                                let fileName: string = getUnduplicatedName(file.name, fileNamesRef.current)
+                                let fileName: string = getUnduplicatedName(file.name, fileNamesRef.current);
 
-                                const res = await API.postFile({ file: file, name: fileName })
-                                isSendingApiRef.current = true
-                                setIsDialogOpen(isSendingApiRef.current)
+                                const res = await API.postFile({ file: file, name: fileName });
+                                isSendingApiRef.current = true;
+                                setIsDialogOpen(isSendingApiRef.current);
                                 if (res.status === 201) {
-                                    setFileNames(fileNames => [...fileNames, fileName])
-                                    fileNamesRef.current = [...fileNamesRef.current, fileName]
+                                    setFileNames(fileNames => [...fileNames, fileName]);
+                                    fileNamesRef.current = [...fileNamesRef.current, fileName];
 
-                                    const newMd: string = mdRef.current + `<p align="center"><img src="${API.getServerPostImageUrl({ postId: 'temp', fileName: fileName })}" alt="${fileName}" style="max-height: 300px"/></p>`
-                                    setMd(newMd)
+                                    const newMd: string = mdRef.current + `<p align="center"><img src="${API.getServerPostImageUrl({ postId: 'temp', fileName: fileName })}" alt="${fileName}" style="max-height: 300px"/></p>`;
+                                    setMd(newMd);
                                 } else {
-                                    alert('이미지가 업로드 되지 못하였습니다!')
+                                    alert('이미지가 업로드 되지 못하였습니다!');
                                 }
-                                isSendingApiRef.current = false
-                                setIsDialogOpen(isSendingApiRef.current)
+                                isSendingApiRef.current = false;
+                                setIsDialogOpen(isSendingApiRef.current);
                             }
                         }
                     });
                 }
                 if (e[0].addedNodes.length > 0) {
-                    const editorTextArea = document.getElementsByClassName('w-md-editor-aree w-md-editor-input')[0] as HTMLElement
+                    const editorTextArea = document.getElementsByClassName('w-md-editor-aree w-md-editor-input')[0] as HTMLElement;
                     // const editorPreview = document.getElementById("viewer")!.firstElementChild?.firstElementChild as HTMLElement
-                    const editorPreview = document.getElementById('md-preview') as HTMLElement
+                    const editorPreview = document.getElementById('md-preview') as HTMLElement;
                     editorTextArea.onscroll = (e) => {
-                        editorPreview.scrollTo(0, Math.round(editorTextArea.scrollTop * ((editorPreview.scrollHeight - editorPreview.offsetHeight) / (editorTextArea.scrollHeight - editorTextArea.offsetHeight))))
-                    }
+                        editorPreview.scrollTo(0, Math.round(editorTextArea.scrollTop * ((editorPreview.scrollHeight - editorPreview.offsetHeight) / (editorTextArea.scrollHeight - editorTextArea.offsetHeight))));
+                    };
                     editorPreview.onscroll = (e) => {
-                        editorTextArea.scrollTo(0, Math.round(editorPreview.scrollTop * ((editorTextArea.scrollHeight - editorTextArea.offsetHeight) / (editorPreview.scrollHeight - editorPreview.offsetHeight))))
-                    }
+                        editorTextArea.scrollTo(0, Math.round(editorPreview.scrollTop * ((editorTextArea.scrollHeight - editorTextArea.offsetHeight) / (editorPreview.scrollHeight - editorPreview.offsetHeight))));
+                    };
                 }
             });
             mdEditorPasteObserver.observe(document.getElementById('MDEditor_parent')!, { childList: true });
         }
 
 
-    }, [router.isReady, router])
+    }, [router.isReady, router]);
 
     function onChangeImageInput(e: ChangeEvent<HTMLInputElement>, isThumbnail?: boolean) {
         if (e.target.files!.length > 0) {
             if (!isSendingApiRef.current) {
-                isSendingApiRef.current = true
-                setIsDialogOpen(isSendingApiRef.current)
+                isSendingApiRef.current = true;
+                setIsDialogOpen(isSendingApiRef.current);
                 API.postFile({ file: e.target.files![0], name: isThumbnail ? `thumbnail` : getUnduplicatedName(e.target.files![0].name, fileNamesRef.current) })
                     .then((res) => {
                         if (res.status === 201) {
-                            postThumbnailLocationRef.current = 'temp'
-                            alert(`${isThumbnail ? '썸네일이' : '이미지가'} 업로드 되었습니다`)
-                            setUrlCacheBreaker(new Date().getMilliseconds().toString())
+                            postThumbnailLocationRef.current = 'temp';
+                            alert(`${isThumbnail ? '썸네일이' : '이미지가'} 업로드 되었습니다`);
+                            setUrlCacheBreaker(new Date().getMilliseconds().toString());
 
-                            setUploadImageUrl(`${API.getServerPostImageUrl({ postId: 'temp', fileName: res.data[0].filename })}`)
-                            setUploadImageUrlForMD(`<p align="center"><img src="${API.getPostFileUrl({ postId: 'temp', fileName: res.data[0].filename })}" alt="${res.data[0].filename}" style="max-height: 300px"/></p>`)
+                            setUploadImageUrl(`${API.getServerPostImageUrl({ postId: 'temp', fileName: res.data[0].filename })}`);
+                            setUploadImageUrlForMD(`<p align="center"><img src="${API.getPostFileUrl({ postId: 'temp', fileName: res.data[0].filename })}" alt="${res.data[0].filename}" style="max-height: 300px"/></p>`);
                         } else {
-                            alert(`${isThumbnail ? '썸네일을' : '이미지를'} 업로드하지 못하였습니다`)
+                            alert(`${isThumbnail ? '썸네일을' : '이미지를'} 업로드하지 못하였습니다`);
                         }
-                        isSendingApiRef.current = false
-                        setIsDialogOpen(isSendingApiRef.current)
-                    })
+                        isSendingApiRef.current = false;
+                        setIsDialogOpen(isSendingApiRef.current);
+                    });
             }
             else {
-                alert(`${isThumbnail ? '썸네일' : '이미지'} 업로드 중입니다!`)
+                alert(`${isThumbnail ? '썸네일' : '이미지'} 업로드 중입니다!`);
             }
         } else {
-            alert('input에 파일이 비었습니다')
+            alert('input에 파일이 비었습니다');
         }
     }
 
-    function onPasteThumbnailText(e: any) {
-        var items = (e.clipboardData || e.originalEvent.clipboardData).items;
-        for (var index in items) {
-            var item = items[index];
-            if (item.kind === 'file') {
-                let file = item.getAsFile();
-                if (!isSendingApiRef.current) {
-                    isSendingApiRef.current = true
-                    setIsDialogOpen(isSendingApiRef.current)
-                    API.postFile({ file: file, name: 'thumbnail' }).then((res) => {
-                        if (res.status === 201) {
-                            postThumbnailLocationRef.current = 'temp'
-                            alert('썸네일이 업로드 되었습니다')
-                            setUrlCacheBreaker(new Date().getMilliseconds().toString())
-                        } else {
-                            alert('썸네일을 업로드하지 못하였습니다')
-                        }
-                        isSendingApiRef.current = false
-                        setIsDialogOpen(isSendingApiRef.current)
-                    })
+    function uploadImages(image: File, imageType: string) {
+        if (!isSendingApiRef.current) {
+            isSendingApiRef.current = true;
+            setIsDialogOpen(isSendingApiRef.current);
+            API.postFile({ file: image!, name: imageType === 'thumbnail' ? 'thumbnail' : getUnduplicatedName(image.name, fileNamesRef.current) }).then((res) => {
+                if (res.status === 201) {
+                    postThumbnailLocationRef.current = 'temp';
+                    alert(`${imageType} 업로드 되었습니다`);
+                    setUrlCacheBreaker(new Date().getMilliseconds().toString());
+
+                    setUploadImageUrl(`${API.getServerPostImageUrl({ postId: 'temp', fileName: res.data[0].filename })}`);
+                    setUploadImageUrlForMD(`<p align="center"><img src="${API.getPostFileUrl({ postId: 'temp', fileName: res.data[0].filename })}" alt="${res.data[0].filename}" style="max-height: 300px"/></p>`);
                 } else {
-                    alert('썸네일 업로드 중입니다!')
+                    alert(`${imageType} 업로드하지 못하였습니다`);
                 }
-            }
+                isSendingApiRef.current = false;
+                setIsDialogOpen(isSendingApiRef.current);
+            });
+        } else {
+            alert(`${imageType} 업로드 중입니다!`);
+        }
+    }
+
+    function onPasteThumbnailInput(e: ClipboardEvent<HTMLDivElement>) {
+        const images = getFilesFromClipboard(e);
+        for (const image of images) {
+            uploadImages(image!, 'thumbnail');
+        }
+    }
+
+    function onPasteImageTextInput(e: ClipboardEvent<HTMLDivElement>) {
+        const images = getFilesFromClipboard(e);
+        for (const image of images) {
+            uploadImages(image!, 'image');
         }
     }
 
@@ -266,12 +287,12 @@ export default function WorkPage() {
         if (confirm('정말 삭제하시겠습니까?')) {
             API.deletePost(+router.query.id!).then((res) => {
                 if (res.status === 200) {
-                    alert('삭제 되었습니다.')
-                    router.push('/post')
+                    alert('삭제 되었습니다.');
+                    router.push('/post');
                 } else {
-                    alert('삭제를 실패했습니다.')
+                    alert('삭제를 실패했습니다.');
                 }
-            })
+            });
         }
     }
 
@@ -289,8 +310,8 @@ export default function WorkPage() {
                             InputProps={{ style: { fontWeight: 700, fontSize: '30px' } }}
                             value={title}
                             onChange={(e) => {
-                                setTitle(e.target.value)
-                                router.query.id === 'new' && localStorage.setItem('temp_title', e.target.value)
+                                setTitle(e.target.value);
+                                router.query.id === 'new' && localStorage.setItem('temp_title', e.target.value);
                             }}
                         />
                     </span>
@@ -298,7 +319,7 @@ export default function WorkPage() {
                         <Button
                             variant="outlined"
                             color="error"
-                            onClick={() => { onClickDelete() }}>
+                            onClick={() => { onClickDelete(); }}>
                             삭제
                         </Button>}
 
@@ -311,8 +332,8 @@ export default function WorkPage() {
                             variant="standard"
                             value={subtitle}
                             onChange={(e) => {
-                                setSubtitle(e.target.value)
-                                router.query.id === 'new' && localStorage.setItem('temp_subtitle', e.target.value)
+                                setSubtitle(e.target.value);
+                                router.query.id === 'new' && localStorage.setItem('temp_subtitle', e.target.value);
                             }}
                         />
                     </div>
@@ -324,9 +345,9 @@ export default function WorkPage() {
                         <div className="flex-col w-1/2">
                             <div className="flex">
                                 {categories.map((e, i) => {
-                                    return <div key={i} style={{ cursor: 'pointer' }} onClick={() => { setCategories(categories.filter((v) => v !== e)) }}>
+                                    return <div key={i} style={{ cursor: 'pointer' }} onClick={() => { setCategories(categories.filter((v) => v !== e)); }}>
                                         <span>{e} |&nbsp;</span>
-                                    </div>
+                                    </div>;
                                 })}
                             </div>
                         </div>
@@ -335,8 +356,8 @@ export default function WorkPage() {
                                 {allCategories && allCategories.map((e, i) => {
                                     return <div key={i} onClick={() => {
                                         if (!categories.includes(e.name))
-                                            setCategories([...categories, e.name])
-                                    }}>{e.name}</div>
+                                            setCategories([...categories, e.name]);
+                                    }}>{e.name}</div>;
                                 })}
                             </div>
 
@@ -364,14 +385,16 @@ export default function WorkPage() {
                             <input
                                 type="file"
                                 onChange={(e) => {
-                                    console.log('e', e)
-                                    onChangeImageInput(e, true)
+                                    console.log('e', e);
+                                    onChangeImageInput(e, true);
                                 }}
                             />
                             <TextField
                                 fullWidth
                                 variant="standard"
-                                onPaste={onPasteThumbnailText}
+                                onPaste={(e) => {
+                                    onPasteThumbnailInput(e);
+                                }}
                             />
                         </div>
                     </div>
@@ -396,7 +419,14 @@ export default function WorkPage() {
                             <input
                                 type="file"
                                 onChange={(e) => {
-                                    onChangeImageInput(e)
+                                    onChangeImageInput(e);
+                                }}
+                            />
+                            <TextField
+                                fullWidth
+                                variant="standard"
+                                onPaste={(e) => {
+                                    onPasteImageTextInput(e);
                                 }}
                             />
                             <div>
@@ -414,9 +444,9 @@ export default function WorkPage() {
                     <MDEditor
                         value={md}
                         onChange={(value) => {
-                            value ? setMd(value) : setMd('')
-                            value ? mdRef.current = value : mdRef.current = ''
-                            router.query.id === 'new' && value && localStorage.setItem('temp_post', value)
+                            value ? setMd(value) : setMd('');
+                            value ? mdRef.current = value : mdRef.current = '';
+                            router.query.id === 'new' && value && localStorage.setItem('temp_post', value);
                         }}
                         autoFocus={false}
                         enableScroll
@@ -432,7 +462,7 @@ export default function WorkPage() {
             <Button
                 variant="outlined"
                 style={{ cursor: 'pointer' }}
-                onClick={() => { onClickSave() }}
+                onClick={() => { onClickSave(); }}
             >{router.query.id === 'new' ? '저장' : '수정'}</Button>
         </div>
     );
