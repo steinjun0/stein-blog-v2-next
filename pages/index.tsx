@@ -14,8 +14,8 @@ export default function Home() {
   const [periodicalPosts, setPeriodicalPosts] = useState<IPost[]>([]);
 
   useEffect(() => {
-    const recommendPostIds = [15, 12, 11];
-    const periodicalPostIds = [10];
+    const recommendPostIds = [15, 16, 11];
+    const periodicalPostIds = [10, 18];
     API.getPostsByIds({ ids: recommendPostIds }).then((res) => {
       if (res.status === 200) {
         setRecommendPosts(res.data.sort(
