@@ -6,7 +6,13 @@
 # NextJS for blog.steinjun.net
 This is a personal project where I document my development experiences and personal studies using Nextjs, Typescript, MUI, StyledComponent(MUI), tailwind, Nextjs, MySQL, Docker(compose), letsencrypt, and nginx. We are currently changing the project structure.
 
-## Features
+# Technologies Used
+- NextJS
+- Typescript
+- Material-UI (MUI)
+- Styled Components (MUI)
+
+# Features
 Below are the features of this blog:
 
 ### 1. Upload Post  
