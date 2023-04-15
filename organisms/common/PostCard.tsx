@@ -43,7 +43,7 @@ export default function PostCard({ post, ...props }: { post: IPost; } & HTMLAttr
                                 </div>;
                             })}
                         </div>
-                        <span className="text-gray-400">{koDtf.format(post.created_at)}</span>
+                        <span className="text-gray-400">{koDtf.format(post.createdAt)}</span>
                     </div>
                 </div>
 

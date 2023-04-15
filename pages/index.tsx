@@ -1,4 +1,4 @@
-import API from 'API';
+import API from 'api/post';
 import { IPost } from 'interfaces/post';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
@@ -19,33 +19,15 @@ export default function Home() {
   useEffect(() => {
 
     API.getPostsByIds({ ids: recommendPostIds }).then((res) => {
-      if (res.status === 200) {
-        setRecommendPosts(res.data.sort(
-          (a: IPost, b: IPost) => recommendPostIds.indexOf(a.id) - recommendPostIds.indexOf(b.id)
-        )
-        );
-      } else {
-        alert('post를 받아오지 못했습니다');
-      }
+      setRecommendPosts(res.data.sort((a: IPost, b: IPost) => recommendPostIds.indexOf(a.id) - recommendPostIds.indexOf(b.id)));
     });
 
     API.getPostsByIds({ ids: periodicalPostIds }).then((res) => {
-      if (res.status === 200) {
-        setPeriodicalPosts(res.data.sort(
-          (a: IPost, b: IPost) => periodicalPostIds.indexOf(a.id) - periodicalPostIds.indexOf(b.id)
-        )
-        );
-      } else {
-        alert('post를 받아오지 못했습니다');
-      }
+      setPeriodicalPosts(res.data.sort((a: IPost, b: IPost) => periodicalPostIds.indexOf(a.id) - periodicalPostIds.indexOf(b.id)));
     });
 
     API.getPostList({ page: 1, take: 3 }).then((res) => {
-      if (res.status === 200) {
-        setRecentPosts(res.data);
-      } else {
-        alert('post를 받아오지 못했습니다');
-      }
+      setRecentPosts(res.data);
     });
 
   }, []);

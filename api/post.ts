@@ -22,11 +22,11 @@ function convertApiPostToPost(post: IApiPost): IPost {
 }
 
 export default {
-  async getPost({ id }: { id: number; }): Promise<AxiosResponse<IPost[]>> {
-    const postRes = api.get<IApiPost[]>(`/post/${id}`)
+  async getPost({ id }: { id: number; }): Promise<AxiosResponse<IPost>> {
+    const postRes = api.get<IApiPost>(`/post/${id}`)
       .then((res) => {
         return updateData<IApiPost, IPost>(res, convertApiPostToPost);
-      }) as Promise<AxiosResponse<IPost[]>>;
+      }) as Promise<AxiosResponse<IPost>>;
     return postRes;
   },
 
