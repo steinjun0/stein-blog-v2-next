@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import api, { updateData } from "./API";
+import api, { API_BASE_URL, updateData } from "./API";
 import { IPost } from "interfaces/post";
 
 export interface IApiPost {
@@ -54,6 +54,13 @@ export default {
     return postRes;
   },
 
+  getServerPostImageUrl({ postId, fileName }: { postId: number | 'temp', fileName: string; }) {
+    return `${process.env.NEXT_PUBLIC_SERVER_API_URL}/file/post/${postId}/${fileName}`;
+  },
+
+  getPostFileUrl({ postId, fileName }: { postId: number | 'temp', fileName: string; }) {
+    return `${API_BASE_URL}/file/post/${postId}/${fileName}`;
+  },
 
 };
 

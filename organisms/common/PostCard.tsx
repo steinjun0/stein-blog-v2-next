@@ -1,4 +1,4 @@
-import API from "API";
+import API from "api/post";
 import { marked } from "marked";
 import Link from "next/link";
 import Image from "next/image";
