@@ -1,14 +1,14 @@
 import { Logout } from "@mui/icons-material";
-import { Avatar, Button, Divider, IconButton, ListItemIcon, Menu, MenuItem } from "@mui/material"
+import { Avatar, Button, Divider, IconButton, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import { styled } from "@mui/system";
 import axios from "axios";
-import Link from "next/link"
-import { useRouter } from "next/router"
+import Link from "next/link";
+import { useRouter } from "next/router";
 import { useEffect, useLayoutEffect, useState } from "react";
 import Swal from "sweetalert2";
 import DataUsageIcon from '@mui/icons-material/DataUsage';
 import SignalCellularAltRoundedIcon from '@mui/icons-material/SignalCellularAltRounded';
-import API from "API";
+import EtcAPI from "api/etc";
 
 const Nav = styled('nav')((props) => (
   {
@@ -18,7 +18,7 @@ const Nav = styled('nav')((props) => (
       marginLeft: 'calc(50vw - 620px)',
     }
   }
-))
+));
 
 function useScroll() {
   const [scroll, setScroll] = useState<{
@@ -29,29 +29,29 @@ function useScroll() {
     setScroll({
       x: window.scrollX,
       y: window.scrollY,
-    })
+    });
   }
   useEffect(() => {
     if (window) {
-      window.addEventListener('scroll', onScroll)
+      window.addEventListener('scroll', onScroll);
     }
     return () => {
-      window.removeEventListener('scroll', onScroll)
-    }
-  }, [])
-  return scroll
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, []);
+  return scroll;
 }
 
 export default function Gnb() {
-  const router = useRouter()
-  const scroll = useScroll()
+  const router = useRouter();
+  const scroll = useScroll();
 
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [userData, setUserData] = useState<any>({ id: -1 })
+  const [userData, setUserData] = useState<any>({ id: -1 });
   const open = Boolean(anchorEl);
 
-  const [isLogined, setIsLogined] = useState<boolean>(false)
+  const [isLogined, setIsLogined] = useState<boolean>(false);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -60,30 +60,30 @@ export default function Gnb() {
     setAnchorEl(null);
   };
   function onClickLogout() {
-    ['id', 'nickname', 'profile_image', 'access_token', 'thumbnail_image'].forEach((e: string) => localStorage.removeItem(e))
-    setIsLogined(false)
-    router.reload()
+    ['id', 'nickname', 'profile_image', 'access_token', 'thumbnail_image'].forEach((e: string) => localStorage.removeItem(e));
+    setIsLogined(false);
+    router.reload();
   }
 
   useEffect(() => {
     if (router.isReady) {
       if (!window.Kakao.isInitialized()) {
-        window.Kakao.init('1add2d01ae1a29668f10cd0d48ce63c5')
+        window.Kakao.init('1add2d01ae1a29668f10cd0d48ce63c5');
       }
-      const accessToken = localStorage.getItem('access_token')
+      const accessToken = localStorage.getItem('access_token');
       if (accessToken) {
-        window.Kakao.Auth.setAccessToken(accessToken)
+        window.Kakao.Auth.setAccessToken(accessToken);
         axios.get('https://kapi.kakao.com/v1/user/access_token_info', { headers: { Authorization: `Bearer ${accessToken}` } })
           .then((res) => {
             if (res.status === 200) {
-              setUserData({ 'id': localStorage.getItem('id') ? +localStorage.getItem('id')! : -1 })
-              setIsLogined(true)
+              setUserData({ 'id': localStorage.getItem('id') ? +localStorage.getItem('id')! : -1 });
+              setIsLogined(true);
             }
           }).catch((error) => {
-            console.log('res.status', error.response)
+            console.log('res.status', error.response);
             if (error.response.status === 401) {
               ['id', 'access_token', 'nickname', 'profile_image', 'thumbnail_image']
-                .forEach((e) => { localStorage.removeItem(e) })
+                .forEach((e) => { localStorage.removeItem(e); });
               Swal.fire({
                 title: '로그인 안내',
                 text: '카카오 로그인이 만료되었어요! 로그인이 필요한 서비스를 이용하시려면 다시 로그인 해주세요!',
@@ -91,33 +91,33 @@ export default function Gnb() {
                 color: 'black',
                 confirmButtonColor: 'black',
                 iconColor: 'black'
-              })
+              });
             } else if (error.response.status === 400) {
               if (error.response.data.code === -1) {
-                alert('카카오 플랫폼 서비스의 일시적 내부 장애 상태 입니다. 잠시 뒤에 다시 시도해주세요.')
+                alert('카카오 플랫폼 서비스의 일시적 내부 장애 상태 입니다. 잠시 뒤에 다시 시도해주세요.');
               } else if (error.response.data.code === -2) {
                 alert(`필수 인자가 포함되지 않은 경우나 호출 인자값의 데이터 타입이 적절하지 않거나 허용된 범위를 벗어난 경우
-                    요청 시 주어진 액세스 토큰 정보가 잘못된 형식인 경우로 올바른 형식으로 요청했는지 확인. code: -2`)
+                    요청 시 주어진 액세스 토큰 정보가 잘못된 형식인 경우로 올바른 형식으로 요청했는지 확인. code: -2`);
               }
             } else {
-              alert('unknown error')
+              alert('unknown error');
             }
-          })
+          });
       }
 
-      const adminUrlList = ['/post/edit/[id]']
+      const adminUrlList = ['/post/edit/[id]'];
       if (adminUrlList.includes(router.pathname)) {
         if (accessToken) {
           window.Kakao.Auth.setAccessToken(`${accessToken}`);
           window.Kakao.API.request({
             url: '/v2/user/me',
           }).then((res: any) => {
-            localStorage.setItem('nickname', res.properties.nickname)
-            localStorage.setItem('profile_image', res.properties.profile_image)
-            localStorage.setItem('thumbnail_image', res.properties.thumbnail_image)
-            localStorage.setItem('thumbnail_image', res.properties.thumbnail_image)
-            localStorage.setItem('id', res.id)
-            API.getIsAdmin({ accessToken }).then((res) => {
+            localStorage.setItem('nickname', res.properties.nickname);
+            localStorage.setItem('profile_image', res.properties.profile_image);
+            localStorage.setItem('thumbnail_image', res.properties.thumbnail_image);
+            localStorage.setItem('thumbnail_image', res.properties.thumbnail_image);
+            localStorage.setItem('id', res.id);
+            EtcAPI.getIsAdmin({ accessToken }).then((res) => {
               if (res.data !== true) {
                 Swal.fire({
                   title: '허가되지 않은 사용자',
@@ -127,11 +127,11 @@ export default function Gnb() {
                   confirmButtonColor: 'black',
                   iconColor: 'black'
                 }).then(() => {
-                  router.push('/')
-                })
+                  router.push('/');
+                });
               }
             }).catch(() => {
-              router.push('/')
+              router.push('/');
               Swal.fire({
                 title: '허가되지 않은 사용자',
                 text: '네트워크 오류로 인증에 실패했습니다.',
@@ -139,12 +139,12 @@ export default function Gnb() {
                 color: 'black',
                 confirmButtonColor: 'black',
                 iconColor: 'black'
-              })
-            })
+              });
+            });
 
-          })
+          });
         } else {
-          router.push('/')
+          router.push('/');
           Swal.fire({
             title: '허가되지 않은 사용자',
             text: '여긴 허가된 사용자만 접속할 수 있는 uri입니다',
@@ -152,12 +152,12 @@ export default function Gnb() {
             color: 'black',
             confirmButtonColor: 'black',
             iconColor: 'black'
-          })
+          });
         }
       }
     }
 
-  }, [router.asPath, router.isReady])
+  }, [router.asPath, router.isReady]);
 
 
 
@@ -194,7 +194,7 @@ export default function Gnb() {
       <Button style={{ height: 36 }}
         color='primary'
         variant='outlined'
-        onClick={() => { router.push('/login') }}>
+        onClick={() => { router.push('/login'); }}>
         Login
       </Button>
     }
@@ -238,14 +238,14 @@ export default function Gnb() {
         { icon: <DataUsageIcon fontSize="small" />, title: 'Google Search', link: "https://search.google.com/search-console?resource_id=https%3A%2F%2Fblog.steinjun.net%2F" }
         ].map((e, i) => {
           return <MenuItem key={i} onClick={() => {
-            window.open(e.link, '_blank')
+            window.open(e.link, '_blank');
             handleClose();
           }}>
             <ListItemIcon>
               {e.icon}
             </ListItemIcon>
             {e.title}
-          </MenuItem>
+          </MenuItem>;
         })
       }
 
@@ -254,7 +254,7 @@ export default function Gnb() {
       }
       <MenuItem onClick={() => {
         handleClose();
-        onClickLogout()
+        onClickLogout();
       }}>
         <ListItemIcon>
           <Logout fontSize="small" />
@@ -262,5 +262,5 @@ export default function Gnb() {
         Logout
       </MenuItem>
     </Menu>
-  </Nav >
+  </Nav >;
 }

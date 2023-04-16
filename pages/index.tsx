@@ -1,4 +1,4 @@
-import API from 'api/post';
+import PostAPI from 'api/post';
 import { IPost } from 'interfaces/post';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
@@ -18,15 +18,15 @@ export default function Home() {
 
   useEffect(() => {
 
-    API.getPostsByIds({ ids: recommendPostIds }).then((res) => {
+    PostAPI.getPostsByIds({ ids: recommendPostIds }).then((res) => {
       setRecommendPosts(res.data.sort((a: IPost, b: IPost) => recommendPostIds.indexOf(a.id) - recommendPostIds.indexOf(b.id)));
     });
 
-    API.getPostsByIds({ ids: periodicalPostIds }).then((res) => {
+    PostAPI.getPostsByIds({ ids: periodicalPostIds }).then((res) => {
       setPeriodicalPosts(res.data.sort((a: IPost, b: IPost) => periodicalPostIds.indexOf(a.id) - periodicalPostIds.indexOf(b.id)));
     });
 
-    API.getPostList({ page: 1, take: 3 }).then((res) => {
+    PostAPI.getPostList({ page: 1, take: 3 }).then((res) => {
       setRecentPosts(res.data);
     });
 

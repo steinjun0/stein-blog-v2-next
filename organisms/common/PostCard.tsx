@@ -1,4 +1,4 @@
-import API from "api/post";
+import PostAPI from "api/post";
 import { marked } from "marked";
 import Link from "next/link";
 import Image from "next/image";
@@ -13,7 +13,7 @@ export default function PostCard({ post, ...props }: { post: IPost; } & HTMLAttr
             <div className="flex flex-col justify-between w-full">
                 <div className="relative" style={{ maxHeight: 382, minHeight: 382, overflow: 'hidden', maxWidth: '100%' }}>
                     <Image
-                        src={API.getServerPostImageUrl({ postId: post.id, fileName: 'thumbnail' })}
+                        src={PostAPI.getServerPostImageUrl({ postId: post.id, fileName: 'thumbnail' })}
                         alt={`${post.id}-thumnail`}
                         fill
                         className="object-contain"

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import API from "API";
+import PostAPI from "api/post";
 import { IPost } from "interfaces/post";
 import { useRouter } from "next/router";
 import PostCard from 'organisms/common/PostCard';
@@ -13,7 +13,7 @@ export default function Post() {
 	const bottomElementRef = useRef<HTMLDivElement>(null);
 
 	async function getPosts(page: number, tag?: string) {
-		await API.getPostList({ take: 6, page: page, tagFilter: tag }).then((res) => {
+		await PostAPI.getPostList({ take: 6, page: page, tagFilter: tag }).then((res) => {
 			if (res.status === 200) {
 				setPosts((prev) => {
 					if (page * 6 < prev.length + res.data.length) {
