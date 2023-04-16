@@ -52,6 +52,9 @@ export default function WorkPage(post: IPostProps) {
         if (router.isReady && router.query.id === '10') {
             PostService.updateBeakjoon();
         }
+        if (router.isReady && router.query.id === '18') {
+            PostService.updateProgrammers();
+        }
     }, [router.isReady]);
 
     const koDtf = new Intl.DateTimeFormat("ko", { dateStyle: "medium" });

@@ -15,5 +15,15 @@ export default {
             if (document.getElementById('solvedac-rating'))
                 document.getElementById('solvedac-rating')!.innerHTML = `${numberWithCommas(res.data.rank)}등`;
         });
+    },
+    updateProgrammers() {
+        EtcAPI.getProgrammersData().then((res) => {
+            if (document.getElementById('solved-num'))
+                document.getElementById('solved-num')!.innerHTML = `${numberWithCommas(res.data.solvedChallengesCount)}문제`;
+            if (document.getElementById('programmers-score'))
+                document.getElementById('programmers-score')!.innerHTML = `점수 ${numberWithCommas(res.data.score)}점`;
+            if (document.getElementById('programmers-rating'))
+                document.getElementById('programmers-rating')!.innerHTML = `순위 ${numberWithCommas(res.data.rank)}등`;
+        });
     }
 };
