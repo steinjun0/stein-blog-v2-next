@@ -1,12 +1,10 @@
-import oldAPI from "API";
-import API from "api/post";
-import { IPost } from "interfaces/post";
+import PostAPI from "api/post";
 import { GetServerSidePropsContext } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { numberWithCommas } from "utils";
+import { useEffect } from "react";
+import PostService from "services/post";
 
 
 const Markdown = dynamic(
@@ -28,7 +26,7 @@ interface IPostProps {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
 
-    const post = (await API.getPost({ id: Number(context.query.id) })).data;
+    const post = (await PostAPI.getPost({ id: Number(context.query.id) })).data;
     // data.body 
     if (process.env.NODE_ENV === 'development') {
         post.body = post.body.replace('https://api.blog.steinjun.net', '//localhost:8888');
@@ -43,26 +41,16 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
             files: post.files,
             createdAt: `${post.createdAt}`,
             updatedAt: `${post.updatedAt}`,
-        }, // will be passed to the page component as props
+        }, // should pass stringified props
     };
 }
+
 
 export default function WorkPage(post: IPostProps) {
     const router = useRouter();
     useEffect(() => {
         if (router.isReady && router.query.id === '10') {
-            oldAPI.getBaekjoonData().then((res: { data: { solvedacTierImg: string, solved: number, rating: number; }; }) => {
-                if (document.getElementById('baekjoon-tier'))
-                    document.getElementById('baekjoon-tier')?.setAttribute('src', res.data.solvedacTierImg);
-                if (document.getElementById('solved-num'))
-                    document.getElementById('solved-num')!.innerHTML = `${numberWithCommas(res.data.solved)}문제`;
-                if (document.getElementById('baekjun-rating'))
-                    document.getElementById('baekjun-rating')!.innerHTML = `${numberWithCommas(res.data.rating)}등`;
-            });
-            oldAPI.getSolvedacData().then((res) => {
-                if (document.getElementById('solvedac-rating'))
-                    document.getElementById('solvedac-rating')!.innerHTML = `${numberWithCommas(res.data.rank)}등`;
-            });
+            PostService.updateBeakjoon();
         }
     }, [router.isReady]);
 
@@ -81,7 +69,7 @@ export default function WorkPage(post: IPostProps) {
                 <meta key="og:type" property="og:type" content="website" />
                 <meta key="og:title" property="og:title" content={post.title} />
                 <meta key="og:description" property="og:description" content={post.subtitle} />
-                <meta key="og:image" property="og:image" content={oldAPI.getServerPostImageUrl({ postId: post.id, fileName: 'thumbnail' })} />
+                <meta key="og:image" property="og:image" content={PostAPI.getServerPostImageUrl({ postId: post.id, fileName: 'thumbnail' })} />
 
                 {/* Twitter Meta Tags  */}
                 <meta key="twitter:card" name="twitter:card" content="summary_large_image" />
@@ -89,7 +77,7 @@ export default function WorkPage(post: IPostProps) {
                 <meta key="twitter:url" property="twitter:url" content={`https://blog.steinjun.net/post/${router.query.id}`} />
                 <meta key="twitter:title" name="twitter:title" content={post.title} />
                 <meta key="twitter:description" name="twitter:description" content={post.subtitle} />
-                <meta key="twitter:image" name="twitter:image" content={oldAPI.getServerPostImageUrl({ postId: post.id, fileName: 'thumbnail' })} />
+                <meta key="twitter:image" name="twitter:image" content={PostAPI.getServerPostImageUrl({ postId: post.id, fileName: 'thumbnail' })} />
             </Head>
             <div className="flex-col">
                 <div className="flex-col mb-4 items-end">
