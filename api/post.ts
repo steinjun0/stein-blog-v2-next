@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import api, { API_BASE_URL, updateData } from "./API";
-import { IPost } from "interfaces/post";
+import { ICategory, IPost } from "interfaces/post";
 
 export interface IApiPost {
   id: number,
@@ -14,11 +14,28 @@ export interface IApiPost {
   updated_at: string,
 }
 
+interface IApiPostPost {
+  postRes: IApiPost,
+  fileRes: number[],
+}
+
+interface IPostPost {
+  postRes: IPost,
+  fileRes: number[],
+}
+
 function convertApiPostToPost(post: IApiPost): IPost {
   const newPost = structuredClone(post) as any;
   newPost.createdAt = new Date(newPost.created_at);
   newPost.updatedAt = new Date(newPost.created_at);
   return newPost;
+}
+
+function convertApiPostPostToPost(res: { postRes: IApiPost, fileRes: number[]; }): { postRes: IPost, fileRes: number[]; } {
+  const newPost = structuredClone(res.postRes) as any;
+  newPost.createdAt = new Date(newPost.created_at);
+  newPost.updatedAt = new Date(newPost.created_at);
+  return { postRes: newPost, fileRes: res.fileRes };
 }
 
 export default {
@@ -46,12 +63,17 @@ export default {
     }
   },
 
-  async getPostsByIds({ ids }: { ids: number[]; }): Promise<AxiosResponse<IPost[]>> {
+  async getPostsByIds({ ids }: { ids: number[]; }) {
     const postRes = api.get<IApiPost[]>(`/post?${ids.map(id => `ids=${id}&`).join('')}`)
       .then((res) => {
         return updateData<IApiPost, IPost>(res, convertApiPostToPost);
       }) as Promise<AxiosResponse<IPost[]>>;
     return postRes;
+  },
+
+  async getCategories() {
+    const categoryRes = await api.get<ICategory[]>(`/post/category`);
+    return categoryRes;
   },
 
   getServerPostImageUrl({ postId, fileName }: { postId: number | 'temp', fileName: string; }) {
@@ -60,6 +82,27 @@ export default {
 
   getPostFileUrl({ postId, fileName }: { postId: number | 'temp', fileName: string; }) {
     return `${API_BASE_URL}/file/post/${postId}/${fileName}`;
+  },
+
+  async postPost(data: { title: string, subtitle: string, body: string, categories?: Array<string>, files?: Array<string>; }) {
+    const postRes = api.post<IApiPostPost>(`/post`, data)
+      .then((res) => {
+        return updateData<IApiPostPost, IPostPost>(res, convertApiPostPostToPost);
+      }) as Promise<AxiosResponse<IPostPost>>;
+    return postRes;
+  },
+
+  async patchPost(postId: number, data: { title: string, subtitle: string, body: string, categories?: Array<string>, files?: Array<string>; }) {
+    const postRes = api.patch<IApiPost>(`/post/${postId}`, data)
+      .then((res) => {
+        return updateData<IApiPost, IPost>(res, convertApiPostToPost);
+      }) as Promise<AxiosResponse<IPost>>;
+    return postRes;
+  },
+
+  async deletePost(postId: number) {
+    const postRes = api.delete<IApiPost>(`/post/${postId}`);
+    return postRes;
   },
 
 };

@@ -9,3 +9,8 @@ export interface IPost {
     createdAt?: Date,
     updatedAt?: Date,
 }
+
+export interface ICategory {
+    id: number,
+    name: string,
+}
