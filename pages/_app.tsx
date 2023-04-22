@@ -10,6 +10,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import Head from 'next/head';
 import * as gtag from '../lib/gtag';
+import useAdminCheck from 'hooks/useAdminCheck';
 
 
 const theme = createTheme({
@@ -23,6 +24,9 @@ const theme = createTheme({
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
+
+  useAdminCheck();
+
   useEffect(() => {
     const handleRouteChange = (url: string) => {
       gtag.pageview(url);
@@ -32,6 +36,8 @@ export default function App({ Component, pageProps }: AppProps) {
       router.events.off('routeChangeComplete', handleRouteChange);
     };
   }, [router.events]);
+
+
   const description = "Blog for Stein. Engineering, Music, Camera, Art, and Life.";
   const url = "https://blog.steinjun.net/";
   return (
