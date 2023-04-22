@@ -6,13 +6,12 @@ export default function Login() {
 
     useEffect(() => {
         if (!window.Kakao.isInitialized()) {
-            window.Kakao.init('1add2d01ae1a29668f10cd0d48ce63c5')
+            window.Kakao.init('1add2d01ae1a29668f10cd0d48ce63c5');
         }
-    }, [])
+    }, []);
 
 
     function onClickLogin() {
-        console.log(window.Kakao)
         if (window.Kakao.isInitialized()) {
             const authRes = window.Kakao.Auth.authorize({
                 redirectUri: `${process.env.NEXT_PUBLIC_HOST}/login/auth`,
