@@ -1,4 +1,4 @@
-import api from "api/API";
+import api from "apis/API";
 
 export default {
     async postFile({ file, name }: { file: Blob, name?: string; }) {

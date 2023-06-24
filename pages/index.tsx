@@ -1,4 +1,4 @@
-import PostAPI from 'api/post';
+import PostAPI from 'apis/post';
 import { IPost } from 'interfaces/post';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';

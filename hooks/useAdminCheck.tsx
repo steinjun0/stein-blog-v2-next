@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import Swal from "sweetalert2";
-import EtcAPI from "api/etc";
+import EtcAPI from "apis/etc";
 import useKakaoValid from "./useKakaoValid";
 
 export default function useAdminCheck() {

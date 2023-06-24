@@ -1,4 +1,4 @@
-import EtcAPI from "api/etc";
+import EtcAPI from "apis/etc";
 import { numberWithCommas } from "utils";
 
 export default {

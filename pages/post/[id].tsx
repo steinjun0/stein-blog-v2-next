@@ -1,4 +1,4 @@
-import PostAPI from "api/post";
+import PostAPI from "apis/post";
 import { GetServerSidePropsContext } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";

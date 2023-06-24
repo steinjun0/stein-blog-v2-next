@@ -1,7 +1,7 @@
 import { Button, Dialog, Input, NativeSelect, Select, TextField } from "@mui/material";
 
-import PostAPI from 'api/post';
-import FileAPI from 'api/file';
+import PostAPI from 'apis/post';
+import FileAPI from 'apis/file';
 import ListPushInput from "components/ListPushInput";
 import { IPost } from "interfaces/post";
 import dynamic from "next/dynamic";
