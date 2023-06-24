@@ -12,8 +12,8 @@ export default function Post() {
 	const postNextPageRef = useRef<number>(1);
 	const bottomElementRef = useRef<HTMLDivElement>(null);
 
-	async function getPosts(page: number, tag?: string) {
-		await PostAPI.getPostList({ take: 6, page: page, tagFilter: tag }).then((res) => {
+	async function getPosts(page: number, categoryFilters?: string[]) {
+		await PostAPI.getPostList({ take: 6, page: page, categoryFilters }).then((res) => {
 			if (res.status === 200) {
 				setPosts((prev) => {
 					if (page * 6 < prev.length + res.data.length) {
