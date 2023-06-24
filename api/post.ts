@@ -47,9 +47,9 @@ export default {
     return postRes;
   },
 
-  async getPostList(option?: { page?: number, take?: number, tagFilter?: string; }): Promise<AxiosResponse<IPost[]>> {
+  async getPostList(option?: { page?: number, take?: number, categoryFilters?: string[]; }): Promise<AxiosResponse<IPost[]>> {
     if (option) {
-      const postListRes = api.get<IApiPost[]>(`/post?${option.tagFilter ? `tagFilter=${option.tagFilter}&` : ''}${option.page ? `page=${option.page}&` : ''}${option.take ? `take=${option.take}&` : ''}`)
+      const postListRes = api.get<IApiPost[]>(`/post?${option.categoryFilters ? option.categoryFilters.map(category => `categoryFilters=${category}&`).join('') : ''}${option.page ? `page=${option.page}&` : ''}${option.take ? `take=${option.take}&` : ''}`)
         .then((res) => {
           return updateData<IApiPost, IPost>(res, convertApiPostToPost);
         }) as Promise<AxiosResponse<IPost[]>>;

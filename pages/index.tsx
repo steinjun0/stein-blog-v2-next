@@ -13,17 +13,14 @@ export default function Home() {
   const [recommendPosts, setRecommendPosts] = useState<IPost[]>([]);
   const [periodicalPosts, setPeriodicalPosts] = useState<IPost[]>([]);
 
-  const recommendPostIds = [15, 16, 11];
-  const periodicalPostIds = [10, 18];
-
   useEffect(() => {
 
-    PostAPI.getPostsByIds({ ids: recommendPostIds }).then((res) => {
-      setRecommendPosts(res.data.sort((a: IPost, b: IPost) => recommendPostIds.indexOf(a.id) - recommendPostIds.indexOf(b.id)));
+    PostAPI.getPostList({ categoryFilters: ['Recommend'] }).then((res) => {
+      setRecommendPosts(res.data.sort((a: IPost, b: IPost) => b.id - a.id));
     });
 
-    PostAPI.getPostsByIds({ ids: periodicalPostIds }).then((res) => {
-      setPeriodicalPosts(res.data.sort((a: IPost, b: IPost) => periodicalPostIds.indexOf(a.id) - periodicalPostIds.indexOf(b.id)));
+    PostAPI.getPostList({ categoryFilters: ['Periodical'] }).then((res) => {
+      setPeriodicalPosts(res.data.sort((a: IPost, b: IPost) => b.id - a.id));
     });
 
     PostAPI.getPostList({ page: 1, take: 3 }).then((res) => {
@@ -45,17 +42,19 @@ export default function Home() {
 
       <Profile />
 
-      <Section title='추천 게시물' subtitle='개발에 관심있다면 이런 글은 어떠세요?' link='/post'>
-        {getPostCardList(recommendPosts)}
-      </Section>
-
-      <Section title='정기 게시물' subtitle='항상 업데이트된 내용을 전달해드립니다!' link='/post'>
-        {getPostCardList(periodicalPosts)}
-      </Section>
-
       <Section title='최근 게시물' subtitle='가장 최근 올라온 게시글을 확인하세요!' link='/post'>
         {getPostCardList(recentPosts)}
       </Section>
+
+      <Section title='추천 게시물' subtitle='개발에 관심있다면 이런 글은 어떠세요?'>
+        {getPostCardList(recommendPosts)}
+      </Section>
+
+      <Section title='정기 게시물' subtitle='항상 업데이트된 내용을 전달해드립니다!'>
+        {getPostCardList(periodicalPosts)}
+      </Section>
+
+
 
       <Link className='flex items-end no-underline hover:underline' href={'/post'}>
         <div className='flex justify-center items-center w-full border-gray-200 border rounded-sm p-4'>
