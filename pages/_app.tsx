@@ -11,7 +11,8 @@ import { useEffect } from 'react';
 import Head from 'next/head';
 import * as gtag from '../lib/gtag';
 import useAdminCheck from 'hooks/useAdminCheck';
-
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 
 const theme = createTheme({
   palette: {
@@ -20,6 +21,8 @@ const theme = createTheme({
     },
   },
 });
+
+const queryClient = new QueryClient();
 
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -85,12 +88,15 @@ export default function App({ Component, pageProps }: AppProps) {
         src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
       /> */}
       <ThemeProvider theme={theme} >
-        <Gnb />
-        <div className='flex justify-center'>
-          <div className='flex justify-center px-4 xl:px-0 mt-20 w-screen' style={{ maxWidth: '1240px' }}>
-            <Component {...pageProps} />
+        <QueryClientProvider client={queryClient}>
+          <ReactQueryDevtools initialIsOpen={false} />
+          <Gnb />
+          <div className='flex justify-center'>
+            <div className='flex justify-center px-4 xl:px-0 mt-20 w-screen' style={{ maxWidth: '1240px' }}>
+              <Component {...pageProps} />
+            </div>
           </div>
-        </div>
+        </QueryClientProvider>
       </ThemeProvider >
     </>
   );
