@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import api, { API_BASE_URL, updateData } from "./API";
+import api, { API_BASE_URL, convertInterface } from "./API";
 import { ICategory, IPost } from "interfaces/post";
 
 export interface IApiPost {
@@ -42,31 +42,25 @@ export default {
   async getPost({ id }: { id: number; }): Promise<AxiosResponse<IPost>> {
     const postRes = api.get<IApiPost>(`/post/${id}`)
       .then((res) => {
-        return updateData<IApiPost, IPost>(res, convertApiPostToPost);
+        return convertInterface<IApiPost, IPost>(res, convertApiPostToPost);
       }) as Promise<AxiosResponse<IPost>>;
     return postRes;
   },
 
   async getPostList(option?: { page?: number, take?: number, categoryFilters?: string[]; }): Promise<AxiosResponse<IPost[]>> {
-    if (option) {
-      const postListRes = api.get<IApiPost[]>(`/post?${option.categoryFilters ? option.categoryFilters.map(category => `categoryFilters=${category}&`).join('') : ''}${option.page ? `page=${option.page}&` : ''}${option.take ? `take=${option.take}&` : ''}`)
-        .then((res) => {
-          return updateData<IApiPost, IPost>(res, convertApiPostToPost);
-        }) as Promise<AxiosResponse<IPost[]>>;
-      return postListRes;
-    } else {
-      const postListRes = api.get<IApiPost[]>(`/post`)
-        .then((res) => {
-          return updateData<IApiPost, IPost>(res, convertApiPostToPost);
-        }) as Promise<AxiosResponse<IPost[]>>;
-      return postListRes;
-    }
+    const postListRes = api.get<IApiPost[]>(
+      `/post?${option?.categoryFilters?.map(category => `categoryFilters=${category}&`).join('') ?? ''}${option?.page !== undefined ? `page=${option.page}&` : ''}${option?.take !== undefined ? `take=${option.take}&` : ''}`
+    )
+      .then((res) => {
+        return convertInterface<IApiPost, IPost>(res, convertApiPostToPost);
+      }) as Promise<AxiosResponse<IPost[]>>;
+    return postListRes;
   },
 
   async getPostsByIds({ ids }: { ids: number[]; }) {
     const postRes = api.get<IApiPost[]>(`/post?${ids.map(id => `ids=${id}&`).join('')}`)
       .then((res) => {
-        return updateData<IApiPost, IPost>(res, convertApiPostToPost);
+        return convertInterface<IApiPost, IPost>(res, convertApiPostToPost);
       }) as Promise<AxiosResponse<IPost[]>>;
     return postRes;
   },
@@ -87,7 +81,7 @@ export default {
   async postPost(data: { title: string, subtitle: string, body: string, categories?: Array<string>, files?: Array<string>; }) {
     const postRes = api.post<IApiPostPost>(`/post`, data)
       .then((res) => {
-        return updateData<IApiPostPost, IPostPost>(res, convertApiPostPostToPost);
+        return convertInterface<IApiPostPost, IPostPost>(res, convertApiPostPostToPost);
       }) as Promise<AxiosResponse<IPostPost>>;
     return postRes;
   },
@@ -95,7 +89,7 @@ export default {
   async patchPost(postId: number, data: { title: string, subtitle: string, body: string, categories?: Array<string>, files?: Array<string>; }) {
     const postRes = api.patch<IApiPost>(`/post/${postId}`, data)
       .then((res) => {
-        return updateData<IApiPost, IPost>(res, convertApiPostToPost);
+        return convertInterface<IApiPost, IPost>(res, convertApiPostToPost);
       }) as Promise<AxiosResponse<IPost>>;
     return postRes;
   },

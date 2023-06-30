@@ -48,7 +48,7 @@ api.interceptors.response.use(
 );
 
 export { setAuthToken };
-export function updateData<IApi, IData>(res: AxiosResponse<IApi | IApi[], any>, convertFunction: (data: IApi) => IData): AxiosResponse<IData | IData[]> {
+export function convertInterface<IApi, IData>(res: AxiosResponse<IApi | IApi[], any>, convertFunction: (data: IApi) => IData): AxiosResponse<IData | IData[]> {
   if (Array.isArray(res.data)) {
     const newData = res.data.map(convertFunction);
     res.data = newData as any;
