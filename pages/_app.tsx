@@ -77,8 +77,9 @@ export default function App({ Component, pageProps }: AppProps) {
         strategy="afterInteractive"
         src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
       /> */}
-      <Script async src="https://www.googletagmanager.com/gtag/js?id=G-F6WWRZZP6J"></Script>
+      <Script id='ga-script' async src="https://www.googletagmanager.com/gtag/js?id=G-F6WWRZZP6J"></Script>
       <Script
+        id='ga-run-script'
         dangerouslySetInnerHTML={{
           __html: `
               window.dataLayer = window.dataLayer || [];
