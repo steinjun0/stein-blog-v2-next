@@ -9,6 +9,9 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { ChangeEvent, SetStateAction, useEffect, useRef, useState } from "react";
 import { ClipboardEvent } from 'react';
+import useAdminCheck from "hooks/useAdminCheck";
+import { useSession } from "next-auth/react";
+import Swal from "sweetalert2";
 
 const MDEditor = dynamic(
     () => {
@@ -68,6 +71,8 @@ function getFilesFromClipboard(e: ClipboardEvent<HTMLDivElement>) {
 
 export default function WorkPage() {
     const router = useRouter();
+    const { data: session } = useSession();
+
 
     const [title, setTitle] = useState<string>('');
     const [subtitle, setSubtitle] = useState<string>('');

@@ -30,7 +30,6 @@ const queryClient = new QueryClient();
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
-  useAdminCheck();
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {
