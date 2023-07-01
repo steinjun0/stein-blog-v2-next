@@ -1,98 +1,58 @@
-import { useEffect, useRef, useState } from "react";
 import PostAPI from "apis/post";
-import { IPost } from "interfaces/post";
-import { useRouter } from "next/router";
 import PostCard from 'organisms/common/PostCard';
 import { useInfiniteQuery } from "react-query";
-
+import IntersectionObserverComponent from "components/common/IntersectionObserverComponent";
 
 export default function Post() {
-	const router = useRouter();
-	const [posts, setPosts] = useState<IPost[]>([]);
-	const postNextPageRef = useRef<number>(1);
-	const bottomElementRef = useRef<HTMLDivElement>(null);
-	const [isFinish, setIsFinish] = useState<boolean>(false);
 
 	const { fetchNextPage, data, status } = useInfiniteQuery(
 		['posts'],
-		() => {
-			console.log('postNextPageRef.current', postNextPageRef.current);
-			const result = getPosts(postNextPageRef.current);
-			result.then((res) => {
-				console.log('res', res);
-				if (Array.isArray(res)) {
-					res.length === 0 ? setIsFinish(true) : setIsFinish(false);
-				}
-			});
-			return result;
+		({ pageParam = { page: 1, take: 6 } }) => {
+			return PostAPI.getPostList(pageParam);
 		},
 		{
 			getNextPageParam: () => {
-				if (!isFinish) {
-					return { page: postNextPageRef.current, take: 6 };
+				try {
+					if (data?.pages[data?.pages.length - 1].length === 0) {
+						return undefined;
+					} else {
+						const nextPage: number = (data?.pages.length ?? 0) + 1;
+						const nextParam = { page: nextPage, take: 6 };
+						return nextParam;
+					}
+				} catch (error) {
+					return { page: 1, take: 6 };
+				}
+			},
+			onSuccess: (data) => {
+				if (data.pages[data.pages.length - 1].length === 0) {
+					data.pages.pop();
+					data.pageParams.pop();
+					return;
 				}
 			},
 			staleTime: 1000 * 60 * 30,
 		}
 	);
 
-	async function getPosts(page: number, categoryFilters?: string[]) {
-		return PostAPI.getPostList({ take: 6, page: page, categoryFilters })
-			.then((resPosts) => {
-				setPosts((prev) => {
-					if (page * 6 < prev.length + resPosts.length) {
-						return [...prev];
-					}
-					else {
-						return [...prev, ...resPosts];
-					}
-				});
-
-				return resPosts;
-			}).catch((err) => {
-				alert('Post를 받아오지 못하였습니다');
-			});
-	}
-
-	function getIntersectionHandler() {
+	function intersectHandler() {
 		let isLoading = false;
 		return async (e: any) => {
 			if (e[0].isIntersecting && !isLoading) {
 				isLoading = true;
 				await fetchNextPage();
-				postNextPageRef.current += 1;
 				isLoading = false;
 			}
 		};
 	}
 
-	useEffect(() => {
-		let observer: IntersectionObserver | null = null;
-		let options: IntersectionObserverInit | null = null;
-		if (router) {
-			if (router.isReady && bottomElementRef.current) {
-				options = {
-					root: document.querySelector('#scrollArea'),
-					rootMargin: '100px',
-					threshold: 0,
-				};
-				observer = new IntersectionObserver(getIntersectionHandler(), options);
-				observer.observe(bottomElementRef.current);
-			}
-		}
-		return () => {
-			if (observer && options) {
-				observer.disconnect();
-			}
-		};
-	}, [router, bottomElementRef]);
-
 	return (
-		<div className="flex-col w-full my-10 justify-start">
+		<div id="posts-container" className="flex-col w-full my-10 justify-start">
 			<div className="flex flex-col justify-start">
 				<div className="flex w-full justify-between items-end">
 					<div>
 						<div>
+
 							<h1
 								className='no-underline hover:underline'
 								style={{ fontSize: '36px', fontWeight: '600', marginTop: '24px' }}>최근 게시글</h1>
@@ -115,8 +75,14 @@ export default function Post() {
 				</div>
 			</div>
 			<div style={{ height: 300 }}></div>
-			<div id="bottom-checker" ref={bottomElementRef} />
 
+			{/* <div id="bottom-checker" ref={oberverRefCallback} /> */}
+			<IntersectionObserverComponent
+				onIntersect={intersectHandler}
+				observerOptions={{
+					rootMargin: '100px',
+					threshold: 0,
+				}} />
 		</div >
 	);
 }
