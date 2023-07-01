@@ -1,9 +1,12 @@
 import { Button } from "@mui/material";
+import { useSession, signIn } from "next-auth/react";
+import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 
 export default function Login() {
-
+    const { data: session } = useSession();
+    const router = useRouter();
     useEffect(() => {
         if (!window.Kakao.isInitialized()) {
             window.Kakao.init('1add2d01ae1a29668f10cd0d48ce63c5');
@@ -12,12 +15,14 @@ export default function Login() {
 
 
     function onClickLogin() {
-        if (window.Kakao.isInitialized()) {
-            const authRes = window.Kakao.Auth.authorize({
-                redirectUri: `${process.env.NEXT_PUBLIC_HOST}/login/auth`,
-                scope: 'profile_nickname,profile_image'
-            });
-        }
+        console.log('history', history);
+        signIn('kakao');
+        // if (window.Kakao.isInitialized()) {
+        //     const authRes = window.Kakao.Auth.authorize({
+        //         redirectUri: `${process.env.NEXT_PUBLIC_HOST}/login/auth`,
+        //         scope: 'profile_nickname,profile_image'
+        //     });
+        // }
 
     }
 

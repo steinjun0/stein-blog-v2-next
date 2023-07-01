@@ -13,6 +13,7 @@ import * as gtag from '../lib/gtag';
 import useAdminCheck from 'hooks/useAdminCheck';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import { SessionProvider } from "next-auth/react";
 
 const theme = createTheme({
   palette: {
@@ -89,13 +90,15 @@ export default function App({ Component, pageProps }: AppProps) {
       /> */}
       <ThemeProvider theme={theme} >
         <QueryClientProvider client={queryClient}>
-          <ReactQueryDevtools initialIsOpen={false} />
-          <Gnb />
-          <div className='flex justify-center'>
-            <div className='flex justify-center px-4 xl:px-0 mt-20 w-screen' style={{ maxWidth: '1240px' }}>
-              <Component {...pageProps} />
+          <SessionProvider session={pageProps.session}>
+            <ReactQueryDevtools initialIsOpen={false} />
+            <Gnb />
+            <div className='flex justify-center'>
+              <div className='flex justify-center px-4 xl:px-0 mt-20 w-screen' style={{ maxWidth: '1240px' }}>
+                <Component {...pageProps} />
+              </div>
             </div>
-          </div>
+          </SessionProvider>
         </QueryClientProvider>
       </ThemeProvider >
     </>
