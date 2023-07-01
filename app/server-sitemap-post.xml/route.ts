@@ -12,7 +12,7 @@ export async function GET() {
     const response = await axios.get('https://api.blog.steinjun.net/post');
     response.data.forEach((post: IApiPost) => {
         result.push({
-            loc: `https://blog.steinjun.net/post/${post.id}`,
+            loc: `https://blog.steinjun.net/posts/${post.id}`,
             lastmod: new Date(post.updated_at).toISOString(),
         });
     });

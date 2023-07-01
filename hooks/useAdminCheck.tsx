@@ -51,7 +51,7 @@ export default function useAdminCheck() {
   useEffect(() => {
     if (router.isReady) {
       const accessToken = localStorage.getItem('access_token');
-      const adminUrlList = ['/post/edit/[id]'];
+      const adminUrlList = ['/posts/edit/[id]'];
       if (adminUrlList.includes(router.pathname)) {
         checkAdmin(accessToken);
       }

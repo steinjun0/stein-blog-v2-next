@@ -60,7 +60,7 @@ export default function WorkPage(post: IPostProps) {
                 <meta key="author" name="author" content="Steinjun_0" />
 
                 {/*  Facebook Meta Tags  */}
-                <meta key="og:url" property="og:url" content={`https://blog.steinjun.net/post/${router.query.id}`} />
+                <meta key="og:url" property="og:url" content={`https://blog.steinjun.net/posts/${router.query.id}`} />
                 <meta key="og:type" property="og:type" content="website" />
                 <meta key="og:title" property="og:title" content={post.title} />
                 <meta key="og:description" property="og:description" content={post.subtitle} />
@@ -69,7 +69,7 @@ export default function WorkPage(post: IPostProps) {
                 {/* Twitter Meta Tags  */}
                 <meta key="twitter:card" name="twitter:card" content="summary_large_image" />
                 <meta key="twitter:domain" property="twitter:domain" content="blog.steinjun.net" />
-                <meta key="twitter:url" property="twitter:url" content={`https://blog.steinjun.net/post/${router.query.id}`} />
+                <meta key="twitter:url" property="twitter:url" content={`https://blog.steinjun.net/posts/${router.query.id}`} />
                 <meta key="twitter:title" name="twitter:title" content={post.title} />
                 <meta key="twitter:description" name="twitter:description" content={post.subtitle} />
                 <meta key="twitter:image" name="twitter:image" content={PostAPI.getServerPostImageUrl({ postId: post.id, fileName: 'thumbnail' })} />

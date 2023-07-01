@@ -100,7 +100,7 @@ export default function WorkPage() {
                 try {
                     PostAPI.postPost(data).then((res) => {
                         alert('업로드에 성공했습니다');
-                        router.push(`/post/${res.postRes.id}`);
+                        router.push(`/posts/${res.postRes.id}`);
 
                         new Array("temp_post", "temp_title", "temp_subtitle").forEach(element => {
                             localStorage.removeItem(element);
@@ -117,7 +117,7 @@ export default function WorkPage() {
                 setIsDialogOpen(isSendingApiRef.current);
                 PostAPI.patchPost(parseInt(`${router.query.id}`), data).then((res) => {
                     alert('수정에 성공했습니다');
-                    router.push(`/post/${router.query.id}`);
+                    router.push(`/posts/${router.query.id}`);
                     isSendingApiRef.current = false;
                     setIsDialogOpen(isSendingApiRef.current);
                 }).catch((err) => {
@@ -278,7 +278,7 @@ export default function WorkPage() {
             PostAPI.deletePost(+router.query.id!).then((res) => {
                 if (res.status === 200) {
                     alert('삭제 되었습니다.');
-                    router.push('/post');
+                    router.push('/posts');
                 } else {
                     alert('삭제를 실패했습니다.');
                 }

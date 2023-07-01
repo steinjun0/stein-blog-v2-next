@@ -48,7 +48,7 @@ export default function Home() {
     <div className="flex flex-col w-full my-10 justify-start gap-24">
 
       <Profile />
-      <Section title='최근 게시물' subtitle='가장 최근 올라온 게시글을 확인하세요!' link='/post'>
+      <Section title='최근 게시물' subtitle='가장 최근 올라온 게시글을 확인하세요!' link='/posts'>
         {recentPostsQuery.isSuccess && getPostCardList(recentPostsQuery.data)}
       </Section>
 
@@ -60,7 +60,7 @@ export default function Home() {
         {periodicalPostsQuery.data && getPostCardList(periodicalPostsQuery.data)}
       </Section>
 
-      <Link className='flex items-end no-underline hover:underline' href={'/post'}>
+      <Link className='flex items-end no-underline hover:underline' href={'/posts'}>
         <div className='flex justify-center items-center w-full border-gray-200 border rounded-sm p-4'>
           <h1
             style={{ fontSize: '24px', fontWeight: '600' }}>전체 게시글 보러가기</h1>
