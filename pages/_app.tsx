@@ -14,6 +14,7 @@ import useAdminCheck from 'hooks/useAdminCheck';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { SessionProvider } from "next-auth/react";
+import Script from 'next/script';
 
 const theme = createTheme({
   palette: {
@@ -70,10 +71,16 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta key="twitter:title" name="twitter:title" content="stein-blog" />
         <meta key="twitter:description" name="twitter:description" content={description} />
         <meta key="twitter:image" name="twitter:image" content="https://blog.steinjun.net/stein-logo.svg" />
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-F6WWRZZP6J"></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
+
+      </Head>
+      {/* <Script
+        strategy="afterInteractive"
+        src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
+      /> */}
+      <Script async src="https://www.googletagmanager.com/gtag/js?id=G-F6WWRZZP6J"></Script>
+      <Script
+        dangerouslySetInnerHTML={{
+          __html: `
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
@@ -81,13 +88,8 @@ export default function App({ Component, pageProps }: AppProps) {
                 page_path: window.location.pathname,
               });
             `,
-          }}
-        />
-      </Head>
-      {/* <Script
-        strategy="afterInteractive"
-        src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
-      /> */}
+        }}
+      />
       <ThemeProvider theme={theme} >
         <QueryClientProvider client={queryClient}>
           <SessionProvider session={pageProps.session}>
