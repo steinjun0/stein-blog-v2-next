@@ -5,7 +5,7 @@ import "styles/markdown-editor.css";
 
 import type { AppProps } from 'next/app';
 import { createTheme, ThemeProvider } from '@mui/material';
-import Gnb from 'organisms/Gnb';
+import Gnb from 'organisms/common/Gnb';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import Head from 'next/head';
