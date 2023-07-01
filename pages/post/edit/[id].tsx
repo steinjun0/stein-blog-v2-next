@@ -99,35 +99,29 @@ export default function WorkPage() {
                 setIsDialogOpen(isSendingApiRef.current);
                 try {
                     PostAPI.postPost(data).then((res) => {
-                        if (res.status === 201) {
-                            alert('업로드에 성공했습니다');
-                            router.push(`/post/${res.data.postRes.id}`);
+                        alert('업로드에 성공했습니다');
+                        router.push(`/post/${res.postRes.id}`);
 
-                            new Array("temp_post", "temp_title", "temp_subtitle").forEach(element => {
-                                localStorage.removeItem(element);
-                            });
-                        } else {
-                            alert('업로드에 실패했습니다');
-                        }
+                        new Array("temp_post", "temp_title", "temp_subtitle").forEach(element => {
+                            localStorage.removeItem(element);
+                        });
                         isSendingApiRef.current = false;
                         setIsDialogOpen(isSendingApiRef.current);
                     });
                 } catch (error) {
-
+                    alert('업로드에 실패했습니다');
                 }
 
             } else {
                 isSendingApiRef.current = true;
                 setIsDialogOpen(isSendingApiRef.current);
                 PostAPI.patchPost(parseInt(`${router.query.id}`), data).then((res) => {
-                    if (res.status === 200) {
-                        alert('수정에 성공했습니다');
-                        router.push(`/post/${router.query.id}`);
-                    } else {
-                        alert('수정에 실패했습니다');
-                    }
+                    alert('수정에 성공했습니다');
+                    router.push(`/post/${router.query.id}`);
                     isSendingApiRef.current = false;
                     setIsDialogOpen(isSendingApiRef.current);
+                }).catch((err) => {
+                    alert('수정에 실패했습니다');
                 });
             }
         } else {
@@ -154,7 +148,7 @@ export default function WorkPage() {
             else if (!isNaN(parseInt(`${router.query.id}`))) {
                 postThumbnailLocationRef.current = parseInt(`${router.query.id}`);
                 PostAPI.getPost({ id: parseInt(`${router.query.id}`) }).then((res) => {
-                    const post: IPost = res.data;
+                    const post: IPost = res;
                     setTitle(post.title);
                     setSubtitle(post.subtitle);
                     setMd(post.body);

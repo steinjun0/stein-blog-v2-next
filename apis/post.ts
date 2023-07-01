@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import api, { API_BASE_URL, convertInterface } from "./API";
+import api, { API_BASE_URL } from "./API";
 import { ICategory, IPost } from "interfaces/post";
 
 export interface IApiPost {
@@ -39,30 +39,26 @@ function convertApiPostPostToPost(res: { postRes: IApiPost, fileRes: number[]; }
 }
 
 export default {
-  async getPost({ id }: { id: number; }): Promise<AxiosResponse<IPost>> {
-    const postRes = api.get<IApiPost>(`/post/${id}`)
-      .then((res) => {
-        return convertInterface<IApiPost, IPost>(res, convertApiPostToPost);
-      }) as Promise<AxiosResponse<IPost>>;
-    return postRes;
+  // get
+  async getPost({ id }: { id: number; }) {
+    return api.get<IApiPost>(
+      `/post/${id}`
+    )
+      .then(res => convertApiPostToPost(res.data));
   },
 
-  async getPostList(option?: { page?: number, take?: number, categoryFilters?: string[]; }): Promise<AxiosResponse<IPost[]>> {
-    const postListRes = api.get<IApiPost[]>(
+  async getPostList(option?: { page?: number, take?: number, categoryFilters?: string[]; }) {
+    return api.get<IApiPost[]>(
       `/post?${option?.categoryFilters?.map(category => `categoryFilters=${category}&`).join('') ?? ''}${option?.page !== undefined ? `page=${option.page}&` : ''}${option?.take !== undefined ? `take=${option.take}&` : ''}`
     )
-      .then((res) => {
-        return convertInterface<IApiPost, IPost>(res, convertApiPostToPost);
-      }) as Promise<AxiosResponse<IPost[]>>;
-    return postListRes;
+      .then(res => res.data.map(post => convertApiPostToPost(post)));
   },
 
   async getPostsByIds({ ids }: { ids: number[]; }) {
-    const postRes = api.get<IApiPost[]>(`/post?${ids.map(id => `ids=${id}&`).join('')}`)
-      .then((res) => {
-        return convertInterface<IApiPost, IPost>(res, convertApiPostToPost);
-      }) as Promise<AxiosResponse<IPost[]>>;
-    return postRes;
+    return api.get<IApiPost[]>(
+      `/post?${ids.map(id => `ids=${id}&`).join('')}`
+    )
+      .then(res => res.data.map(post => convertApiPostToPost(post)));
   },
 
   async getCategories() {
@@ -70,6 +66,7 @@ export default {
     return categoryRes;
   },
 
+  // static 
   getServerPostImageUrl({ postId, fileName }: { postId: number | 'temp', fileName: string; }) {
     return `${process.env.NEXT_PUBLIC_SERVER_API_URL}/file/post/${postId}/${fileName}`;
   },
@@ -78,26 +75,21 @@ export default {
     return `${API_BASE_URL}/file/post/${postId}/${fileName}`;
   },
 
+  // post
   async postPost(data: { title: string, subtitle: string, body: string, categories?: Array<string>, files?: Array<string>; }) {
-    const postRes = api.post<IApiPostPost>(`/post`, data)
-      .then((res) => {
-        return convertInterface<IApiPostPost, IPostPost>(res, convertApiPostPostToPost);
-      }) as Promise<AxiosResponse<IPostPost>>;
-    return postRes;
+    return api.post<IApiPostPost>(`/post`, data)
+      .then(res => convertApiPostPostToPost(res.data));
   },
 
+  // patch
   async patchPost(postId: number, data: { title: string, subtitle: string, body: string, categories?: Array<string>, files?: Array<string>; }) {
-    const postRes = api.patch<IApiPost>(`/post/${postId}`, data)
-      .then((res) => {
-        return convertInterface<IApiPost, IPost>(res, convertApiPostToPost);
-      }) as Promise<AxiosResponse<IPost>>;
-    return postRes;
+    return api.patch<IApiPost>(`/post/${postId}`, data)
+      .then(res => convertApiPostToPost(res.data));
   },
 
+  // delete
   async deletePost(postId: number) {
-    const postRes = api.delete<IApiPost>(`/post/${postId}`);
-    return postRes;
+    return api.delete<IApiPost>(`/post/${postId}`);
   },
-
 };
 

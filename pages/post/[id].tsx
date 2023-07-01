@@ -26,7 +26,7 @@ interface IPostProps {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
 
-    const post = (await PostAPI.getPost({ id: Number(context.query.id) })).data;
+    const post = (await PostAPI.getPost({ id: Number(context.query.id) }));
     // data.body 
     if (process.env.NODE_ENV === 'development') {
         post.body = post.body.replace('https://api.blog.steinjun.net', '//localhost:8888');
@@ -48,14 +48,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
 export default function WorkPage(post: IPostProps) {
     const router = useRouter();
-    useEffect(() => {
-        if (router.isReady && router.query.id === '10') {
-            PostService.updateBeakjoon();
-        }
-        if (router.isReady && router.query.id === '18') {
-            PostService.updateProgrammers();
-        }
-    }, [router.isReady]);
 
     const koDtf = new Intl.DateTimeFormat("ko", { dateStyle: "medium" });
 
