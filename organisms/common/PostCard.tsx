@@ -1,4 +1,4 @@
-import API from "API";
+import PostAPI from "apis/post";
 import { marked } from "marked";
 import Link from "next/link";
 import Image from "next/image";
@@ -9,11 +9,11 @@ export default function PostCard({ post, ...props }: { post: IPost; } & HTMLAttr
     const koDtf = new Intl.DateTimeFormat("ko", { dateStyle: "long" });
     const titleRef = useRef<HTMLHeadingElement>(null);
     return <div {...props} className="justify-center border-gray-200 border rounded-sm overflow-hidden" style={{ minHeight: '574px' }}>
-        <Link href={`/post/${post.id}`} className="flex h-full">
+        <Link href={`/posts/${post.id}`} className="flex h-full">
             <div className="flex flex-col justify-between w-full">
                 <div className="relative" style={{ maxHeight: 382, minHeight: 382, overflow: 'hidden', maxWidth: '100%' }}>
                     <Image
-                        src={API.getServerPostImageUrl({ postId: post.id, fileName: 'thumbnail' })}
+                        src={PostAPI.getServerPostImageUrl({ postId: post.id, fileName: 'thumbnail' })}
                         alt={`${post.id}-thumnail`}
                         fill
                         className="object-contain"
@@ -43,7 +43,7 @@ export default function PostCard({ post, ...props }: { post: IPost; } & HTMLAttr
                                 </div>;
                             })}
                         </div>
-                        <span className="text-gray-400">{koDtf.format(post.created_at)}</span>
+                        <span className="text-gray-400">{koDtf.format(post.createdAt)}</span>
                     </div>
                 </div>
 

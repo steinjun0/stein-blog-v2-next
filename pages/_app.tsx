@@ -5,12 +5,16 @@ import "styles/markdown-editor.css";
 
 import type { AppProps } from 'next/app';
 import { createTheme, ThemeProvider } from '@mui/material';
-import Gnb from 'organisms/Gnb';
+import Gnb from 'organisms/common/Gnb';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import Head from 'next/head';
 import * as gtag from '../lib/gtag';
-
+import useAdminCheck from 'hooks/useAdminCheck';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
+import { SessionProvider } from "next-auth/react";
+import Script from 'next/script';
 
 const theme = createTheme({
   palette: {
@@ -20,9 +24,13 @@ const theme = createTheme({
   },
 });
 
+const queryClient = new QueryClient();
+
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
+
+
   useEffect(() => {
     const handleRouteChange = (url: string) => {
       gtag.pageview(url);
@@ -32,6 +40,8 @@ export default function App({ Component, pageProps }: AppProps) {
       router.events.off('routeChangeComplete', handleRouteChange);
     };
   }, [router.events]);
+
+
   const description = "Blog for Stein. Engineering, Music, Camera, Art, and Life.";
   const url = "https://blog.steinjun.net/";
   return (
@@ -60,10 +70,17 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta key="twitter:title" name="twitter:title" content="stein-blog" />
         <meta key="twitter:description" name="twitter:description" content={description} />
         <meta key="twitter:image" name="twitter:image" content="https://blog.steinjun.net/stein-logo.svg" />
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-F6WWRZZP6J"></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
+
+      </Head>
+      {/* <Script
+        strategy="afterInteractive"
+        src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
+      /> */}
+      <Script id='ga-script' async src="https://www.googletagmanager.com/gtag/js?id=G-F6WWRZZP6J"></Script>
+      <Script
+        id='ga-run-script'
+        dangerouslySetInnerHTML={{
+          __html: `
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
@@ -71,20 +88,20 @@ export default function App({ Component, pageProps }: AppProps) {
                 page_path: window.location.pathname,
               });
             `,
-          }}
-        />
-      </Head>
-      {/* <Script
-        strategy="afterInteractive"
-        src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
-      /> */}
+        }}
+      />
       <ThemeProvider theme={theme} >
-        <Gnb />
-        <div className='flex justify-center'>
-          <div className='flex justify-center px-4 xl:px-0 mt-20 w-screen' style={{ maxWidth: '1240px' }}>
-            <Component {...pageProps} />
-          </div>
-        </div>
+        <QueryClientProvider client={queryClient}>
+          <SessionProvider session={pageProps.session}>
+            <ReactQueryDevtools initialIsOpen={false} />
+            <Gnb />
+            <div className='flex justify-center'>
+              <div className='flex justify-center px-4 xl:px-0 mt-20 w-screen' style={{ maxWidth: '1240px' }}>
+                <Component {...pageProps} />
+              </div>
+            </div>
+          </SessionProvider>
+        </QueryClientProvider>
       </ThemeProvider >
     </>
   );

@@ -1,89 +1,66 @@
-import API from 'API';
+import PostAPI from 'apis/post';
 import { IPost } from 'interfaces/post';
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import PostCard from 'organisms/common/PostCard';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Profile from 'organisms/index/Profile';
 import Section from 'organisms/index/Section';
+import { useQueries, useQuery } from 'react-query';
+import { useRouter } from 'next/router';
 
 export default function Home() {
-  const [recentPosts, setRecentPosts] = useState<IPost[]>([]);
-  const [recommendPosts, setRecommendPosts] = useState<IPost[]>([]);
-  const [periodicalPosts, setPeriodicalPosts] = useState<IPost[]>([]);
+  const router = useRouter();
+  useQuery(
+    ['posts', { page: 1, take: 3 }],
+    () => PostAPI.getPostList({ page: 1, take: 3 })
+  );
 
-  useEffect(() => {
-    const recommendPostIds = [15, 16, 11];
-    const periodicalPostIds = [10, 18];
-    API.getPostsByIds({ ids: recommendPostIds }).then((res) => {
-      if (res.status === 200) {
-        setRecommendPosts(res.data.sort(
-          (a: IPost, b: IPost) => recommendPostIds.indexOf(a.id) - recommendPostIds.indexOf(b.id)
-        )
-        );
-      } else {
-        alert('post를 받아오지 못했습니다');
-      }
-    });
+  const [recentPostsQuery, recommendPostsQuery, periodicalPostsQuery] = useQueries<[
+    [IPost[]], [IPost[]], [IPost[]]
+  ]>([
+    {
+      queryKey: ['posts', { page: 1, take: 3 }],
+      queryFn: () => PostAPI.getPostList({ page: 1, take: 3 }),
+    },
+    {
+      queryKey: ['posts', { categoryFilters: ['Recommend'] }],
+      queryFn: () => PostAPI.getPostList({ categoryFilters: ['Recommend'] }),
+      staleTime: 1000 * 60 * 60,
+    },
+    {
+      queryKey: ['posts', { categoryFilters: ['Periodical'] }],
+      queryFn: () => PostAPI.getPostList({ categoryFilters: ['Periodical'] }),
+      staleTime: 1000 * 60 * 60
+    },
+  ]);
 
-    API.getPostsByIds({ ids: periodicalPostIds }).then((res) => {
-      if (res.status === 200) {
-        setPeriodicalPosts(res.data.sort(
-          (a: IPost, b: IPost) => periodicalPostIds.indexOf(a.id) - periodicalPostIds.indexOf(b.id)
-        )
-        );
-      } else {
-        alert('post를 받아오지 못했습니다');
-      }
-    });
-
-    API.getPostList({ page: 1, take: 3 }).then((res) => {
-      if (res.status === 200) {
-        setRecentPosts(res.data);
-      } else {
-        alert('post를 받아오지 못했습니다');
-      }
-    });
-
-  }, []);
+  function getPostCardList(postsData: IPost[]) {
+    return postsData
+      .filter((e) => process.env.NODE_ENV === 'development' || !e.categories.map(i => i.name).includes('test'))
+      .map((post, i) =>
+        <PostCard key={i} post={post} />
+      );
+  }
 
   return (
     <div className="flex flex-col w-full my-10 justify-start gap-24">
 
       <Profile />
-
-      <Section title='추천 게시물' subtitle='개발에 관심있다면 이런 글은 어떠세요?' link='/post'>
-        {
-          recommendPosts!
-            .filter((e) => process.env.NODE_ENV === 'development' || !e.categories.map(i => i.name).includes('test'))
-            .map((post, i) =>
-              <PostCard key={i} post={post} />
-            )
-        }
+      <Section title='최근 게시물' subtitle='가장 최근 올라온 게시글을 확인하세요!' link='/posts'>
+        {recentPostsQuery.isSuccess && getPostCardList(recentPostsQuery.data)}
       </Section>
 
-      <Section title='정기 게시물' subtitle='항상 업데이트된 내용을 전달해드립니다!' link='/post'>
-        {
-          periodicalPosts!
-            .filter((e) => process.env.NODE_ENV === 'development' || !e.categories.map(i => i.name).includes('test'))
-            .map((post, i) =>
-              <PostCard key={i} post={post} />
-            )
-        }
+      <Section title='추천 게시물' subtitle='개발에 관심있다면 이런 글은 어떠세요?'>
+        {recommendPostsQuery.data && getPostCardList(recommendPostsQuery.data)}
       </Section>
 
-      <Section title='최근 게시물' subtitle='가장 최근 올라온 게시글을 확인하세요!' link='/post'>
-        {
-          recentPosts!
-            .filter((e) => process.env.NODE_ENV === 'development' || !e.categories.map(i => i.name).includes('test'))
-            .map((post, i) =>
-              <PostCard key={i} post={post} />
-            )
-        }
+      <Section title='정기 게시물' subtitle='항상 업데이트된 내용을 전달해드립니다!'>
+        {periodicalPostsQuery.data && getPostCardList(periodicalPostsQuery.data)}
       </Section>
 
-      <Link className='flex items-end no-underline hover:underline' href={'/post'}>
+      <Link className='flex items-end no-underline hover:underline' href={'/posts'}>
         <div className='flex justify-center items-center w-full border-gray-200 border rounded-sm p-4'>
           <h1
             style={{ fontSize: '24px', fontWeight: '600' }}>전체 게시글 보러가기</h1>

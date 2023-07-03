@@ -1,6 +1,7 @@
 import { Button, Dialog, Input, NativeSelect, Select, TextField } from "@mui/material";
 
-import API from "API";
+import PostAPI from 'apis/post';
+import FileAPI from 'apis/file';
 import ListPushInput from "components/ListPushInput";
 import { IPost } from "interfaces/post";
 import dynamic from "next/dynamic";
@@ -8,6 +9,9 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { ChangeEvent, SetStateAction, useEffect, useRef, useState } from "react";
 import { ClipboardEvent } from 'react';
+import useAdminCheck from "hooks/useAdminCheck";
+import { useSession } from "next-auth/react";
+import Swal from "sweetalert2";
 
 const MDEditor = dynamic(
     () => {
@@ -67,6 +71,8 @@ function getFilesFromClipboard(e: ClipboardEvent<HTMLDivElement>) {
 
 export default function WorkPage() {
     const router = useRouter();
+    const { data: session } = useSession();
+
 
     const [title, setTitle] = useState<string>('');
     const [subtitle, setSubtitle] = useState<string>('');
@@ -97,36 +103,30 @@ export default function WorkPage() {
                 isSendingApiRef.current = true;
                 setIsDialogOpen(isSendingApiRef.current);
                 try {
-                    API.postPost(data).then((res) => {
-                        if (res.status === 201) {
-                            alert('업로드에 성공했습니다');
-                            router.push(`/post/${res.data.postRes.id}`);
+                    PostAPI.postPost(data).then((res) => {
+                        alert('업로드에 성공했습니다');
+                        router.push(`/posts/${res.postRes.id}`);
 
-                            new Array("temp_post", "temp_title", "temp_subtitle").forEach(element => {
-                                localStorage.removeItem(element);
-                            });
-                        } else {
-                            alert('업로드에 실패했습니다');
-                        }
+                        new Array("temp_post", "temp_title", "temp_subtitle").forEach(element => {
+                            localStorage.removeItem(element);
+                        });
                         isSendingApiRef.current = false;
                         setIsDialogOpen(isSendingApiRef.current);
                     });
                 } catch (error) {
-
+                    alert('업로드에 실패했습니다');
                 }
 
             } else {
                 isSendingApiRef.current = true;
                 setIsDialogOpen(isSendingApiRef.current);
-                API.patchPost(parseInt(`${router.query.id}`), data).then((res) => {
-                    if (res.status === 200) {
-                        alert('수정에 성공했습니다');
-                        router.push(`/post/${router.query.id}`);
-                    } else {
-                        alert('수정에 실패했습니다');
-                    }
+                PostAPI.patchPost(parseInt(`${router.query.id}`), data).then((res) => {
+                    alert('수정에 성공했습니다');
+                    router.push(`/posts/${router.query.id}`);
                     isSendingApiRef.current = false;
                     setIsDialogOpen(isSendingApiRef.current);
+                }).catch((err) => {
+                    alert('수정에 실패했습니다');
                 });
             }
         } else {
@@ -135,14 +135,9 @@ export default function WorkPage() {
     }
 
     useEffect(() => {
-        API.getCategories().then((res) => {
-            if (res.status === 200) {
-                console.log(res);
-                const resCategories: Array<{ id: number, name: string; }> = res.data;
-                setAllCategories(resCategories);
-            } else {
-                alert('카테고리를 받아오지 못했습니다');
-            }
+        PostAPI.getCategories().then((res) => {
+            const resCategories: Array<{ id: number, name: string; }> = res.data;
+            setAllCategories(resCategories);
         });
 
         if (router && router.isReady) {
@@ -157,8 +152,8 @@ export default function WorkPage() {
             }
             else if (!isNaN(parseInt(`${router.query.id}`))) {
                 postThumbnailLocationRef.current = parseInt(`${router.query.id}`);
-                API.getPost({ id: parseInt(`${router.query.id}`) }).then((res) => {
-                    const post: IPost = res.data;
+                PostAPI.getPost({ id: parseInt(`${router.query.id}`) }).then((res) => {
+                    const post: IPost = res;
                     setTitle(post.title);
                     setSubtitle(post.subtitle);
                     setMd(post.body);
@@ -181,14 +176,14 @@ export default function WorkPage() {
                                 let file = item.getAsFile();
                                 let fileName: string = getUnduplicatedName(file.name, fileNamesRef.current);
 
-                                const res = await API.postFile({ file: file, name: fileName });
+                                const res = await FileAPI.postFile({ file: file, name: fileName });
                                 isSendingApiRef.current = true;
                                 setIsDialogOpen(isSendingApiRef.current);
                                 if (res.status === 201) {
                                     setFileNames(fileNames => [...fileNames, fileName]);
                                     fileNamesRef.current = [...fileNamesRef.current, fileName];
 
-                                    const newMd: string = mdRef.current + `<p align="center"><img src="${API.getServerPostImageUrl({ postId: 'temp', fileName: fileName })}" alt="${fileName}" style="max-height: 300px"/></p>`;
+                                    const newMd: string = mdRef.current + `<p align="center"><img src="${PostAPI.getServerPostImageUrl({ postId: 'temp', fileName: fileName })}" alt="${fileName}" style="max-height: 300px"/></p>`;
                                     setMd(newMd);
                                 } else {
                                     alert('이미지가 업로드 되지 못하였습니다!');
@@ -222,15 +217,15 @@ export default function WorkPage() {
             if (!isSendingApiRef.current) {
                 isSendingApiRef.current = true;
                 setIsDialogOpen(isSendingApiRef.current);
-                API.postFile({ file: e.target.files![0], name: isThumbnail ? `thumbnail` : getUnduplicatedName(e.target.files![0].name, fileNamesRef.current) })
+                FileAPI.postFile({ file: e.target.files![0], name: isThumbnail ? `thumbnail` : getUnduplicatedName(e.target.files![0].name, fileNamesRef.current) })
                     .then((res) => {
                         if (res.status === 201) {
                             postThumbnailLocationRef.current = 'temp';
                             alert(`${isThumbnail ? '썸네일이' : '이미지가'} 업로드 되었습니다`);
                             setUrlCacheBreaker(new Date().getMilliseconds().toString());
 
-                            setUploadImageUrl(`${API.getServerPostImageUrl({ postId: 'temp', fileName: res.data[0].filename })}`);
-                            setUploadImageUrlForMD(`<p align="center"><img src="${API.getPostFileUrl({ postId: 'temp', fileName: res.data[0].filename })}" alt="${res.data[0].filename}" style="max-height: 300px"/></p>`);
+                            setUploadImageUrl(`${PostAPI.getServerPostImageUrl({ postId: 'temp', fileName: res.data[0].filename })}`);
+                            setUploadImageUrlForMD(`<p align="center"><img src="${PostAPI.getPostFileUrl({ postId: 'temp', fileName: res.data[0].filename })}" alt="${res.data[0].filename}" style="max-height: 300px"/></p>`);
                         } else {
                             alert(`${isThumbnail ? '썸네일을' : '이미지를'} 업로드하지 못하였습니다`);
                         }
@@ -250,14 +245,14 @@ export default function WorkPage() {
         if (!isSendingApiRef.current) {
             isSendingApiRef.current = true;
             setIsDialogOpen(isSendingApiRef.current);
-            API.postFile({ file: image!, name: imageType === 'thumbnail' ? 'thumbnail' : getUnduplicatedName(image.name, fileNamesRef.current) }).then((res) => {
+            FileAPI.postFile({ file: image!, name: imageType === 'thumbnail' ? 'thumbnail' : getUnduplicatedName(image.name, fileNamesRef.current) }).then((res) => {
                 if (res.status === 201) {
                     postThumbnailLocationRef.current = 'temp';
                     alert(`${imageType} 업로드 되었습니다`);
                     setUrlCacheBreaker(new Date().getMilliseconds().toString());
 
-                    setUploadImageUrl(`${API.getServerPostImageUrl({ postId: 'temp', fileName: res.data[0].filename })}`);
-                    setUploadImageUrlForMD(`<p align="center"><img src="${API.getPostFileUrl({ postId: 'temp', fileName: res.data[0].filename })}" alt="${res.data[0].filename}" style="max-height: 300px"/></p>`);
+                    setUploadImageUrl(`${PostAPI.getServerPostImageUrl({ postId: 'temp', fileName: res.data[0].filename })}`);
+                    setUploadImageUrlForMD(`<p align="center"><img src="${PostAPI.getPostFileUrl({ postId: 'temp', fileName: res.data[0].filename })}" alt="${res.data[0].filename}" style="max-height: 300px"/></p>`);
                 } else {
                     alert(`${imageType} 업로드하지 못하였습니다`);
                 }
@@ -285,10 +280,10 @@ export default function WorkPage() {
 
     function onClickDelete() {
         if (confirm('정말 삭제하시겠습니까?')) {
-            API.deletePost(+router.query.id!).then((res) => {
+            PostAPI.deletePost(+router.query.id!).then((res) => {
                 if (res.status === 200) {
                     alert('삭제 되었습니다.');
-                    router.push('/post');
+                    router.push('/posts');
                 } else {
                     alert('삭제를 실패했습니다.');
                 }
@@ -374,7 +369,7 @@ export default function WorkPage() {
                         {postThumbnailLocationRef.current &&
                             <div className="relative w-60 h-28">
                                 <Image
-                                    src={API.getServerPostImageUrl({ postId: postThumbnailLocationRef.current!, fileName: 'thumbnail' }) + `?${urlCacheBreaker}`} alt=""
+                                    src={PostAPI.getServerPostImageUrl({ postId: postThumbnailLocationRef.current!, fileName: 'thumbnail' }) + `?${urlCacheBreaker}`} alt=""
                                     fill
                                     className="object-contain"
                                 />

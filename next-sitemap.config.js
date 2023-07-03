@@ -2,21 +2,11 @@ const axios = require('axios')
 
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: process.env.SITE_URL || 'https://example.com',
+  siteUrl: process.env.SITE_URL,
   generateRobotsTxt: true, // (optional)
+  exclude: ['/server-sitemap-post.xml', '/login', '/login/auth'],
   // ...other options,
-  additionalPaths: async (config) => {
-    const result = []
-
-    const response = await axios.get('https://api.blog.steinjun.net/post')
-    response.data.forEach((post) => {
-      result.push({
-        loc: `/post/${post.id}`,
-        changefreq: 'yearly',
-        lastmod: new Date(post.updated_at).toISOString(),
-      })
-    })
-
-    return result
+  robotsTxtOptions: {
+    additionalSitemaps: [`${process.env.SITE_URL}/server-sitemap-post.xml`]
   },
 }

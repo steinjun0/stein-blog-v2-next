@@ -6,6 +6,11 @@ export interface IPost {
     subtitle: string,
     body: string,
     files: Array<{ id: number, name: string; }>;
-    created_at?: Date,
-    updated_at?: Date,
+    createdAt?: Date,
+    updatedAt?: Date,
+}
+
+export interface ICategory {
+    id: number,
+    name: string,
 }
