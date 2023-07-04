@@ -77,9 +77,6 @@ export default {
 
   // post
   async postPost(data: { title: string, subtitle: string, body: string, categories?: Array<string>, files?: Array<string>; }) {
-    api.get('https://www.google.com/ping?sitemap=https://blog.steinjun.net/server-sitemap-post.xml');
-    api.get('https://www.google.com/ping?sitemap=https://blog.steinjun.net/sitemap-0.xml');
-    api.get('https://www.google.com/ping?sitemap=https://blog.steinjun.net/sitemap.xml');
     return api.post<IApiPostPost>(`/post`, data)
       .then(res => convertApiPostPostToPost(res.data));
   },
