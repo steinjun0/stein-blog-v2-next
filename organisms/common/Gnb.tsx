@@ -13,7 +13,7 @@ const Nav = styled('nav')((props) => (
     maxWidth: '1240px',
     marginLeft: '0',
     [props.theme.breakpoints.up(1240)]: {
-      marginLeft: 'calc(50vw - 620px)',
+      marginLeft: 'calc(50vw - 620px - 50vw + 50%)',
     }
   }
 ));
