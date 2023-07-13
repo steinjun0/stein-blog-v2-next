@@ -1,6 +1,5 @@
-import { AxiosResponse } from "axios";
-import api, { API_BASE_URL } from "./API";
 import { ICategory, IPost } from "interfaces/post";
+import api, { API_BASE_URL } from "./API";
 
 export interface IApiPost {
   id: number,
@@ -27,7 +26,7 @@ interface IPostPost {
 function convertApiPostToPost(post: IApiPost): IPost {
   const newPost = structuredClone(post) as any;
   newPost.createdAt = new Date(newPost.created_at);
-  newPost.updatedAt = new Date(newPost.created_at);
+  newPost.updatedAt = new Date(newPost.updatedAt);
   return newPost;
 }
 
