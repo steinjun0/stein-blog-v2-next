@@ -26,14 +26,14 @@ interface IPostPost {
 function convertApiPostToPost(post: IApiPost): IPost {
   const newPost = structuredClone(post) as any;
   newPost.createdAt = new Date(newPost.created_at);
-  newPost.updatedAt = new Date(newPost.updatedAt);
+  newPost.updatedAt = new Date(newPost.updated_at);
   return newPost;
 }
 
 function convertApiPostPostToPost(res: { postRes: IApiPost, fileRes: number[]; }): { postRes: IPost, fileRes: number[]; } {
   const newPost = structuredClone(res.postRes) as any;
   newPost.createdAt = new Date(newPost.created_at);
-  newPost.updatedAt = new Date(newPost.created_at);
+  newPost.updatedAt = new Date(newPost.updated_at);
   return { postRes: newPost, fileRes: res.fileRes };
 }
 
