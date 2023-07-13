@@ -71,8 +71,8 @@ function getFilesFromClipboard(e: ClipboardEvent<HTMLDivElement>) {
 
 export default function WorkPage() {
     const router = useRouter();
-    const { data: session } = useSession();
-
+    const { data: session, status } = useSession();
+    useAdminCheck(session, status);
 
     const [title, setTitle] = useState<string>('');
     const [subtitle, setSubtitle] = useState<string>('');
