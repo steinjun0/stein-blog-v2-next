@@ -4,7 +4,7 @@ const nextConfig = {
   swcMinify: true,
   images: {
     domains: ['dev-nest', 'localhost', 'api.blog.steinjun.net']
-  }
+  },
 }
 
 const removeImports = require('next-remove-imports')();

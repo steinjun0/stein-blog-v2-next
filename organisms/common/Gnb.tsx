@@ -1,12 +1,13 @@
+'use client';
 import { Logout } from "@mui/icons-material";
-import { Avatar, Button, IconButton, ListItemIcon, Menu, MenuItem } from "@mui/material";
-import { styled } from "@mui/system";
-import Link from "next/link";
-import { useState } from "react";
 import DataUsageIcon from '@mui/icons-material/DataUsage';
 import SignalCellularAltRoundedIcon from '@mui/icons-material/SignalCellularAltRounded';
+import { Avatar, Button, IconButton, ListItemIcon, Menu, MenuItem } from "@mui/material";
+import { styled } from "@mui/system";
 import { useScroll } from "hooks/useScroll";
-import { useSession, signOut, signIn } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
+import Link from "next/link";
+import { useState } from "react";
 
 const Nav = styled('nav')((props) => (
   {
@@ -38,7 +39,7 @@ export default function Gnb() {
 
 
   return <Nav
-    className='flex md:py-4 xl:px-0 xs:p-4 p-4 justify-between items-end bg-white fixed top-0 left-0 w-screen z-10'
+    className='flex md:py-4 xl:px-0 xs:p-4 p-4 h-20 justify-between items-center bg-white fixed top-0 left-0 w-screen z-10'
     style={{
       borderBottom: ((scrollY >= 30)) ? '1px solid #e5e7eb' : '1px solid transparent',
       transition: 'border-bottom ease 0.5s'
@@ -69,7 +70,10 @@ export default function Gnb() {
       <Button style={{ height: 36 }}
         color='primary'
         variant='outlined'
-        onClick={() => { signIn('kakao'); }}>
+        onClick={() => {
+          console.log('login');
+          signIn('kakao');
+        }}>
         Login
       </Button>
     }
