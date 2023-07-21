@@ -3,9 +3,6 @@ import { GetServerSidePropsContext } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
-import PostService from "services/post";
-
 
 const Markdown = dynamic(
     () => import("@uiw/react-markdown-preview").then((mod) => mod.default),
@@ -27,6 +24,7 @@ interface IPostProps {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
 
     const post = (await PostAPI.getPost({ id: Number(context.query.id) }));
+    console.log('post', post);
     // data.body 
     if (process.env.NODE_ENV === 'development') {
         post.body = post.body.replace('https://api.blog.steinjun.net', '//localhost:8888');
