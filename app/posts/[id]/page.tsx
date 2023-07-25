@@ -2,13 +2,7 @@ import { API_BASE_URL } from "apis/API";
 import { IPost } from "interfaces/post";
 import MarkdownViewer from "./markdownViewer";
 
-// const Markdown = dynamic(
-//     () => import("@uiw/react-markdown-preview").then((mod) => mod.default),
-//     { ssr: false }
-// );
-
 async function getServerSideProps(id: number): Promise<IPost> {
-    const b = await fetch('https://api.github.com/search/repositories?q=nextjs');
     const res = await (fetch(`${API_BASE_URL}/post/${id}`));
     const post = await res.json();
     if (process.env.NODE_ENV === 'development') {
@@ -30,6 +24,7 @@ async function getServerSideProps(id: number): Promise<IPost> {
 export default async function WorkPage({ params }: { params: { id: string; }; }) {
     const post = await getServerSideProps(Number(params.id));
     const koDtf = new Intl.DateTimeFormat("ko", { dateStyle: "medium" });
+
 
     return (
         <div className='flex flex-col w-full max-w-2xl mt-10 pb-20'>
