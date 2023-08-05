@@ -1,15 +1,15 @@
 import PostAPI from "apis/post";
-import { marked } from "marked";
-import Link from "next/link";
-import Image from "next/image";
 import { IPost } from "interfaces/post";
+import { marked } from "marked";
+import Image from "next/image";
+import Link from "next/link";
 import { HTMLAttributes, useRef } from "react";
 
 export default function PostCard({ post, ...props }: { post: IPost; } & HTMLAttributes<HTMLDivElement>) {
     const koDtf = new Intl.DateTimeFormat("ko", { dateStyle: "long" });
     const titleRef = useRef<HTMLHeadingElement>(null);
-    return <div {...props} className="justify-center border-gray-200 border rounded-sm overflow-hidden" style={{ minHeight: '574px' }}>
-        <Link href={`/posts/${post.id}`} className="flex h-full">
+    return <Link href={`/posts/${post.id}`} className="flex h-full">
+        <div {...props} className="hidden sm:flex justify-center border-gray-200 border rounded-sm overflow-hidden " style={{ minHeight: '574px' }}>
             <div className="flex flex-col justify-between w-full">
                 <div className="relative" style={{ maxHeight: 382, minHeight: 382, overflow: 'hidden', maxWidth: '100%' }}>
                     <Image
@@ -48,6 +48,19 @@ export default function PostCard({ post, ...props }: { post: IPost; } & HTMLAttr
                 </div>
 
             </div>
-        </Link>
-    </div>;
+        </div>
+
+        <div {...props} className="flex flex-col sm:hidden justify-start border-gray-200 border-b pb-8 rounded-sm overflow-hidden w-full gap-3 text-gray-500">
+            <div>
+                <h3 ref={titleRef} className='text-xl whitespace-pre-wrap [&:hover]:underline' style={{ fontWeight: '700' }}>{post.title}</h3>
+                <h6 className='whitespace-pre-wrap [&:hover]:underline' style={{ fontWeight: '500', minHeight: '32px', fontSize: '16px' }}>{post.subtitle}</h6>
+            </div>
+
+            <div className="flex justify-between items-center text-xs ">
+                <span className="text-gray-400 align-text-bottom">{koDtf.format(post.createdAt)}</span>
+            </div>
+        </div>
+
+    </Link>;
+
 }
