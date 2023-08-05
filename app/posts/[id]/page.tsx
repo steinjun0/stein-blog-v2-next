@@ -1,7 +1,7 @@
 import { API_BASE_URL } from "apis/API";
 import PostAPI from "apis/post";
 import { IPost } from "interfaces/post";
-import { Metadata, ResolvingMetadata } from "next";
+import { Metadata } from "next";
 import MarkdownViewer from "./markdownViewer";
 
 async function getServerSideProps(id: number): Promise<IPost> {
@@ -23,8 +23,7 @@ async function getServerSideProps(id: number): Promise<IPost> {
 }
 
 export async function generateMetadata(
-    { params }: { params: { id: string; }; },
-    parent?: ResolvingMetadata
+    { params }: { params: { id: string; }; }
 ): Promise<Metadata> {
     const post = await getServerSideProps(Number(params.id));
     return {
