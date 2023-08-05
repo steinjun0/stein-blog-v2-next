@@ -9,7 +9,7 @@ export default function PostCard({ post, ...props }: { post: IPost; } & HTMLAttr
     const koDtf = new Intl.DateTimeFormat("ko", { dateStyle: "long" });
     const titleRef = useRef<HTMLHeadingElement>(null);
     return <Link href={`/posts/${post.id}`} className="flex h-full">
-        <div {...props} className="hidden sm:flex justify-center border-gray-200 border rounded-sm overflow-hidden " style={{ minHeight: '574px' }}>
+        <div {...props} className="hidden sm:flex justify-center border-gray-200 border rounded-sm overflow-hidden w-full" style={{ minHeight: '574px' }}>
             <div className="flex flex-col justify-between w-full">
                 <div className="relative" style={{ maxHeight: 382, minHeight: 382, overflow: 'hidden', maxWidth: '100%' }}>
                     <Image
