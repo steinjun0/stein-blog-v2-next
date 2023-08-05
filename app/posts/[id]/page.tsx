@@ -1,5 +1,7 @@
 import { API_BASE_URL } from "apis/API";
+import PostAPI from "apis/post";
 import { IPost } from "interfaces/post";
+import { Metadata, ResolvingMetadata } from "next";
 import MarkdownViewer from "./markdownViewer";
 
 async function getServerSideProps(id: number): Promise<IPost> {
@@ -20,6 +22,36 @@ async function getServerSideProps(id: number): Promise<IPost> {
     };
 }
 
+export async function generateMetadata(
+    { params }: { params: { id: string; }; },
+    parent?: ResolvingMetadata
+): Promise<Metadata> {
+    const post = await getServerSideProps(Number(params.id));
+    return {
+        title: post.title,
+        description: post.subtitle,
+        openGraph: {
+            title: post.title,
+            description: post.subtitle,
+            url: `https://blog.steinjun.net/posts/${params.id}`,
+            type: 'website',
+            images: [
+                {
+                    url: PostAPI.getServerPostImageUrl({ postId: post.id, fileName: 'thumbnail' }),
+                    width: 800,
+                    height: 600,
+                    alt: post.title
+                }
+            ]
+        },
+        twitter: {
+            card: "summary_large_image",
+            site: `https://blog.steinjun.net/posts/${params.id}`,
+            creator: "steinjun0",
+            "images": PostAPI.getServerPostImageUrl({ postId: post.id, fileName: 'thumbnail' })
+        }
+    };
+}
 
 export default async function WorkPage({ params }: { params: { id: string; }; }) {
     const post = await getServerSideProps(Number(params.id));

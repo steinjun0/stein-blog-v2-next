@@ -14,6 +14,7 @@ export default function RootLayout({
 }) {
   return (
     <html>
+      <link rel="shortcut icon" href="/stein-logo.svg" />
       <body>
         {/* TODO: QueryClientProvider */}
         {/* TODO: ReactQueryDevtools */}
