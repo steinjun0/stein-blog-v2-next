@@ -60,11 +60,11 @@ export default function Home() {
 
       <Link className='flex items-end no-underline hover:underline' href={'/posts'}>
         <div className='hidden sm:flex justify-center items-center w-full border-gray-200 border rounded-sm p-4'>
-          <h1 className="font-bold text-xl">전체 게시글 보러가기 →</h1>
+          <h1 style={{ fontSize: '700' }} className="text-xl">전체 게시글 보러가기 →</h1>
         </div>
 
         <div className="flex flex-col sm:hidden justify-start border-gray-200 border-b pb-8 rounded-sm overflow-hidden w-full gap-3">
-          <h3 className='font-bold text-2xl [&:hover]:underline' style={{ fontWeight: '700' }}>전체 게시글 보러가기 →</h3>
+          <h3 className=' text-2xl [&:hover]:underline' style={{ fontWeight: '700' }}>전체 게시글 보러가기 →</h3>
         </div>
       </Link>
     </div>
