@@ -1,13 +1,17 @@
 import PostAPI from "apis/post";
-import PostCard from 'organisms/common/PostCard';
-import { useInfiniteQuery } from "react-query";
 import IntersectionObserverComponent from "components/common/IntersectionObserverComponent";
+import { useRouter } from "next/router";
+import PostCard from 'organisms/common/PostCard';
+import Section from "organisms/index/Section";
+import { useEffect, useState } from "react";
+import { useInfiniteQuery } from "react-query";
 
 export default function Post() {
-
-	const { fetchNextPage, data, status } = useInfiniteQuery(
+	const router = useRouter();
+	const [category, setCategory] = useState<string>(router?.query?.category as string ?? 'Article');
+	const { fetchNextPage, data, status, remove, refetch } = useInfiniteQuery(
 		['posts'],
-		({ pageParam = { page: 1, take: 6 } }) => {
+		({ pageParam = { page: 1, take: 6, categoryFilters: category === "" ? undefined : [category] } }) => {
 			return PostAPI.getPostList(pageParam);
 		},
 		{
@@ -17,7 +21,7 @@ export default function Post() {
 						return undefined;
 					} else {
 						const nextPage: number = (data?.pages.length ?? 0) + 1;
-						const nextParam = { page: nextPage, take: 6 };
+						const nextParam = { page: nextPage, take: 6, categoryFilters: category === "" ? undefined : [category] };
 						return nextParam;
 					}
 				} catch (error) {
@@ -46,23 +50,30 @@ export default function Post() {
 		};
 	}
 
+	useEffect(() => {
+		remove();
+		refetch();
+	}, [category]);
+
+	useEffect(() => {
+		if (router?.query?.category) {
+			setCategory(router?.query?.category as string);
+		}
+	}, [router?.query?.category]);
+
 	return (
 		<div id="posts-container" className="flex-col w-full my-10 justify-start">
 			<div className="flex flex-col justify-start">
-				<div className="flex w-full justify-between items-end">
-					<div>
-						<div>
-
-							<h1
-								className='no-underline hover:underline'
-								style={{ fontSize: '36px', fontWeight: '600', marginTop: '24px' }}>최근 게시글</h1>
-						</div>
-
-						<h6 style={{ fontSize: '16px', fontWeight: '400', marginTop: '4px' }}>가장 최근 올라온 게시글을 확인하세요!</h6>
-					</div>
+				<div className="flex gap-3 cursor-pointer mb-2">
+					<div onClick={() => setCategory('')}
+						style={category === '' ? { fontWeight: 500, textDecoration: 'underline' } : { fontWeight: 400, color: "#aaa" }}>전체</div>
+					<div onClick={() => setCategory('Article')}
+						style={category === 'Article' ? { fontWeight: 500, textDecoration: 'underline' } : { fontWeight: 400, color: "#aaa" }}>아티클</div>
+					<div onClick={() => setCategory('Feed')}
+						style={category === 'Feed' ? { fontWeight: 500, textDecoration: 'underline' } : { fontWeight: 400, color: "#aaa" }}>피드</div>
 				</div>
+				<Section title='최근 게시글' subtitle='가장 최근 올라온 게시글을 확인하세요!'>
 
-				<div className='mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 gap-y-16 justify-center'>
 					{status === 'success' && data.pages.map(page => {
 						return page
 							?.filter(e => process.env.NODE_ENV === 'development' || !e.categories.map(i => i.name).includes('test'))
@@ -72,7 +83,7 @@ export default function Post() {
 								)
 							);
 					})}
-				</div>
+				</Section>
 			</div>
 			<div style={{ height: 300 }}></div>
 
